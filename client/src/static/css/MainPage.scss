@@ -1,0 +1,113 @@
+.hero {
+  position: relative;
+  height: 576px;
+  padding-top: 83px;
+  overflow: hidden;
+
+  &__bg {
+    object-fit: cover;
+    object-position: center center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  &__title {
+    position: relative;
+    margin-bottom: 12px;
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 64px;
+    letter-spacing: 0;
+    text-align: left;
+    z-index: 1;
+  }
+
+  &__subtitle {
+    position: relative;
+    margin-bottom: 32px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0;
+    text-align: left;
+    z-index: 1;
+  }
+
+  &__callToCation {
+    position: relative;
+    @include rounded-button('accent', $BR: true, $TL: true, $fontWeight: 700);
+    width: 152px;
+    height: 48px;
+    margin: 0 8px;
+    z-index: 1;
+  }
+
+  &__character {
+    width: 712px;
+    height: 100%;
+    position: absolute;
+    right: calc(50vw - 612px);
+    bottom: 0;
+    z-index: 2;
+  }
+
+  &__roundsImg {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  &__characterImg {
+    position: absolute;
+    bottom: -80px;
+    right: 108px;
+  }
+
+  &__characterShadowImg {
+    position: absolute;
+    bottom: -250px;
+    right: -50px;
+  }
+}
+
+.recent {
+  padding: 32px 0 104px;
+
+  &__title {
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 44px;
+    letter-spacing: 0;
+    text-align: left;
+    padding-top: 32px;
+  }
+  &__subtitle {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0;
+    text-align: left;
+    max-width: 600px;
+    width: 100%;
+    padding-top: 12px;
+    color: $textHoverWhite;
+  }
+  &__second-title {
+    font-family: 'Mustica Pro', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: 0;
+    text-align: left;
+  }
+}

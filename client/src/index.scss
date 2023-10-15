@@ -1,0 +1,783 @@
+// Fonts
+
+@font-face {
+  font-family: "Mustica Pro";
+  font-weight: 600;
+  src:
+      local("Mustica Pro"),
+      url("./static/fonts/MusticaproSemibold.ttf") format("truetype"),
+      url("./static/fonts/MusticaproSemibold.otf") format("opentype"),
+      url("./static/fonts/MusticaproSemibold.woff") format("woff");
+}
+
+// Base styles
+@import "static/css/Base";
+
+// Sections styles
+@import './static/css/MainPage';
+@import 'static/css/Auth';
+@import 'static/css/Tournament';
+@import 'static/css/Profile';
+@import 'static/css/Team';
+
+
+body {
+  margin: 0;
+  font-family: "Inter", "Mustica Pro", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ul, p, h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+a {
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+svg {
+  display: block;
+}
+
+
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.container {
+  width: 100%;
+  max-width: 1256px;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+.flex-clear {
+  width: 100%;
+  height: 0;
+}
+
+.mb {
+  display: none;
+}
+
+// Header
+
+.header {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  border-bottom: 1px solid $header-border-color;
+  padding: 6px 0;
+  z-index: 10;
+
+  &.no-border-bottom {
+    border-bottom: none;
+  }
+  
+  &.fixed {
+    position: fixed;
+  }
+
+  &__logo {
+    width: 70px;
+    height: 70px;
+    margin-right: 24px;
+  }
+
+  &__nav {
+    margin: 0 -12px;
+  }
+
+  &__navLink a {
+    color: $white;
+    opacity: .75;
+    margin: 12px;
+    transition: opacity .3s ease-in-out;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  .language {
+    margin: 0 12px;
+    @include rounded-button('gray', $TL: true, $fontWeight: 400);
+
+    & > svg {
+      margin-right: 6px;
+    }
+    &.active {
+      @include rounded-button('gray', $TL: true, $fontWeight: 400, $bgDefault: $hoverGray);
+    }
+
+    &__wrapper {
+      margin-left: auto;
+      margin-right: 28px;
+    }
+
+    &__icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+    }
+  }
+  .auth {
+    &__login-button {
+      @include rounded-button('accent', $BR: true, $fontWeight: 700);
+      margin-right: 8px;
+    }
+  }
+
+  &__goBackToMain {
+    margin-right: 8px;
+    @include rounded-button('gray', $BR: true, $fontWeight: 400);
+  }
+
+  &__mobileMenu {
+    position: relative;
+    margin: 0 8px;
+
+    &-button {
+      @include rounded-button('gray', $BR: true, $TL: true, $fontWeight: 400);
+      padding: 10px 2px;
+      width: 24px;
+      height: 40px;
+    }
+
+    &-icon {
+      transition: .3s transform ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      width: 20px;
+      height: 20px;
+      padding: 3px;
+
+      i {
+        transition: .3s transform ease-in-out,
+                    .3s width ease-in-out;
+        display: block;
+        width: 14px;
+        height: 1px;
+        border-radius: 2px;
+        margin-bottom: 5px;
+        background-color: $white;
+      }
+
+      i:nth-child(3) {
+        margin-bottom: 0;
+        width: 10px;
+      }
+    }
+
+    &.active {
+      .header__mobileMenu {
+        &-icon {
+          transform: rotate(90deg);
+
+          i:nth-child(1) {
+            transform: translateY(3px) rotate(-45deg);
+            width: 8px;
+          }
+          i:nth-child(3) {
+            transform: translateY(-3px) rotate(45deg);
+            width: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.mobileMenu {
+  height: 140vh;
+  position: fixed;
+  z-index: 9;
+  left: 0;
+  right: 0;
+  top: 0;
+  max-height: 0;
+  pointer-events: none;
+  transition: max-height .3s ease-in-out;
+  overflow: hidden;
+  background-color: $black;
+  font-family: 'Inter', sans-serif;
+
+  &.active {
+    max-height: 140vh;
+    pointer-events: all;
+  }
+
+  &__flex {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 70px 16px 40vh 16px;
+  }
+  &__items {
+    border-top: 1px solid $header-border-color;
+    padding: 20px 0 14px;
+  }
+  &__item {
+    a {
+      margin: 0 8px 6px;
+      img {
+        margin-right: 6px;
+      }
+      span {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0;
+        text-align: left;
+        color: $textHoverWhite;
+      }
+    }
+    &:last-child a {
+      @include rounded-button('gray', $BR: true);
+      justify-content: flex-start;
+    }
+    &:first-child a {
+      @include rounded-button('gray', $TL: true);
+      justify-content: flex-start;
+    }
+    &:not(:first-child):not(:last-child) a {
+      @include rounded-button('gray');
+      justify-content: flex-start;
+    }
+  }
+
+  &__bottom {
+    margin-top: auto;
+    padding-bottom: 24px;
+  }
+  &__title {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+  }
+  &__subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0;
+    margin-bottom: 12px;
+  }
+
+  &__social {
+    margin: 0 -14px;
+    padding: 0 8px;
+
+    &-item {
+      margin: 0 12px;
+      width: 60px;
+      height: 48px;
+      @include rounded-button('gray', $fontWeight: 700, $bgDefault: $hoverGray);
+
+      &:first-child {
+        @include rounded-button('gray', $TL: true, $fontWeight: 700, $bgDefault: $hoverGray);
+      }
+      &:last-child {
+        @include rounded-button('gray', $BR: true, $bgDefault: $hoverGray);
+      }
+    }
+  }
+}
+
+
+// Footer
+
+.footer {
+  margin-top: auto;
+  padding: 12px 0;
+  background-color: $gray;
+
+  &__logo {
+    margin-right: 32px;
+
+    &-title {
+      font-family: "Mustica Pro", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+      letter-spacing: 0;
+      text-align: left;
+    }
+  }
+
+  &__text {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: $textWhite;
+    padding-top: 8px;
+    padding-bottom: 24px;
+  }
+
+  &__social {
+    margin: 0 -14px;
+    padding: 0 8px;
+
+    &-item {
+      margin: 0 12px;
+      width: 60px;
+      height: 48px;
+      @include rounded-button('gray', $fontWeight: 700, $bgDefault: $hoverGray);
+
+      &:first-child {
+        @include rounded-button('gray', $TL: true, $fontWeight: 700, $padding: 0, $bgDefault: $hoverGray);
+      }
+      &:last-child {
+        @include rounded-button('gray', $BR: true, $padding: 0, $bgDefault: $hoverGray);
+      }
+    }
+  }
+
+  &__up {
+    @include rounded-button($BR: true, $TL: true, $fontWeight: 400, $padding: 0, $color: $white, $bgDefault: $hoverGray);
+    width: 32px;
+    height: 48px;
+    margin-left: auto;
+    margin-right: 8px;
+
+    span + svg {
+      margin-left: 0;
+    }
+  }
+}
+
+
+@media screen and (max-device-width:500px) {
+  // Base mobile
+  .ds {
+    display: none;
+  }
+  .mb {
+    display: block;
+  }
+  .flex-mb-column {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .full-height.header-padding {
+    padding-top: 70px;
+  }
+
+  // Header mobile
+  .header {
+    padding: 0;
+    border-bottom-color: transparent;
+
+    &__nav {
+      display: none;
+    }
+    &__goBackToMain {
+      width: 24px;
+      height: 40px;
+      padding: 0;
+    }
+    .language {
+      &__wrapper {
+        margin-right: 16px;
+      }
+    }
+    .auth__authenticated {
+      background: none;
+      padding-right: 0;
+      margin-right: 0;
+      margin-left: -4px;
+
+      &::after, &::before {
+        display: none;
+      }
+      .rating__team-nicks {
+        display: none;
+      }
+      .rating__team-images {
+        margin-right: 0;
+      }
+    }
+  }
+
+  // Footer mobile
+  .footer {
+    &__logo {
+      margin-right: 0;
+      margin-bottom: -18px;
+
+      img {
+        width: 73px;
+        height: 73px;
+        margin-left: -14px;
+        margin-right: 2px;
+      }
+
+      &-title {
+        font-size: 20px;
+        line-height: 28px;
+      }
+    }
+
+    &__social {
+      margin-bottom: 12px;
+
+      &-item {
+        width: calc(33.333% - 14px);
+      }
+    }
+    &__up {
+      margin-left: 8px;
+      width: calc(100% - 16px);
+
+      span + svg {
+        margin-left: 6px;
+      }
+    }
+  }
+
+  // Main Page Mobile
+  .hero {
+    height: auto;
+    padding-top: 70px;
+    padding-bottom: 40px;
+
+    &__character {
+      display: none;
+    }
+    &__callToCation {
+      width: calc(100% - 16px);
+    }
+
+    &__title {
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    &__subtitle {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
+  .recent {
+    &__title {
+      font-size: 24px;
+      line-height: 32px;
+    }
+    &__subtitle {
+      font-size: 16px;
+      line-height: 24px;
+
+    }
+    &__second-title {
+      font-size: 20px;
+      line-height: 28px;
+    }
+  }
+
+  // Auth page Mobile
+  .auth {
+    padding: 70px 0 56px;
+
+    &__content {
+      padding: 0 24px;
+    }
+    &__title {
+      padding: 24px 0 16px;
+      font-size: 24px;
+      line-height: 32px;
+    }
+    &__buttons {
+      flex-direction: column-reverse;
+
+      & > * {
+        width: calc(100% - 28px);
+        margin: 0 14px 8px;
+      }
+    }
+    &__gray-button {
+      @include rounded-button('gray', $BR: true, $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
+      &::before {
+        border-top: none;
+      }
+    }
+    &__submit {
+      @include rounded-button('accent', $TL: true, $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
+    }
+    &__social {
+      flex-direction: column;
+      padding-bottom: 8px;
+
+      & > * {
+        width: calc(100% - 28px);
+        margin: 0 14px 8px;
+      }
+    }
+    &__dsLink {
+      @include rounded-button($fontWeight: 400, $TL: true, $padding: 14px 8px, $bgDefault: #0C0C15, $bgHover: #18182A, $bgActive: #0C0C15, $color: #6363E9);
+    }
+    &__row {
+      flex-direction: column;
+      margin-bottom: 4px;
+
+      & > *,
+      & > .input,
+      & > .input-br{
+        width: calc(100% - 28px);
+        margin: 0 14px 12px;
+      }
+    }
+  }
+
+  // TournamentList Mobile
+  .previewVertical {
+    &.c2, &.c3 {
+      width: calc(100% - 24px);
+    }
+
+    &__img {
+      height: 246px;
+    }
+
+    &__fund {
+      width: auto;
+    }
+
+    &__link {
+      width: auto;
+      flex-grow: 1;
+    }
+  }
+
+  // Tournament Page mobile
+  .TournamentsPage {
+    .side {
+      &__content-bottom {
+        padding-top: 0;
+      }
+      svg {
+        stroke: $white;
+      }
+      &__title {
+        margin-bottom: 0;
+      }
+      &__subtitle,
+      &__top-info-item span {
+        color: $white;
+      }
+      &__top {
+        &-flex,
+        &-info {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        &-right {
+          padding-top: 24px;
+          width: 100%;
+        }
+
+        &-reg-time {
+          text-align: left;
+        }
+        &-register {
+          flex-grow: 1;
+        }
+
+        &-left {
+          width: 100%;
+        }
+
+        &-info-item {
+          width: calc(100% - 24px);
+          margin-bottom: 6px;
+        }
+      }
+    }
+  }
+  .tournament {
+    flex-wrap: wrap;
+
+    &__sidebar {
+      &-box {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+    &__block-grid {
+      &.main-info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      &.main-info-grid > &-item:last-child {
+        grid-column-start: 1;
+        grid-column-end: 3;
+      }
+    }
+  }
+
+
+  // Side Mobile
+  .side {
+    &__tab-heading {
+      font-size: 12px;
+      padding: 14px 6px;
+    }
+    &__content {
+      width: 100%;
+      max-width: none;
+      padding: 0 16px;
+
+      &-top.profile {
+        .side__content-top-bg {
+          height: 100%;
+        }
+        &.blackShadow::before {
+          height: 100%;
+        }
+      }
+    }
+    &__container {
+      padding: 24px 0 0;
+    }
+    &__content-top {
+      padding: 0;
+    }
+    &__title {
+      padding-top: 24px;
+      font-size: 24px;
+      line-height: 32px;
+    }
+    &__subtitle {
+      font-size: 16px;
+      line-height: 24px;
+    }
+    &__content-top {
+      margin: 0 -16px;
+      padding: 0 16px;
+    }
+    &__top {
+      &-profile {
+        &-flex {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        &-logout {
+          width: 100%;
+          margin-top: 16px;
+
+          span + svg {
+            margin-left: 6px;
+          }
+        }
+        &-nickname {
+          word-break: break-word;
+        }
+        &-info {
+          &-top {
+            flex-wrap: wrap;
+          }
+
+          &-bottom {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  // Popup
+  .popup {
+    align-items: flex-end;
+  }
+
+  // Dropdown
+  .pagination {
+    align-items: stretch;
+    flex-direction: column;
+
+    &__left {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    &__number {
+      flex-grow: 1;
+    }
+
+    &__right {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+
+  // Team
+  .team {
+    &__tablet {
+      flex-wrap: wrap;
+
+      &-bottom {
+        margin-top: 16px;
+        display: flex;
+        width: 100%;
+      }
+      &-info {
+        margin-top: 16px;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-right: 0;
+        width: 100%;
+      }
+      &-edit {
+        flex-grow: 1;
+        margin-right: 8px;
+      }
+      &-ignore {
+        flex-grow: 1;
+      }
+    }
+  }
+
+  // Meta builds
+  .build {
+    &__subheading {
+      margin-bottom: 24px;
+    }
+    &__create-button {
+      margin-left: 8px;
+    }
+    &__block {
+      margin-top: 12px;
+    }
+  }
+}

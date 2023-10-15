@@ -1,0 +1,56 @@
+.profile {
+  &__heading {
+    font-family: 'Mustica Pro', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: 0;
+  }
+  &__heading-big {
+    font-family: 'Mustica Pro', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 44px;
+    letter-spacing: 0;
+  }
+  &__stats {
+    background-color: $gray;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-column-gap: 16px;
+    grid-auto-flow: column;
+    padding: 16px;
+
+    &-heading {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 16px;
+      letter-spacing: 0;
+      color: $textHoverWhite;
+    }
+    &-value {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: 0;
+
+      svg {
+        margin-right: 6px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  &__teams-tablet-bottom {
+    padding-top: 12px;
+  }
+  &__teams-tablet-more {
+    @include rounded-button('gray', $BR: true, $TL: true, $color: $textHoverWhite, $padding: 14px 8px);
+    margin: 0 8px;
+    width: calc(100% - 16px);
+  }
+}
+
+

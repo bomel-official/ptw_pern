@@ -1,0 +1,485 @@
+.tournamentsList {
+  margin: 0 -12px;
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 24px;
+  padding-bottom: 24px;
+
+  &.active {
+    .tournamentsList__showMore {
+      @include rounded-button('accent', $BR: true, $TL: true, $fontWeight: 700);
+    }
+  }
+
+  &__showMore {
+    @include rounded-button('gray', $BR: true, $TL: true, $fontWeight: 400);
+    width: 100%;
+    margin: 0 20px;
+  }
+}
+
+.previewVertical {
+  position: relative;
+  background-color: $gray;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 12px 24px 12px;
+
+  &.c3 {
+    width: calc(33.333% - 24px);
+  }
+  &.c2 {
+    width: calc(50% - 24px);
+  }
+  &.c1 {
+    width: calc(100% - 24px);
+  }
+
+  &.finished {
+    .previewVertical__img {
+      filter: grayscale(100%);
+    }
+    .previewVertical__status {
+      color: $textTransparentWhite;
+      background-color: $hoverGray;
+    }
+  }
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 12px solid transparent;
+    border-top: 12px solid $black;
+    border-right: 12px solid transparent;
+    content: '';
+    display: block;
+    z-index: 5;
+    transform: translate(-8px, -2px) rotate(135deg);
+  }
+  &::after {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-left: 12px solid transparent;
+    border-bottom: 12px solid $black;
+    border-right: 12px solid transparent;
+    content: '';
+    display: block;
+    z-index: 5;
+    transform: translate(8px, 2px) rotate(135deg);
+  }
+
+  &__img {
+    height: 294px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  &__top {
+    position: relative;
+  }
+
+  &__status {
+    top: 16px;
+    right: 16px;
+    position: absolute;
+    background-color: $accent;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0;
+    display: block;
+  }
+
+  &__bottom {
+    padding: 24px;
+  }
+
+  &__title {
+    font-family: 'Mustica Pro', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: 0;
+    text-align: left;
+    margin-bottom: 4px;
+  }
+  &__subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0;
+    text-align: left;
+    color: $textHoverWhite;
+    margin-bottom: 4px;
+  }
+  &__users,
+  &__date{
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+
+    span {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      margin-left: 8px;
+      color: $textHoverWhite;
+    }
+  }
+  &__buttons {
+    display: flex;
+    align-items: center;
+    margin: 0 -8px;
+  }
+  &__fund {
+    @include rounded-button('gray', $TL: true, $fontWeight: 400, $color: $textHoverWhite, $padding: 14px 8px, $bgDefault: $black, $bgHover: $black, $bgActive: $black);
+    cursor: default;
+    margin: 0 14px;
+    width: calc(50% - 24px);
+  }
+  &__link {
+    @include rounded-button('accent', $BR: true, $fontWeight: 700, $color: $white, $padding: 14px 8px);
+    margin: 0 14px;
+    width: calc(50% - 24px);
+  }
+}
+
+.tournament {
+  display: flex;
+  align-items: flex-start;
+
+  &__content {
+    flex-grow: 1;
+  }
+  &__fund {
+    border-radius: 4px;
+    overflow: hidden;
+
+    &-top {
+      position: relative;
+      background-color: $gray;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.both-borders::after {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border-left: 8px solid transparent;
+        border-bottom: 8px solid $black;
+        border-right: 8px solid transparent;
+        content: '';
+        display: block;
+        transform: translate(8px, 2px) rotate(135deg);
+      }
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-left: 8px solid transparent;
+        border-top: 8px solid $black;
+        border-right: 8px solid transparent;
+        content: '';
+        display: block;
+        transform: translate(-8px, -2px) rotate(135deg);
+      }
+    }
+    &-heading {
+      color: $textHoverWhite;
+      font-family: 'Mustica Pro', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: 0;
+    }
+    &-number {
+      color: $white;
+      font-family: 'Mustica Pro', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: 0;
+      display: flex;
+      align-items: center;
+
+      svg, img {
+        margin-right: 8px;
+      }
+    }
+
+    &-bottom {
+      padding: 10px 16px;
+      border: 1px solid $gray;
+      border-radius: 0 0 2px 2px;
+    }
+    &-item {
+      &-place {
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: 0;
+        text-align: left;
+        color: $textHoverWhite;
+      }
+      &-prize {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 0;
+        text-align: left;
+        color: $white;
+      }
+    }
+  }
+  &__block {
+    padding-top: 32px;
+
+    &-heading {
+      font-family: 'Mustica Pro', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+      letter-spacing: 0;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+
+    &-subheading {
+      font-family: 'Mustica Pro', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: 0;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+    &-grid {
+      grid-column-gap: 12px;
+      grid-row-gap: 12px;
+
+      &-item {
+        &-heading {
+          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 16px;
+          letter-spacing: 0;
+          text-align: left;
+          color: $textHoverWhite;
+        }
+        &-row {
+          padding-top: 4px;
+          display: flex;
+          align-items: center;
+
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+          letter-spacing: 0;
+          text-align: left;
+          color: $white;
+
+          svg {
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+    &-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      color: $textHoverWhite;
+    }
+  }
+
+  &__sidebar {
+    margin-left: 24px;
+    min-width: 288px;
+    border: 1px solid $gray;
+    border-radius: 4px;
+    padding: 16px;
+
+    &-box {
+      margin-left: 24px;
+      min-width: 288px;
+      width: 288px;
+    }
+    &-block {
+      padding: 16px;
+      border-radius: 4px;
+      border: 1px solid $gray;
+    }
+
+    .tournament__block {
+      padding-top: 0;
+    }
+
+    svg {
+      stroke: $textHoverWhite;
+    }
+    .tournament__block-grid-item-heading {
+      color: $textWhite;
+    }
+    .tournament__block-grid-item-row span {
+      color: $textHoverWhite;
+    }
+  }
+  &__participants-link {
+    @include rounded-button('gray', $BR: true, $TL: true, $fontWeight: 400, $color: $textHoverWhite, $padding: 10px 8px);
+    margin: 0 8px;
+  }
+
+  &__tablet {
+    @extend .black-corner-both;
+    background: $gray;
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+
+    &.finished {
+      .tournament__tablet-img {
+        filter: grayscale(100%);
+      }
+    }
+
+    &-img {
+      width: 184px;
+      height: 116px;
+      object-position: center center;
+      object-fit: cover;
+    }
+    &-title {
+      font-family: 'Mustica Pro', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+      letter-spacing: 0;
+    }
+    &-place {
+      svg {
+        margin-right: 6px;
+        width: 24px;
+        height: 24px;
+
+        path {
+         stroke-opacity: 1;
+        }
+      }
+      span {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+        letter-spacing: 0;
+      }
+    }
+
+    &-right {
+      padding: 24px;
+    }
+  }
+}
+
+.rating {
+  overflow-x: auto;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    tr td,
+    tr th{
+      border-bottom: 1px solid $gray;
+      white-space: nowrap;
+    }
+
+    th {
+      padding: 10px 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      color: $textHoverWhite;
+    }
+    td {
+      padding: 16px 6px;
+    }
+    .text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      margin: 0;
+      padding: 0;
+      color: $textHoverWhite;
+    }
+    .bold {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: left;
+      color: $white;
+    }
+  }
+
+  &__team {
+    &-flex {
+      display: flex;
+      align-items: flex-start;
+    }
+    &-images {
+      margin-right: 12px;
+      width: 40px;
+      height: 40px;
+
+      img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        object-position: center center;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+    }
+    &-nicks {
+      svg, img {
+        margin-left: 4px;
+        width: 16px;
+        height: 16px;
+      }
+      .a-img {
+        width: 16px;
+        height: 16px;
+      }
+      a {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}

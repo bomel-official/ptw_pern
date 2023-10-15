@@ -1,0 +1,111 @@
+.AuthPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth {
+  padding-top: 94px;
+  padding-bottom: 104px;
+
+  &__authenticated {
+    @include rounded-button('gray', $BR: true, $fontWeight: 400, $padding: 8px 8px 8px 0);
+    text-transform: none;
+    margin-right: 8px;
+
+    .text {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    padding-top: 64px;
+    padding-bottom: 24px;
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 44px;
+    letter-spacing: 0;
+    text-align: left;
+  }
+
+  &__content {
+    max-width: 648px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: left;
+  }
+
+  &__buttons {
+    margin: 0 -6px;
+
+    & > * {
+      width: calc(50% - 28px);
+      margin: 0 14px;
+    }
+  }
+  &__gray-button {
+    @include rounded-button('gray', $TL: true, $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
+  }
+  &__submit {
+    @include rounded-button('accent', $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
+  }
+
+  &__password {
+    &-hide {
+      opacity: .5;
+      transition: opacity .2s ease-in-out;
+
+      &.show {
+        opacity: 1;
+      }
+    }
+  }
+  &__withText {
+    padding-top: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: $textWhite;
+  }
+
+  &__social {
+    margin: 0 -6px;
+    padding-bottom: 24px;
+
+    & > * {
+      width: calc(33.333% - 28px);
+      margin: 0 14px;
+
+      svg {
+        margin-right: 6px;
+      }
+    }
+  }
+
+  &__dsLink {
+    @include rounded-button($fontWeight: 400, $padding: 14px 8px, $bgDefault: #0C0C15, $bgHover: #18182A, $bgActive: #0C0C15, $color: #6363E9);
+  }
+  &__ggLink {
+    @include rounded-button($fontWeight: 400, $padding: 14px 8px, $bgDefault: #070D18, $bgHover: #0D1B31, $bgActive: #070D18, $color: #4285F4);
+  }
+  &__twLink {
+    @include rounded-button($BR: true, $fontWeight: 400, $padding: 14px 8px, $bgDefault: #0E0719, $bgHover: #1D0E33, $bgActive: #0E0719, $color: #9146FF);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    margin: 0 -6px 32px;
+
+    & > *,
+    & > .input,
+    & > .input-br{
+      width: calc(50% - 28px);
+      margin: 0 14px;
+    }
+  }
+}
