@@ -1,0 +1,203 @@
+.build {
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 104px;
+  }
+}
+
+.meta-build {
+  &__tablet {
+    border: 1px solid $gray;
+    border-radius: 4px;
+    overflow: hidden;
+
+    &.active {
+      border-color: $accentGradHover;
+    }
+  }
+  &__container {
+    max-width: 656px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  &__flex {
+    display: flex;
+    gap: 12px;
+    padding-right: 64px;
+    position: relative;
+  }
+  &__header {
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    margin-bottom: 4px;
+  }
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+
+    &-name {
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+  &__tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    & > * {
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+  }
+  &__mode {
+    background: linear-gradient(90deg, #9400D3 0%, #4B0082 100%);
+  }
+  &__weapon-type {
+    background: linear-gradient(90deg, #3793FB 0%, #4364F7 50%, #0052D4 100%);
+  }
+  &__date {
+    background: $gray;
+  }
+  &__weapon-image {
+    object-fit: contain;
+    object-position: center;
+    max-width: 176px;
+    margin-left: auto;
+  }
+  &__show-button {
+    @include rounded-button('accent', $BR: true, $TL: true, $padding: 14px 8px);
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 24px;
+    height: 40px;
+    padding: 0;
+    transform: translateY(-50%);
+
+    span {
+      display: block;
+      width: 8px;
+      height: 2px;
+      background-color: $white;
+      border-radius: 2px;
+    }
+    span:first-child {
+      transform: translate(1px, 0) rotate(45deg);
+    }
+    span:last-child {
+      transform: translate(-2px, 0) rotate(-45deg);
+    }
+
+    &.active {
+      span {
+        width: 16px;
+      }
+      span:first-child {
+        transform: translate(5px, 0) rotate(45deg);
+      }
+      span:last-child {
+        transform: translate(-7px) rotate(-45deg);
+      }
+    }
+  }
+  &__bottom {
+    border-top: 1px solid $accentGradHover;
+    display: none;
+    position: relative;
+
+    &.active {
+      display: block;
+    }
+
+    &::after,
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      bottom: 0;
+      width: calc(50% - 328px);
+    }
+    &::after {
+      background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,1));
+      right: 0;
+    }
+    &::before {
+      background: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,1));
+      left: 0;
+    }
+  }
+  &__data-item-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  &__data-item {
+    background: linear-gradient(0deg, rgba(234, 91, 62, 0.1), rgba(234, 91, 62, 0.1));
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $accentGradHover;
+    }
+  }
+  &__data-item-left {
+    margin-right: auto;
+  }
+  &__data-item-title {
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    margin-bottom: 4px;
+  }
+  &__data-item-type {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: left;
+  }
+  &__data-item-size {
+    background-color: $black;
+    padding: 10px 8px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 152px;
+    justify-content: center;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+    span {
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      text-align: center;
+      color: $accentGradHover;
+    }
+  }
+}

@@ -408,6 +408,10 @@ input[type=file] {
       border-right: none;
     }
 
+    img {
+      height: 40px;
+    }
+
     & > * {
       opacity: .3;
     }

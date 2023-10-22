@@ -21,6 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "serve": "pm2 serve build --name \"react-build\" --spa --watch",
+    "restart": "pm2 restart --spa --watch",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1158,7 +1158,7 @@ export const Translations: ITranslations = {
     },
     "Мета–сборки": {
         "RU": "Мета–сборки",
-        "EU": "Meta Assemblies"
+        "EU": "Meta Builds"
     },
     "Играть": {
         "RU": "Играть",
@@ -1346,7 +1346,7 @@ export const Translations: ITranslations = {
     },
     "Конструктор сборок": {
         "RU": "Конструктор сборок",
-        "EU": "Assembly Builder"
+        "EU": "Meta build constructor"
     },
     "Ваши сборки": {
         "RU": "Ваши сборки",
@@ -1394,7 +1394,7 @@ export const Translations: ITranslations = {
     },
     "Поиск по сборкам": {
         "RU": "Поиск по сборкам",
-        "EU": "Assembly Search"
+        "EU": "Search meta builds"
     },
     "Создать сборку": {
         "RU": "Создать сборку",

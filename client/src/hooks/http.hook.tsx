@@ -1,7 +1,7 @@
 import {useState, useCallback} from 'react'
 import {__} from "../multilang/Multilang";
 
-export const API_URL = 'http://192.168.8.101:7000'
+export const API_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:7000"
 
 export const useHttp = () => {
     const [loading, setLoading] = useState(false)
