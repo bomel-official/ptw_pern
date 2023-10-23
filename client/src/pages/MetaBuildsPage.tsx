@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useContext, useState} from 'react';
 import {Header} from "../components/base/Header";
 import {GameTabs} from "../components/base/GameTabs";
 import {SideMenu} from "../components/base/SideMenu";
@@ -9,10 +9,13 @@ import {Footer} from "../components/base/Footer";
 import {BuildTypes, IBuildType} from "../data/BuildTypes";
 import {useDebounce} from "../hooks/debounce.hook";
 import MetaBuildTablet from "../components/metaBuilds/MetaBuildTablet";
+import {NavLink} from "react-router-dom";
+import {AuthContext} from "../context/AuthContext";
 
 
 const MetaBuildsPage = () => {
     const [buildType, setBuildType] = useState<IBuildType>('all')
+    const {isAuthenticated} = useContext(AuthContext)
 
     const [searchString, setSearchString] = useState<string>('')
     const debouncedString = useDebounce(searchString)
@@ -28,18 +31,21 @@ const MetaBuildsPage = () => {
                         <div className="side__container">
                             <SideMobileMenu/>
                             <h1 className="side__title">{__(`Мета-сборки`)}</h1>
-                            <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
+                            { isAuthenticated && <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
                                 <h2 className="side__subtitle build__subheading">{__(`Выбирайте мета-сборки или составляйте свои и делитесь ими с игроками на нашей платформе.`)}</h2>
-                                <button className="button-both-accent corner-margin build__create-button">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.99935 4.16669V15.8334M4.16602 10H15.8327" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <NavLink to="/new-build"
+                                         className="button-both-accent corner-margin build__create-button">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.99935 4.16669V15.8334M4.16602 10H15.8327" stroke="white"
+                                              strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                     <span>{__('Создать сборку')}</span>
-                                </button>
-                            </div>
+                                </NavLink>
+                            </div>}
                             <div className="side__tab-headings">
-                                { BuildTypes.map((currentBuildType, index) => (
-                                    <button
+                                { Object.entries(BuildTypes).map(([currentBuildTypeId, currentBuildType], index) => (
+                                    (currentBuildTypeId === 'all' || isAuthenticated) && <button
                                         key={index}
                                         className={buildType === currentBuildType.id ? "side__tab-heading active": "side__tab-heading"}
                                         onClick={() => setBuildType(currentBuildType.id)}

@@ -279,6 +279,67 @@ input[type=file] {
   max-height: 0;
 }
 
+.select {
+  position: relative;
+  padding: 0 8px;
+
+  &__current {
+    @include rounded-button('gray', $padding: 14px 8px, $color: $textWhite, $fontWeight: 400);
+    cursor: pointer;
+    justify-content: space-between;
+
+    svg path {
+      stroke: $textWhite;
+    }
+  }
+  &__options {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 10;
+    background-color: $hoverGray;
+    border-radius: 2px;
+  }
+
+  &__option {
+    cursor: pointer;
+    padding: 0 16px;
+    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 20px;
+    color: $textHoverWhite;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+
+    span {
+      display: block;
+      padding: 10px 0;
+    }
+
+    &:not(:last-child) span {
+      border-bottom: 1px solid rgba(255,255,255, .05);
+    }
+  }
+
+  &.active {
+    .select__current {
+      color: $white;
+
+      svg {
+        transform: rotate(180deg);
+        path {
+          stroke: $white;
+        }
+      }
+    }
+    .select__options {
+      display: block;
+    }
+  }
+}
+
 .input-tl {
   @include rounded-button('gray', $TL: true, $fontWeight: 400, $padding: 0, $color: $textWhite);
 }
@@ -1220,16 +1281,5 @@ input[type=file] {
   &__right {
     width: 240px;
     margin-left: 24px;
-  }
-}
-
-.build {
-  &__subheading {
-    margin-right: 24px;
-    max-width: 500px;
-    margin-bottom: 0;
-  }
-  &__create-button {
-    margin-left: auto;
   }
 }

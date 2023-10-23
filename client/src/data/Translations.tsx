@@ -1342,7 +1342,7 @@ export const Translations: ITranslations = {
     },
     "Общая информация": {
         "RU": "Общая информация",
-        "EU": "general information"
+        "EU": "General information"
     },
     "Конструктор сборок": {
         "RU": "Конструктор сборок",

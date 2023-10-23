@@ -14,14 +14,14 @@ const MetaBuildTablet = () => {
                         <div className="meta-build__left">
                             <h3 className="meta-build__header">{__('Основное оружие сборки')}</h3>
                             <div className="meta-build__author">
-                                <NavLink to={"profile/"} className="meta-build__author-name">Ник игрока</NavLink>
+                                <NavLink to={"profile/"} className="meta-build__author-name">{__("Ник автора")}</NavLink>
                                 <NavLink to={'userTwitch'}>
                                     <img src={icons.twitchUser} alt="User twitch"/>
                                 </NavLink>
                             </div>
                             <div className="meta-build__tags">
-                                <div className="meta-build__mode">Режим</div>
-                                <div className="meta-build__weapon-type">Тип оружия</div>
+                                <div className="meta-build__mode">{__("Режим")}</div>
+                                <div className="meta-build__weapon-type">{__("Тип оружия")}</div>
                                 <div className="meta-build__date">22.10.2023</div>
                             </div>
                         </div>

@@ -1,9 +1,54 @@
 .build {
+  &__subheading {
+    margin-right: 24px;
+    max-width: 500px;
+    margin-bottom: 0;
+  }
+  &__create-button {
+    margin-left: auto;
+  }
   &__items {
     display: flex;
     flex-direction: column;
     gap: 24px;
     padding-bottom: 104px;
+  }
+  &__back {
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+    margin-bottom: 12px;
+    color: $textHoverWhite;
+  }
+  &__data-block {
+    padding: 12px 0;
+  }
+  &__label {
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+    color: $textWhite;
+  }
+  &__grid-row {
+    padding: 6px 0;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: 12px;
+  }
+  &__publish-wrapper {
+    padding: 6px 8px;
   }
 }
 
