@@ -25,11 +25,10 @@ const defaultData: IMetaBuildData = {
     }
 }
 
-const CreateMetaBuildPage = () => {
+const MetaBuildCreatePage = () => {
     const [data, setData] = useState<IMetaBuildData>(defaultData)
     const getDataEditor = (key: string) => {
         return (value: string|number|null) => {
-            console.log(key, value)
             setData({...data, [key]: {value, text: data[key].text}})
         }
     }
@@ -108,4 +107,4 @@ const CreateMetaBuildPage = () => {
     );
 };
 
-export default CreateMetaBuildPage;
+export default MetaBuildCreatePage;

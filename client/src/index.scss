@@ -20,6 +20,7 @@
 @import 'static/css/Profile';
 @import 'static/css/Team';
 @import 'static/css/MetaBuilds';
+@import 'static/css/Shop';
 
 
 body {
@@ -92,7 +93,7 @@ button {
   top: 0;
   width: 100%;
   border-bottom: 1px solid $header-border-color;
-  padding: 6px 0;
+  padding: 6px 24px;
   z-index: 10;
 
   &.no-border-bottom {
@@ -397,7 +398,7 @@ button {
 
   // Header mobile
   .header {
-    padding: 0;
+    padding: 6px 16px;
     border-bottom-color: transparent;
 
     &__nav {
@@ -779,6 +780,40 @@ button {
     }
     &__block {
       margin-top: 12px;
+    }
+    &__grid-row {
+      grid-template-columns: 1fr;
+      grid-auto-flow: row;
+    }
+  }
+  .meta-build {
+    &__flex {
+      flex-direction: column-reverse;
+      padding-right: 0;
+    }
+    &__left {
+      padding-right: 64px;
+    }
+    &__weapon-image {
+      margin-right: auto;
+    }
+    &__data-item-size {
+      width: auto;
+    }
+  }
+
+  // Shop Page
+  .shop {
+    &__products {
+      grid-template-columns: 1fr;
+    }
+    &__product {
+      &-right {
+        padding: 16px;
+      }
+      &-img {
+        width: 120px;
+      }
     }
   }
 }

@@ -2,6 +2,9 @@ import TrophyIcon from "../static/icons/trophy.svg";
 import ShopIcon from "../static/icons/shopping-bag.svg";
 import TrendUpIcon from "../static/icons/trending-up.svg";
 import MailIcon from "../static/icons/mail.svg";
+import PackagePlusIcon from "../static/icons/package-plus.svg";
+import PackageOpenIcon from "../static/icons/package-open.svg";
+import ArrowLeftRightIcon from "../static/icons/arrow-left-right.svg";
 
 import DiscordIcon from "./../static/icons/discord-white.svg"
 import TwitchIcon from "./../static/icons/twitch-white.svg"
@@ -11,6 +14,39 @@ import YoutubeIcon from "./../static/icons/youtube-white.svg"
 import ComponentIcon from "./../static/icons/component.svg"
 import BarChartIcon from "./../static/icons/bar-chart-3.svg"
 import UserPlusIcon from "./../static/icons/user-plus.svg"
+
+export const adminMenuItem = {
+    to: '/admin/tournaments',
+    name: 'Админ-панель',
+    icon: PackagePlusIcon
+}
+
+export const sideAdminMenuItems: Record<string, {to: string, icon: string, name: string, isMarginBottom: boolean}> = {
+    '/admin/tournaments': {
+        to: '/admin/tournaments',
+        icon: TrophyIcon,
+        name: 'Турниры',
+        isMarginBottom: false
+    },
+    '/admin/hubs': {
+        to: '/admin/hubs',
+        icon: ComponentIcon,
+        name: 'Хабы',
+        isMarginBottom: true
+    },
+    '/admin/products': {
+        to: '/admin/products',
+        icon: PackageOpenIcon,
+        name: 'Товары',
+        isMarginBottom: false
+    },
+    '/admin/faq': {
+        to: '/admin/faq',
+        icon: ArrowLeftRightIcon,
+        name: 'Вопросы и ответы',
+        isMarginBottom: false
+    },
+}
 
 export const menuItems = [
     {

@@ -6,11 +6,7 @@ import {AuthContext} from "../context/AuthContext";
 import {useHttp} from "../hooks/http.hook";
 import {__} from "../multilang/Multilang";
 import {LoginWith} from "../components/auth/LoginWith";
-
-interface IMessageOptions {
-    status: string,
-    text: null|string
-}
+import {IMessageOptions} from "../StoreTypes";
 
 export const RegisterPage = () => {
     const [isPasswordHidden, setIsPasswordHidden] = useState(true)

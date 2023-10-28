@@ -11,7 +11,9 @@ import PanelsPage from "./pages/PanelsPage";
 import ProfilePage from "./pages/ProfilePage";
 import TeammateSearchPage from "./pages/TeammateSearchPage";
 import MetaBuildsPage from "./pages/MetaBuildsPage";
-import CreateMetaBuildPage from "./pages/CreateMetaBuildPage";
+import MetaBuildCreatePage from "./pages/MetaBuildCreatePage";
+import ShopPage from "./pages/ShopPage";
+import AdminTournamentsPage from "./components/adminPages/AdminTournamentsPage";
 
 export const useRoutes = () => {
     return (
@@ -28,7 +30,9 @@ export const useRoutes = () => {
             <Route path="/rating" element={<OverallRatingPage/>} />
             <Route path="/teammate-search" element={<TeammateSearchPage/>} />
             <Route path="/builds" element={<MetaBuildsPage/>} />
-            <Route path="/new-build" element={<CreateMetaBuildPage/>} />
+            <Route path="/builds/create" element={<MetaBuildCreatePage/>} />
+            <Route path="/shop" element={<ShopPage/>} />
+            <Route path="/admin/tournaments" element={<AdminTournamentsPage/>} />
         </Routes>
     )
 }

@@ -33,7 +33,7 @@ const MetaBuildsPage = () => {
                             <h1 className="side__title">{__(`Мета-сборки`)}</h1>
                             { isAuthenticated && <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
                                 <h2 className="side__subtitle build__subheading">{__(`Выбирайте мета-сборки или составляйте свои и делитесь ими с игроками на нашей платформе.`)}</h2>
-                                <NavLink to="/new-build"
+                                <NavLink to="/builds/create"
                                          className="button-both-accent corner-margin build__create-button">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">

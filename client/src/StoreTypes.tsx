@@ -1,5 +1,10 @@
 export type IUserPlatform = 'pc' | 'xbox' | 'playstation'
 
+export interface IMessageOptions {
+    status: string,
+    text: null|string
+}
+
 export type IUser = {
     id: number,
     nickname: string,

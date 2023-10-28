@@ -1,0 +1,75 @@
+.shop {
+  &__header {
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 44px;
+  }
+  &__subheading {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: $textHoverWhite;
+    max-width: 600px;
+  }
+  &__products {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  &__product {
+    background-color: $gray;
+    position: relative;
+    display: flex;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-left: 12px solid transparent;
+      border-top: 12px solid #000;
+      border-right: 12px solid transparent;
+      content: "";
+      display: block;
+      z-index: 5;
+      transform: translate(-8px, -2px) rotate(135deg);
+    }
+    &::after {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border-left: 12px solid transparent;
+      border-bottom: 12px solid #000;
+      border-right: 12px solid transparent;
+      content: "";
+      display: block;
+      z-index: 5;
+      transform: translate(8px, 2px) rotate(135deg);
+    }
+
+    &-img {
+      width: 184px;
+      height: 184px;
+      object-fit: contain;
+      object-position: center;
+    }
+    &-right {
+      padding: 28px 24px;
+    }
+    &-title {
+      font-family: "Mustica Pro", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 32px;
+    }
+    &-description {
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      color: $textHoverWhite;
+    }
+  }
+
+}

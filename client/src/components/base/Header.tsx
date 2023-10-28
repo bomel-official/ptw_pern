@@ -1,11 +1,12 @@
 import {NavLink} from "react-router-dom";
 import {AccountButtons} from "./AccountButtons";
 import {LanguageSwitcher} from "./LanguageSwitcher";
-import {useState} from "react";
+import {useContext, useState} from "react";
 
 import Logo from "../../static/icons/logo-header.png"
 import {__} from "../../multilang/Multilang";
-import {menuItems, socialItems} from "../../data/Links";
+import {adminMenuItem, menuItems, socialItems} from "../../data/Links";
+import {AuthContext} from "../../context/AuthContext";
 
 export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) => {
     let headerClassNames = 'header no-border-bottom'
@@ -13,6 +14,7 @@ export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) 
         headerClassNames = 'header'
     }
     const [isMobileMenuActive, setIsMobileMenuActive] = useState<boolean>(false)
+    const {user} = useContext(AuthContext)
 
     return (
         <div className="header__wrapper">
@@ -31,6 +33,15 @@ export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) 
                                 </NavLink>
                             </li>
                         }) }
+                        {user?.role === 'ADMIN' && <li className="mobileMenu__item">
+                            <NavLink
+                                to={adminMenuItem.to}
+                                onClick={() => setIsMobileMenuActive(!isMobileMenuActive)}
+                            >
+                                <img src={adminMenuItem.icon} alt={adminMenuItem.name} width="20" height="20"/>
+                                <span>{adminMenuItem.name}</span>
+                            </NavLink>
+                        </li>}
                     </ul>
                     <div className="mobileMenu__bottom">
                         <h3 className="mobileMenu__title">Play 2 win</h3>
@@ -51,7 +62,7 @@ export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) 
                 </div>
             </div>
             <header className={isMobileMenuActive ? headerClassNames + " fixed" : headerClassNames} id="header">
-                <div className="container">
+                <div className="">
                     <div className="flex">
                         <div className={isMobileMenuActive ? "active header__mobileMenu mb" : "header__mobileMenu mb"} >
                             <button
@@ -78,6 +89,8 @@ export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) 
                             { menuItems.map((value, index) => {
                                 return <li className="header__navLink" key={index}><NavLink to={value.to}>{__(value['name'])}</NavLink></li>
                             }) }
+                            { user?.role === 'ADMIN' && <li className="header__navLink"><NavLink
+                                to={adminMenuItem.to}>{adminMenuItem.name}</NavLink></li>}
                         </ul>
                         <LanguageSwitcher/>
                         { !props.isBackToMain && <AccountButtons mobileMenu={{isMobileMenuActive, setIsMobileMenuActive}}/>}
