@@ -12,7 +12,7 @@ function genJwt (id, email, role, nickname) {
     return jwt.sign(
         {id, email, role, nickname},
         process.env.JWT_SECRET_KEY,
-        {expiresIn: '7d'}
+        {expiresIn: '30d'}
     )
 }
 
