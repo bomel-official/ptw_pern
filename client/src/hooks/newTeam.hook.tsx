@@ -3,6 +3,7 @@ import {useDebounce} from "./debounce.hook";
 
 import PIC from '../static/icons/PIC.jpg'
 import {ITeam, IUser} from "../StoreTypes";
+import {useHttp} from "./http.hook";
 
 export const initNewTeam: ITeam = {
     id: null,
@@ -55,24 +56,17 @@ export const useNewTeam = () => {
 
     const [search, setSearch] = useState<string>('')
     const debounced = useDebounce(search)
+    const {request} = useHttp()
 
     const [playersSearch, setPlayersSearch] = useState<Array<IUser>>([])
 
+    const fetchPlayersSearch = useCallback(async (debounced: string) => {
+        const {rows} = debounced.length ? await request(`/api/user/?s=${debounced}`, 'GET') : {rows: []}
+        setPlayersSearch(rows)
+    }, [])
+
     useEffect(() => {
-        // Request
-        const newPlayersSearch = [
-            {avatar: PIC, nickname: 'user1', id: 0, role: 'USER', friends: []},
-            {avatar: PIC, nickname: 'user2', id: 1, role: 'USER', friends: []},
-            {avatar: PIC, nickname: 'user3', id: 2, role: 'USER', friends: []},
-            {avatar: PIC, nickname: 'user4', id: 3, role: 'USER', friends: []},
-            {avatar: PIC, nickname: 'user5', id: 4, role: 'USER', friends: []}
-        ]
-        if (debounced.length > 0) {
-            setPlayersSearch(newPlayersSearch.filter((player) => player.nickname.includes(debounced)))
-        } else {
-            setPlayersSearch([])
-        }
-        // request end
+        fetchPlayersSearch(debounced).catch(() => {})
     }, [debounced])
 
     const clearNewPlayersSearch = () => {

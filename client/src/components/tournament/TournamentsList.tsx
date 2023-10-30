@@ -2,7 +2,8 @@ import {IResultStatus} from "../../data/ResultStatuses";
 import {TournamentPreview} from "./TournamentPreview";
 import {useCallback, useContext, useEffect, useState} from "react";
 import {__} from "../../multilang/Multilang";
-import {GameContext} from "../../context/GameContext";
+import {GameContext, IGame} from "../../context/GameContext";
+import {useHttp} from "../../hooks/http.hook";
 
 export type ITournament = {
     id: number
@@ -14,31 +15,21 @@ export const TournamentsList = ({status, columns}: {status: IResultStatus, colum
     const [isShowMore, setIsShowMore] = useState<boolean>(false)
 
     const {game} = useContext(GameContext)
+    const {request} = useHttp()
 
-    const fetchData = useCallback((numberPost: number) => {
-        const res = []
-        if (numberPost === -1) {
-            for (let i = 0; i < 10; i++) {
-                res.push({id: i})
-            }
-        } else {
-            for (let i = 0; i < numberPost; i++) {
-                res.push({id: i})
-            }
-        }
-        return res
+    const fetchData = useCallback(async (numberPost: number, status: IResultStatus, game: IGame) => {
+        const {tournaments} = await request(`/api/tournament/get-all?status=${status}&numberPosts=${numberPost}&game=${game}`, 'GET')
+        setIsShowMore(col - tournaments.length === 0)
+        setData(tournaments)
     }, [])
 
     useEffect(() => {
-        const newData = fetchData(col)
-        setIsShowMore(col - newData.length === 0)
-        setData(newData)
-    }, [status, game, col, fetchData])
+        fetchData(col, status, game).catch(() => {})
+    }, [col, fetchData, status, game])
 
     const fetchAllPosts = () => {
-        const newData = fetchData(-1)
+        fetchData(-1, status, game).catch(() => {})
         setIsShowMore(false)
-        setData(newData)
     }
 
     return (

@@ -93,9 +93,9 @@ const ProfileOwnGeneralTab = (
                 </div>
                 <h2 className="profile__heading mb12 ds">{__('Результаты турниров')}</h2>
                 <div className="profile__tournaments-tablet ds">
-                    {[1,2,3,4].map((tournament, index) => (
-                        <TournamentTablet tournament={tournament} status={'finished'} key={index}/>
-                    ))}
+                    {/*{[1,2,3,4].map((tournament, index) => (*/}
+                    {/*    <TournamentTablet tournament={tournament} status={'finished'} key={index}/>*/}
+                    {/*))}*/}
                 </div>
             </div>
             <div className="tournament__sidebar-box">

@@ -19,3 +19,13 @@ export const __ = (str: string | null): string => {
     }
     return str
 }
+
+export const _f = (data: any, field: string): string => {
+    const {language} = useContext(LanguageContext)
+
+    let currentLang: ILang = 'RU'
+    if (language !== null) {
+        currentLang = language
+    }
+    return data[`${field}_${currentLang}`]
+}

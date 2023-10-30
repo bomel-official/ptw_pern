@@ -216,9 +216,13 @@ export const Translations: ITranslations = {
         "RU": "Регистрация до",
         "EU": "Registration until"
     },
-    "1500 за участие": {
-        "RU": "1500 за участие",
-        "EU": "1500 to participate"
+    "за участие": {
+        "RU": "за участие",
+        "EU": "to participate"
+    },
+    "Свободное участие": {
+        "RU": "Свободное участие",
+        "EU": "Free to participate"
     },
     "23.06.2023/30.06.2023": {
         "RU": "23.06.2023/30.06.2023",
@@ -514,7 +518,7 @@ export const Translations: ITranslations = {
     },
     "Дополнительные сведения": {
         "RU": "Дополнительные сведения",
-        "EU": "additional information"
+        "EU": "Additional information"
     },
     "Последний выживший": {
         "RU": "Последний выживший",
@@ -1204,13 +1208,9 @@ export const Translations: ITranslations = {
         "RU": "Смотреть участников",
         "EU": "See participants"
     },
-    "32 слота": {
-        "RU": "32 слота",
-        "EU": "32 slots"
-    },
-    "32 игрока": {
-        "RU": "32 игрока",
-        "EU": "32 players"
+    "игрока": {
+        "RU": "игрока",
+        "EU": "players"
     },
     "Играет с": {
         "RU": "Играет с",

@@ -33,7 +33,7 @@ const newTournamentTemplate = {
     descAdditional_EU: null,
 }
 
-const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament?: ITournament}) => {
+const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament?: any}) => {
     const [newTournament, setNewTournament] = useState(tournament)
 
     const changeTournamentField = (key: string, value: string|number|null|File|boolean) => {

@@ -62,6 +62,7 @@ const Tournament = sequelize.define('tournament', {
     descAdditional_EU: {type: DataTypes.STRING, allowNull: false},
     format_RU: {type: DataTypes.STRING, allowNull: false},
     format_EU: {type: DataTypes.STRING, allowNull: false},
+    participantsList: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
     // participants: User(Many)   ------------------ done
 })
 

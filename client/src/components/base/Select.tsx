@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {__} from "../../multilang/Multilang";
 
 const Select = ({defaultText = "Выбрать", options, changeValue}: {
-    defaultValue?: string|number|null,
+    defaultValue?: any,
     defaultText?: string,
-    options: Array<{ value: string|number|null, text: string }>,
-    changeValue: (value: string|number|null) => void
+    options: Array<{ value: any, text: string }>,
+    changeValue: (value: any) => void
 }) => {
     const [text, setText] = useState<string>(defaultText)
     const [isActive, setIsActive] = useState<boolean>(false)

@@ -6,41 +6,50 @@ import {sideMenuItems} from "../data/Links";
 import {Footer} from "../components/base/Footer";
 
 import SingleTournamentImage from "../static/images/TournamentTopImage.jpg"
-import DefaultUserPic from "../static/icons/USERPIC.png"
-import {__} from "../multilang/Multilang";
+import {__, _f} from "../multilang/Multilang";
 import {TournamentTabs} from "../data/SingleTournamentTabs";
-import {icons} from "../data/PlatformIcons";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useCallback, useContext, useEffect, useState} from "react";
 import {getSlotWord} from "../data/Translations";
-import {Popup} from "../components/base/Popup";
 import {useNewTeam} from "../hooks/newTeam.hook";
-import PIC from "../static/icons/PIC.jpg";
 import {useTournamentRegistration} from "../hooks/tournamentRegistration.hook";
 import TeamRegisterPopup from "../components/base/TeamRegisterPopup";
 import TournamentRating from "../components/tournament/TournamentRating";
-
-
+import {AuthContext} from "../context/AuthContext";
+import {ITournament} from "../StoreTypes";
+import {useHttp} from "../hooks/http.hook";
+import {toDateTimeFormat} from "../data/Functions";
+import {Games} from "../data/Games";
 
 export const SingleTournamentPage = () => {
-    const [userId, setUserId] = useState<number | null>(null)
+    const {user} = useContext(AuthContext)
     const [playersInTeam, setPlayersInTeam] = useState<number>(3)
     const {slug, currentTab} = useParams()
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
     const [isRegisterFormActive, setIsRegisterFormActive] = useState<boolean>(false)
-    
-    useEffect(() => {
-        setUserId(1)
+    const [tournament, setTournament] = useState<ITournament|null>(null)
+
+    const {request} = useHttp()
+
+    const fetchTournament = useCallback(async () => {
+        const {tournament} = await request(`/api/tournament/${slug}`, 'GET')
+        setTournament(tournament)
     }, [])
+
+    useEffect(() => {
+        fetchTournament().catch(() => {})
+    }, [slug])
     
     const newTeamUsed = useNewTeam()
-
     const tournamentRegistrationUsed = useTournamentRegistration()
+
+    const dateBegin = new Date(tournament?.dateBegin || 0)
+    const dateEnd = new Date(tournament?.dateEnd || 0)
 
     return (
         <div className="TournamentsPage full-height header-padding">
             <Header/>
             <GameTabs/>
-            <div className="side">
+            { tournament && <><div className="side">
                 <SideMenu menu={Object.values(sideMenuItems)}/>
                 <div className="side__content">
                     <div className="side__content-top gradientBG">
@@ -48,20 +57,20 @@ export const SingleTournamentPage = () => {
                         <div className="side__container">
                             <div className="side__top-flex">
                                 <div className="side__top-left">
-                                    <div className="side__title">{__('Название турнира')}</div>
-                                    <div className="side__subtitle">{__('Ranked custom + solo')} {slug}</div>
+                                    <div className="side__title">{_f(tournament, 'title')}</div>
+                                    {/*<div className="side__subtitle">{__('Ranked custom + solo')}</div>*/}
                                     <div className="side__top-info">
                                         <div className="side__top-info-item flex">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M13.3333 17.5V15.8333C13.3333 14.9493 12.9821 14.1014 12.357 13.4763C11.7319 12.8512 10.884 12.5 9.99999 12.5H4.99999C4.11593 12.5 3.26809 12.8512 2.64297 13.4763C2.01785 14.1014 1.66666 14.9493 1.66666 15.8333V17.5M18.3333 17.5V15.8333C18.3328 15.0948 18.087 14.3773 17.6345 13.7936C17.182 13.2099 16.5484 12.793 15.8333 12.6083M13.3333 2.60833C14.0503 2.79192 14.6859 3.20892 15.1397 3.79359C15.5935 4.37827 15.8399 5.09736 15.8399 5.8375C15.8399 6.57764 15.5935 7.29673 15.1397 7.88141C14.6859 8.46608 14.0503 8.88308 13.3333 9.06667M10.8333 5.83333C10.8333 7.67428 9.34094 9.16667 7.49999 9.16667C5.65904 9.16667 4.16666 7.67428 4.16666 5.83333C4.16666 3.99238 5.65904 2.5 7.49999 2.5C9.34094 2.5 10.8333 3.99238 10.8333 5.83333Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                             </svg>
-                                            <span>{__('100 / 200 участников')}</span>
+                                            <span>{tournament.participantsList.length} / {tournament.maxUsers} {__('участников')}</span>
                                         </div>
                                         <div className="side__top-info-item flex">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M13.3333 1.66663V4.99996M6.66667 1.66663V4.99996M2.5 8.33329H17.5M4.16667 3.33329H15.8333C16.7538 3.33329 17.5 4.07948 17.5 4.99996V16.6666C17.5 17.5871 16.7538 18.3333 15.8333 18.3333H4.16667C3.24619 18.3333 2.5 17.5871 2.5 16.6666V4.99996C2.5 4.07948 3.24619 3.33329 4.16667 3.33329Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                             </svg>
-                                            <span>23.06.2023/30.06.2023</span>
+                                            <span>{toDateTimeFormat(dateBegin)} – {toDateTimeFormat(dateEnd)}</span>
                                         </div>
                                         <div className="side__top-info-item flex">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,12 +86,12 @@ export const SingleTournamentPage = () => {
                                                     </clipPath>
                                                 </defs>
                                             </svg>
-                                            <span>{__('1500 за участие')}</span>
+                                            <span>{tournament.participationPrice ? tournament.participationPrice + ' ' + __('за участие') : __('Свободное участие')}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="side__top-right">
-                                    <div className="side__top-reg-time">{__('Регистрация до')} 12:00 25.05.2023</div>
+                                    <div className="side__top-reg-time">{__('Регистрация до')} {toDateTimeFormat(dateBegin)}</div>
                                     <div className="side__top-buttons flex">
                                         <button
                                             className="side__top-register"
@@ -90,11 +99,11 @@ export const SingleTournamentPage = () => {
                                         >
                                             {__('Принять участие')}
                                         </button>
-                                        <button className="side__top-share">
+                                        <NavLink to={tournament.twitchChannel} target="_blank" className="side__top-share">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.15833 11.2584L12.85 14.575M12.8417 5.42502L7.15833 8.74169M17.5 4.16669C17.5 5.5474 16.3807 6.66669 15 6.66669C13.6193 6.66669 12.5 5.5474 12.5 4.16669C12.5 2.78598 13.6193 1.66669 15 1.66669C16.3807 1.66669 17.5 2.78598 17.5 4.16669ZM7.5 10C7.5 11.3807 6.38071 12.5 5 12.5C3.61929 12.5 2.5 11.3807 2.5 10C2.5 8.61931 3.61929 7.50002 5 7.50002C6.38071 7.50002 7.5 8.61931 7.5 10ZM17.5 15.8334C17.5 17.2141 16.3807 18.3334 15 18.3334C13.6193 18.3334 12.5 17.2141 12.5 15.8334C12.5 14.4526 13.6193 13.3334 15 13.3334C16.3807 13.3334 17.5 14.4526 17.5 15.8334Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                             </svg>
-                                        </button>
+                                        </NavLink>
                                     </div>
                                 </div>
                             </div>
@@ -143,20 +152,20 @@ export const SingleTournamentPage = () => {
                                     <div className="tournament__fund">
                                         <div className="tournament__fund-top">
                                             <h2 className="tournament__fund-heading">{__('Призовой фонд')}</h2>
-                                            <div className="tournament__fund-number">35 000 ₽</div>
+                                            <div className="tournament__fund-number">{tournament.prizes} ₽</div>
                                         </div>
                                         <div className="tournament__fund-bottom grid c3">
                                             <div className="tournament__fund-item">
                                                 <h3 className="tournament__fund-item-place">1 {__('место')}</h3>
-                                                <div className="tournament__fund-item-prize">20 000 ₽</div>
+                                                <div className="tournament__fund-item-prize">{tournament.prize_1} ₽</div>
                                             </div>
                                             <div className="tournament__fund-item">
                                                 <h3 className="tournament__fund-item-place">2 {__('место')}</h3>
-                                                <div className="tournament__fund-item-prize">10 000 ₽</div>
+                                                <div className="tournament__fund-item-prize">{tournament.prize_2} ₽</div>
                                             </div>
                                             <div className="tournament__fund-item">
                                                 <h3 className="tournament__fund-item-place">3 {__('место')}</h3>
-                                                <div className="tournament__fund-item-prize">5 000 ₽</div>
+                                                <div className="tournament__fund-item-prize">{tournament.prize_3} ₽</div>
                                             </div>
                                         </div>
                                     </div>
@@ -173,7 +182,7 @@ export const SingleTournamentPage = () => {
                                                             stroke="white" strokeWidth="1.5" strokeLinecap="round"
                                                             strokeLinejoin="round"/>
                                                     </svg>
-                                                    <span>Warzone</span>
+                                                    <span>{Games[tournament?.game || 'warzone'].name}</span>
                                                 </div>
                                             </div>
                                             <div className="tournament__block-grid-item">
@@ -186,7 +195,7 @@ export const SingleTournamentPage = () => {
                                                             stroke="white" strokeOpacity="0.75" strokeWidth="1.5"
                                                             strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
-                                                    <span>5 {__('игроков')}</span>
+                                                    <span>{tournament.playersInTeam} {__('игроков')}</span>
                                                 </div>
                                             </div>
                                             <div className="tournament__block-grid-item">
@@ -199,21 +208,16 @@ export const SingleTournamentPage = () => {
                                                             stroke="white" strokeWidth="1.5" strokeLinecap="round"
                                                             strokeLinejoin="round"/>
                                                     </svg>
-                                                    <span>{__('Последний выживший')}</span>
+                                                    <span>{_f(tournament, 'format')}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Дополнительные сведения')}</h2>
-                                        <p className="tournament__block-text">
-                                            Lorem ipsum dolor sit amet consectetur. Auctor nec venenatis amet pretium
-                                            aliquam nisl etiam morbi. Eget vitae elementum ullamcorper vulputate aliquam
-                                            eu faucibus pulvinar. Gravida rhoncus scelerisque enim blandit euismod
-                                            tristique urna ut.
-                                        </p>
+                                        <p className="tournament__block-text">{_f(tournament, 'descAdditional')}</p>
                                     </div>
-                                    <div className="tournament__block">
+                                    {false && <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Расписание игр')}</h2>
                                         <div className="tournament__block-grid grid c1">
                                             <div className="tournament__block-grid-item c1">
@@ -269,7 +273,7 @@ export const SingleTournamentPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>}
                                 </div>
                                 <div className="tournament__sidebar ds">
                                     <div className="tournament__block mb24">
@@ -285,7 +289,7 @@ export const SingleTournamentPage = () => {
                                                             stroke="white" strokeOpacity="0.75" strokeWidth="1.5"
                                                             strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
-                                                    <span>32 {__('игрока')}</span>
+                                                    <span>{Math.floor(tournament.participantsList.length / tournament.playersInTeam)} {__('команд')}</span>
                                                 </div>
                                             </div>
                                             <div className="tournament__block-grid-item c1">
@@ -298,7 +302,7 @@ export const SingleTournamentPage = () => {
                                                             stroke="white" strokeOpacity="0.75" strokeWidth="1.5"
                                                             strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
-                                                    <span>32 {__('слота')}</span>
+                                                    <span>{Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)} {__(getSlotWord(Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)))}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -316,7 +320,7 @@ export const SingleTournamentPage = () => {
                                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3333 17.5V15.8333C13.3333 14.9493 12.9821 14.1014 12.357 13.4763C11.7319 12.8512 10.884 12.5 9.99999 12.5H4.99999C4.11593 12.5 3.26809 12.8512 2.64297 13.4763C2.01785 14.1014 1.66666 14.9493 1.66666 15.8333V17.5M18.3333 17.5V15.8333C18.3328 15.0948 18.087 14.3773 17.6345 13.7936C17.182 13.2099 16.5484 12.793 15.8333 12.6083M13.3333 2.60833C14.0503 2.79192 14.6859 3.20892 15.1397 3.79359C15.5935 4.37827 15.8399 5.09736 15.8399 5.8375C15.8399 6.57764 15.5935 7.29673 15.1397 7.88141C14.6859 8.46608 14.0503 8.88308 13.3333 9.06667M10.8333 5.83333C10.8333 7.67428 9.34094 9.16667 7.49999 9.16667C5.65904 9.16667 4.16666 7.67428 4.16666 5.83333C4.16666 3.99238 5.65904 2.5 7.49999 2.5C9.34094 2.5 10.8333 3.99238 10.8333 5.83333Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                 </svg>
-                                                <span>5 {__(getSlotWord(5))}</span>
+                                                <span>{Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)} {__(getSlotWord(Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)))}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -328,12 +332,16 @@ export const SingleTournamentPage = () => {
                             </div> }
                             { (currentTab === 'rating') && <div className="rating pb104">
                                 <div className="tournament__content">
-                                    <div className="tournament__fund">
+                                    {dateEnd.getTime() < new Date().getTime() && <div className="tournament__fund">
                                         <div className="tournament__fund-top">
                                             <h2 className="tournament__fund-heading">{__('Победители')}</h2>
                                             <div className="tournament__fund-number">
-                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M13.3333 17.5V15.8333C13.3333 14.9493 12.9821 14.1014 12.357 13.4763C11.7319 12.8512 10.884 12.5 9.99999 12.5H4.99999C4.11593 12.5 3.26809 12.8512 2.64297 13.4763C2.01785 14.1014 1.66666 14.9493 1.66666 15.8333V17.5M18.3333 17.5V15.8333C18.3328 15.0948 18.087 14.3773 17.6345 13.7936C17.182 13.2099 16.5484 12.793 15.8333 12.6083M13.3333 2.60833C14.0503 2.79192 14.6859 3.20892 15.1397 3.79359C15.5935 4.37827 15.8399 5.09736 15.8399 5.8375C15.8399 6.57764 15.5935 7.29673 15.1397 7.88141C14.6859 8.46608 14.0503 8.88308 13.3333 9.06667M10.8333 5.83333C10.8333 7.67428 9.34094 9.16667 7.49999 9.16667C5.65904 9.16667 4.16666 7.67428 4.16666 5.83333C4.16666 3.99238 5.65904 2.5 7.49999 2.5C9.34094 2.5 10.8333 3.99238 10.8333 5.83333Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M13.3333 17.5V15.8333C13.3333 14.9493 12.9821 14.1014 12.357 13.4763C11.7319 12.8512 10.884 12.5 9.99999 12.5H4.99999C4.11593 12.5 3.26809 12.8512 2.64297 13.4763C2.01785 14.1014 1.66666 14.9493 1.66666 15.8333V17.5M18.3333 17.5V15.8333C18.3328 15.0948 18.087 14.3773 17.6345 13.7936C17.182 13.2099 16.5484 12.793 15.8333 12.6083M13.3333 2.60833C14.0503 2.79192 14.6859 3.20892 15.1397 3.79359C15.5935 4.37827 15.8399 5.09736 15.8399 5.8375C15.8399 6.57764 15.5935 7.29673 15.1397 7.88141C14.6859 8.46608 14.0503 8.88308 13.3333 9.06667M10.8333 5.83333C10.8333 7.67428 9.34094 9.16667 7.49999 9.16667C5.65904 9.16667 4.16666 7.67428 4.16666 5.83333C4.16666 3.99238 5.65904 2.5 7.49999 2.5C9.34094 2.5 10.8333 3.99238 10.8333 5.83333Z"
+                                                        stroke="white" strokeOpacity="0.75" strokeWidth="1.5"
+                                                        strokeLinecap="round" strokeLinejoin="round"/>
                                                 </svg>
                                                 <span>Мы – растения</span>
                                             </div>
@@ -352,7 +360,7 @@ export const SingleTournamentPage = () => {
                                                 <div className="tournament__fund-item-prize">5 000 ₽</div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>}
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Результаты турнира')}</h2>
                                     </div>
@@ -363,12 +371,7 @@ export const SingleTournamentPage = () => {
                                 <div className="tournament__content">
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Правила турнира')}</h2>
-                                        <p className="tournament__block-text">
-                                            Lorem ipsum dolor sit amet consectetur. Auctor nec venenatis amet pretium
-                                            aliquam nisl etiam morbi. Eget vitae elementum ullamcorper vulputate aliquam
-                                            eu faucibus pulvinar. Gravida rhoncus scelerisque enim blandit euismod
-                                            tristique urna ut.
-                                        </p>
+                                        <p className="tournament__block-text">{_f(tournament, 'descRules')}</p>
                                     </div>
                                 </div>
                             </div> }
@@ -378,12 +381,13 @@ export const SingleTournamentPage = () => {
             </div>
             <TeamRegisterPopup
                 newTeamUsed={newTeamUsed}
-                userId={userId}
+                user={user}
                 tournamentRegistrationUsed={tournamentRegistrationUsed}
-                playersInTeam={playersInTeam}
+                playersInTeam={tournament.playersInTeam}
                 isRegisterFormActive={isRegisterFormActive}
                 setIsRegisterFormActive={setIsRegisterFormActive}
-            />
+            /></>}
+
             <Footer/>
         </div>
     )

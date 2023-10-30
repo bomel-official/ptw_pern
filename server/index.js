@@ -15,6 +15,7 @@ app.use(cors())
 app.use(express.json())
 app.use(fileUpload({}))
 app.use('/api', router)
+app.use('/static', express.static('static'))
 
 
 app.use(errorHandler)

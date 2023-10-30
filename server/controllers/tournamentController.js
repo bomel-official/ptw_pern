@@ -1,8 +1,9 @@
 const ApiError = require("../error/ApiError");
-const {Tournament, Participant, PlayerResult} = require('../models/models')
+const {Tournament, Participant, PlayerResult, User} = require('../models/models')
 const uuid = require("uuid");
 const sharp = require("sharp");
 const path = require("path");
+const {Op, Sequelize} = require("sequelize");
 
 class TournamentController {
     async create (req, res, next) {
@@ -78,6 +79,46 @@ class TournamentController {
         })
 
         return res.json({message: 'Турнир создан!'})
+    }
+
+    async getAll (req, res, next) {
+        const {status, numberPosts, game} = req.query
+        let whereDateEndObject = {}
+        if (status === 'active') {
+            whereDateEndObject = {
+                dateEnd: {
+                    [Op.gte]: Sequelize.literal('NOW()'),
+                },
+            }
+        } else if (status === 'finished') {
+            whereDateEndObject = {
+                dateEnd: {
+                    [Op.lte]: Sequelize.literal('NOW()'),
+                },
+            }
+        }
+        const rows = await Tournament.findAll({
+            where: {
+                [Op.and]: [
+                    whereDateEndObject,
+                    {
+                        game: game
+                    }
+                ]
+            } ,
+            limit: numberPosts === '-1' ? null : numberPosts
+        })
+        return res.json({
+            tournaments: rows
+        })
+    }
+
+    async getById (req, res, next) {
+        const {slug} = req.params
+        const tournament = await Tournament.findOne({ where: {slug}})
+        return res.json({
+            tournament
+        })
     }
 }
 

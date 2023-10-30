@@ -7,9 +7,9 @@ import {Popup} from "./Popup";
 import PIC from "../../static/icons/PIC.jpg";
 import {IUser} from "../../StoreTypes";
 
-const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive}: {
+const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive}: {
     newTeamUsed: any,
-    userId: number | null,
+    user: IUser | null,
     tournamentRegistrationUsed: any,
     playersInTeam: number,
     isRegisterFormActive: boolean,
@@ -36,11 +36,11 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
     } = tournamentRegistrationUsed
 
     useEffect(() => {
-        if (userId !== null) {
-            newTeamUsed.changeNewTeamPlayers({avatar: PIC, nickname: 'user2', id: 1}, 'add')
+        if (user) {
+            newTeamUsed.changeNewTeamPlayers(user, 'add')
             changeRequestPlayers({avatar: PIC, nickname: 'user2', id: 1})
         }
-    }, [userId])
+    }, [user])
 
     return (
         <Popup
@@ -112,7 +112,7 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
                         </label>
                         <ul className={playersSearch.length ? "dropdown__values active" : "dropdown__values"}>
                             {playersSearch.map((player: IUser) => (
-                                (player.id !== userId && !isUserIdIncluded(player.id)) &&
+                                (player.id !== user?.id && !isUserIdIncluded(player.id)) &&
                                 <li className="dropdown__value" key={player.id}>
                                     <button
                                         onClick={() => {
@@ -122,7 +122,7 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
                                         }}
                                     >
                                         <div className="profileCard">
-                                            <img src={player.avatar} alt={player.nickname} className="profileCard__avatar"/>
+                                            <img src={player.avatar || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                             <div className="profileCard__top">
                                                 <span className="profileCard__nickname">{player.nickname}</span>
                                                 <img src={icons.pc} alt="User platform"/>
@@ -139,7 +139,7 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
                             {newTeam.players.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard">
-                                        <img src={player.avatar} alt={player.nickname} className="profileCard__avatar"/>
+                                        <img src={player.avatar || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                         <div className="profileCard__top">
                                             <span className="profileCard__nickname">{player.nickname}</span>
                                             <img src={icons.pc} alt="User platform"/>
@@ -148,7 +148,7 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
                                             </NavLink>
                                         </div>
                                     </div>
-                                    {player.id !== userId && <button
+                                    {player.id !== user?.id && <button
                                         className="popup__player-cross"
                                         onClick={() => {
                                             changeNewTeamPlayers(player, 'remove')
@@ -213,7 +213,7 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
                             {newTeam.players.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard mr-auto">
-                                        <img src={player.avatar} alt={player.nickname} className="profileCard__avatar"/>
+                                        <img src={player.avatar || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                         <div className="profileCard__top">
                                             <span className="profileCard__nickname">{player.nickname}</span>
                                             <img src={icons.pc} alt="User platform"/>
@@ -222,7 +222,7 @@ const TeamRegisterPopup = ({newTeamUsed, userId, tournamentRegistrationUsed, pla
                                             </NavLink>
                                         </div>
                                     </div>
-                                    {player.id !== userId && <button
+                                    {player.id !== user?.id && <button
                                         className={isUserIdIncludedInRequest(player.id) ? "checkbox active" : "checkbox"}
                                         onClick={() => {
                                             changeRequestPlayers(player, playersInTeam)
