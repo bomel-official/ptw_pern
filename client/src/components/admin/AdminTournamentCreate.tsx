@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {__} from "../../multilang/Multilang";
+import {_f, __} from "../../multilang/Multilang";
 import Select from "../base/Select";
 import {Games, IGameObject} from "../../data/Games";
 import {IMessageOptions, ITournament} from "../../StoreTypes";
@@ -64,7 +64,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
         clearError()
         let requestUrl = null
         if (newTournament.id !== null) {
-            requestUrl = '/api/tournament/update'
+            requestUrl = '/api/tournament/edit'
         } else {
             requestUrl = '/api/tournament/create'
         }
@@ -74,15 +74,18 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                     formData.set(key, newTournament[key])
                 }
             } // add data to formData from form state
-            await request(requestUrl, 'POST', formData, {
+            const {message} = await request(requestUrl, 'POST', formData, {
                 Authorization: `Bearer ${auth.token}`
             }, false)
+            setMessageOptions({
+                status: 'pos', text: message
+            })
         } catch (e) {}
     }
 
     return (
         <form onSubmit={createHandler} action={"null"} method="POST">
-            <h2 className="profile__heading mb12">{tournament.id ? __('Редактировать') : __('Создать турнир')}</h2>
+            <h2 className="profile__heading mb12">{tournament.id ? __('Редактировать') + ': ' + _f(newTournament, 'title') : __('Создать турнир')}</h2>
             <div className="build__data-block">
                 <p className="build__label">{__("Основное")}</p>
                 <div className="build__grid-row">
@@ -133,7 +136,8 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                     <Select
                         options={Object.values(Games).map((game: IGameObject) => ({value: game.id, text: game.name}))}
                         changeValue={getTournamentEditor('game')}
-                        defaultText="Выберите игру"
+                        defaultText={newTournament.game ? newTournament.game : "Выберите игру"}
+                        defaultValue={newTournament.game}
                     />
                     <Select
                         options={[
@@ -147,7 +151,8 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             }
                         ]}
                         changeValue={getTournamentEditor('type')}
-                        defaultText="Выберите тип"
+                        defaultText={newTournament.type ? newTournament.type : "Выберите тип"}
+                        defaultValue={newTournament.type}
                     />
                 </div>
                 <div className="build__grid-row">
@@ -157,7 +162,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             name="participationPrice"
                             placeholder={__("Плата за участие (Points)")}
                             onChange={e => changeTournamentField('participationPrice', e.target.value)}
-                            value={newTournament.participationPrice ? newTournament.participationPrice : ''}
+                            value={newTournament.participationPrice ? newTournament.participationPrice : '0'}
                         />
                     </label>
                     <label htmlFor="maxUsers" className="input">
@@ -192,7 +197,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             placeholder={__("Дата начала")}
                             required={true}
                             onChange={e => changeTournamentField('dateBegin', e.target.value)}
-                            value={newTournament.dateBegin ? newTournament.dateBegin : ''}
+                            value={newTournament.dateBegin ? new Date(newTournament.dateBegin).toISOString().slice(0, -1) : ''}
                         />
                     </label>
                     <label htmlFor="dateEnd" className="input-br">
@@ -202,7 +207,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             placeholder={__("Дата конца")}
                             required={true}
                             onChange={e => changeTournamentField('dateEnd', e.target.value)}
-                            value={newTournament.dateEnd ? newTournament.dateEnd : ''}
+                            value={newTournament.dateEnd ? new Date(newTournament.dateEnd).toISOString().slice(0, -1) : ''}
                         />
                     </label>
                 </div>
@@ -210,18 +215,17 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
             <div className="build__data-block">
                 <p className="build__label">{__("Общая информация")}</p>
                 <div className="build__grid-row">
-                    <label htmlFor="previewImg" className="input-tl fileInput" style={{justifyContent: 'flex-start', paddingLeft: '8px', paddingRight: '8px'}}>
+                    <label htmlFor={`${newTournament.id ? newTournament.id : ''}previewImg`} className="input-tl fileInput" style={{justifyContent: 'flex-start', paddingLeft: '8px', paddingRight: '8px'}}>
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 12.5L15.4283 9.92833C15.1158 9.61588 14.6919 9.44036 14.25 9.44036C13.8081 9.44036 13.3842 9.61588 13.0717 9.92833L5.5 17.5M4.66667 2.5H16.3333C17.2538 2.5 18 3.24619 18 4.16667V15.8333C18 16.7538 17.2538 17.5 16.3333 17.5H4.66667C3.74619 17.5 3 16.7538 3 15.8333V4.16667C3 3.24619 3.74619 2.5 4.66667 2.5ZM9.66667 7.5C9.66667 8.42047 8.92047 9.16667 8 9.16667C7.07953 9.16667 6.33333 8.42047 6.33333 7.5C6.33333 6.57953 7.07953 5.83333 8 5.83333C8.92047 5.83333 9.66667 6.57953 9.66667 7.5Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                        <span className="fileInput__text">{newTournament.previewImg ? newTournament.previewImg.name : __('Изображение')}</span>
+                        <span className="fileInput__text">{newTournament.previewImg ? newTournament.previewImg.name || newTournament.previewImg : __('Изображение')}</span>
                         <input
                             type="file"
                             accept="image/png, image/jpeg"
                             name="previewImg"
                             placeholder={__("Изображение")}
-                            required={true}
-                            id="previewImg"
+                            id={`${newTournament.id ? newTournament.id : ''}previewImg`}
                             onChange={e => changeTournamentField('previewImg', e.target.files ? e.target.files[0] : null )}
                         />
                     </label>
@@ -335,7 +339,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                     <span className="admin__checkbox-label">{__(newTournament.isRegisterOn ? "Выключить регистрацию" : "Включить регистрацию")}</span>
                 </label>
             </div>
-            { messageOptions.text && <div className="error-message mb24">{__(messageOptions.text)}</div>}
+            { messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
             <div className="admin__submit-wrapper pt12">
                 <button className="button-both-accent corner-margin">{__("Сохранить")}</button>
             </div>

@@ -7,6 +7,7 @@ import SideMobileMenu from "../base/SideMobileMenu";
 import {__} from "../../multilang/Multilang";
 import {Footer} from "../base/Footer";
 import AdminTournamentCreate from "../admin/AdminTournamentCreate";
+import AdminEditTournaments from "../admin/AdminEditTournaments";
 
 const AdminTournamentsPage = () => {
     return (
@@ -26,6 +27,7 @@ const AdminTournamentsPage = () => {
                     <div className="side__content-bottom">
                         <div className="side__container pb104">
                             <AdminTournamentCreate/>
+                            <AdminEditTournaments/>
                         </div>
                     </div>
                 </div>

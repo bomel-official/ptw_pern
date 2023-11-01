@@ -43,7 +43,7 @@ export const TournamentsPage = ({type}: {type: 'hub' | 'tournament'}) => {
                     </div>
                     <div className="side__content-bottom">
                         <div className="side__container">
-                            <TournamentsList status={resultStatus} columns={2}/>
+                            <TournamentsList status={resultStatus} columns={2} type={type}/>
                         </div>
                     </div>
                 </div>

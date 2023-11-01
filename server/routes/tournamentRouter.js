@@ -4,6 +4,7 @@ const router = express.Router()
 const CheckRoleMiddleware = require('./../middleware/CheckRoleMiddleware')
 
 router.post('/create', CheckRoleMiddleware("ADMIN"), TournamentController.create)
+router.post('/edit', CheckRoleMiddleware("ADMIN"), TournamentController.edit)
 router.get('/get-all', TournamentController.getAll)
 router.get('/:slug', TournamentController.getById)
 

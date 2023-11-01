@@ -12,7 +12,7 @@ function genJwt (id, email, role, nickname) {
     return jwt.sign(
         {id, email, role, nickname},
         process.env.JWT_SECRET_KEY,
-        {expiresIn: '30d'}
+        {expiresIn: '7d'}
     )
 }
 
@@ -96,6 +96,18 @@ class UserController {
 
     check (req, res, next) {
         const token = genJwt(req.user.id, req.user.email, req.user.role, req.user.nickname)
+        return res.json({token})
+    }
+
+    async renew (req, res, next) {
+        const reqToken = req.headers.authorization.split(' ')[1]
+        if (!reqToken) {
+            return res.status(401).json({message: 'Не авторизован'})
+        }
+        const userId = jwt.verify(reqToken, process.env.JWT_SECRET_KEY).id
+        const user = await User.findByPk(userId)
+        const token = genJwt(user.id, user.email, user.role, user.nickname)
+
         return res.json({token})
     }
 

@@ -14,6 +14,7 @@ router.get('/friends/:id', UserController.getFriends)
 router.get('/', UserController.search)
 router.get('/:id', UserController.getOne)
 router.get('/nickname/:nickname', UserController.getOneByNickname)
+router.post('/renew', UserController.renew)
 
 
 

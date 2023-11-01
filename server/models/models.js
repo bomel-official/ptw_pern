@@ -48,7 +48,7 @@ const Tournament = sequelize.define('tournament', {
     twitchChannel: {type: DataTypes.STRING, allowNull: false},
     dateBegin: {type: DataTypes.DATE, allowNull: false},
     dateEnd: {type: DataTypes.DATE, allowNull: false},
-    previewImg: {type: DataTypes.STRING, allowNull: false},
+    previewImg: {type: DataTypes.STRING, allowNull: true},
     maxUsers: {type: DataTypes.INTEGER, allowNull: false},
     playersInTeam: {type: DataTypes.INTEGER, allowNull: false},
     participationPrice: {type: DataTypes.FLOAT, defaultValue: 0},

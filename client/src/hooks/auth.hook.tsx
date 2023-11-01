@@ -1,8 +1,17 @@
 import {useState, useCallback, useEffect} from 'react'
 import jwt_decode from "jwt-decode";
 import {IUser} from "../StoreTypes";
+import {useHttp} from "./http.hook";
 
 const storageName = 'userData'
+
+const parseJwt = (token: string) => {
+    try {
+        return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+        return null;
+    }
+};
 
 export const useAuth = () => {
     const [token, setToken] = useState<string|null>(null)
@@ -22,6 +31,15 @@ export const useAuth = () => {
         localStorage.setItem(storageName, jwtToken ? jwtToken : '')
     }, [])
 
+    const {request} = useHttp()
+
+    const renew = useCallback(async (reqToken: string) => {
+        const data = await request('/api/user/renew', 'POST', {}, {
+            Authorization: `Bearer ${reqToken}`
+        }, true)
+        login(data.token)
+    }, [])
+
 
     const logout = useCallback(() => {
         setToken(null)
@@ -36,7 +54,12 @@ export const useAuth = () => {
         const token = localStorage.getItem(storageName)
 
         if (token) {
-            login(token)
+            const decodedToken = parseJwt(token)
+            if ((decodedToken.exp * 1000 < (Date.now() + 6*24*60*60*1000)) && (decodedToken.exp * 1000 > Date.now())) {
+                renew(token).catch(e => {})
+            } else if ((decodedToken.exp * 1000 >= (Date.now() - 6*24*60*60*1000))) {
+                login(token)
+            }
         }
         setReady(true)
     }, [login])
