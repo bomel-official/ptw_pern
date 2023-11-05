@@ -8,11 +8,30 @@
     border-radius: 4px;
     margin-bottom: 12px;
 
+
     &.mini {
       padding: 12px;
       margin: 0 -16px;
       border: none;
       border-radius: 0;
+      flex-wrap: wrap;
+
+      .team__tablet-info {
+        margin-top: 16px;
+        margin-right: 0;
+        width: 100%;
+      }
+
+      .team__tablet-bottom {
+        margin-top: 16px;
+        display: flex;
+        width: 100%;
+      }
+
+      .team__tablet-edit {
+        flex-grow: 1;
+        margin-right: 8px;
+      }
 
       &:first-child {
         padding-top: 0;

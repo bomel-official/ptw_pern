@@ -36,8 +36,9 @@ export const AuthPage = () => {
         })
     }, [error])
 
-    const loginHandler = async () => {
+    const loginHandler = async (e: any) => {
         clearError()
+        e.preventDefault()
         try {
             const data = await request('/api/user/login', 'POST', {...form})
             auth.login(data.token)
@@ -95,7 +96,7 @@ export const AuthPage = () => {
                             <NavLink to={'/register'} className={"auth__gray-button"}>{__('Зарегистрироваться')}</NavLink>
                             <button
                                 className="auth__submit"
-                                onClick={loginHandler}
+                                onClick={(e) => loginHandler(e)}
                                 disabled={loading}
                             >
                                 <span>{__('Продолжить')}</span>

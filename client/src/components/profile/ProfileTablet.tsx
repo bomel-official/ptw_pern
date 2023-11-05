@@ -1,4 +1,4 @@
-import React, {MouseEvent, useCallback, useContext} from 'react';
+import React, {MouseEvent, useCallback, useContext, useState} from 'react';
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {NavLink} from "react-router-dom";
 import {icons} from "../../data/PlatformIcons";
@@ -6,22 +6,47 @@ import {__} from "../../multilang/Multilang";
 import {IUser} from "../../StoreTypes";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
+import {getFile} from "../../functions/getFile";
 
 const ProfileTablet = ({user, actions, type}: {
     user: IUser,
-    actions: {
-        removeFriend?: (userID: number) => void
+    actions?: {
+        removeFriendCallback?: (user: IUser) => void,
+        addFriendCallback?: (user: IUser) => void,
+        restrictFriendCallback?: (user: IUser) => void,
     },
     type: 'request' | 'friend' | 'search' | 'mini'
 }) => {
     const {user: currentUser, token} = useContext(AuthContext)
+    const [isDeleted, setIsDeleted] = useState<boolean>(false)
+    const [isAdded, setIsAdded] = useState<boolean>(false)
+    const [isRestricted, setIsRestricted] = useState<boolean>(false)
 
     const {request} = useHttp()
 
     const addFriend = useCallback(async () => {
-        await request(`/api/user/add-friend`, 'POST', {to: user.id}, {authorization: `Bearer ${token}`})
+        await request(`/api/friend/add-friend`, 'POST', {to: user.id}, {authorization: `Bearer ${token}`})
+        setIsAdded(true)
+        if (actions && actions.addFriendCallback) {
+            actions.addFriendCallback(user)
+        }
     }, [])
 
+    const removeFriend = useCallback(async () => {
+        await request(`/api/friend/remove-friend`, 'POST', {to: user.id}, {authorization: `Bearer ${token}`})
+        setIsDeleted(true)
+        if (actions && actions.removeFriendCallback) {
+            actions.removeFriendCallback(user)
+        }
+    }, [])
+
+    const restrictFriedRequest = useCallback(async () => {
+        await request(`/api/friend/restrict`, 'POST', {to: currentUser?.id, from: user.id}, {authorization: `Bearer ${token}`})
+        setIsRestricted(true)
+        if (actions && actions.restrictFriendCallback) {
+            actions.restrictFriendCallback(user)
+        }
+    }, [])
 
     if (currentUser?.id === user.id && type === 'search') {
         return <></>
@@ -30,7 +55,7 @@ const ProfileTablet = ({user, actions, type}: {
         <div className={`team__tablet ${type}`}>
             <div className="rating__team-flex">
                 <div className="rating__team-images">
-                    <img src={user.avatar ? user.avatar : DefaultUserPic} alt="nickname"/>
+                    <img src={user?.avatar ? getFile(user.avatar) : DefaultUserPic} alt="nickname"/>
                 </div>
                 <div className="rating__team-nicks">
                     <div className="bold flex">
@@ -45,13 +70,15 @@ const ProfileTablet = ({user, actions, type}: {
                 </div>
             </div>
             { type === 'request' && <div className="team__tablet-bottom flex profile">
-                <button className="team__tablet-ignore">
+                {!isRestricted && !isAdded && <button className="team__tablet-ignore" onClick={restrictFriedRequest}>
                     <span>{__('Игнорировать')}</span>
-                </button>
-                <button className="team__tablet-edit">
+                </button>}
+                {!isRestricted && !isAdded && <button className="team__tablet-edit" onClick={addFriend}>
                     <span className="ds">{__('Принять заявку')}</span>
                     <span className="mb">{__('Принять')}</span>
-                </button>
+                </button>}
+                {isRestricted && <span>{__('Отклонено')}</span>}
+                {isAdded && <span>{__('Принято')}</span>}
             </div>}
             { (type === 'friend' || type === 'mini' || type === 'search') && <>
                 {(currentUser?.friends.includes(user.id)) && <>
@@ -81,10 +108,12 @@ const ProfileTablet = ({user, actions, type}: {
                         </button>
                         <ul className="dropdown__values">
                             <li className="dropdown__value">
-                                <button
-                                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                                {!isDeleted && <button
+                                    onClick={async (e: MouseEvent<HTMLButtonElement>) => {
                                         e.preventDefault()
                                         e.currentTarget.parentElement?.parentElement?.parentElement?.classList.toggle('active')
+                                        await removeFriend().catch(e => {
+                                        })
                                     }}
                                 >
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -95,7 +124,8 @@ const ProfileTablet = ({user, actions, type}: {
                                             strokeLinejoin="round"/>
                                     </svg>
                                     <span>{__('Удалить из друзей')}</span>
-                                </button>
+                                </button>}
+                                {isDeleted && <span>{__('Удалён из друзей')}</span>}
                             </li>
                         </ul>
                     </div>
@@ -106,9 +136,10 @@ const ProfileTablet = ({user, actions, type}: {
                         <span>{__('Турниров сыграно:')} {user.toursPlayed ? user.toursPlayed : '-'}</span>
                     </div>
                     <div className="team__tablet-bottom flex profile">
-                        <button className="team__tablet-edit" onClick={addFriend}>
+                        {!isAdded && <button className="team__tablet-edit" onClick={addFriend}>
                             <span>{__('Добавить в друзья')}</span>
-                        </button>
+                        </button>}
+                        {isAdded && <span>{__('Заявка отпралена')}</span>}
                     </div>
                 </>}
             </>}

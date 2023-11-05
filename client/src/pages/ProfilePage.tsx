@@ -19,7 +19,7 @@ const ProfilePage = () => {
     const getUser = useCallback(async () => {
         const data = await request(`/api/user/nickname/${nickname || ''}`, 'GET')
         setProfileUser(data.data || null)
-    }, [setProfileUser, nickname])
+    }, [])
 
     useEffect(() => {
         getUser().catch(() => null)

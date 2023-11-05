@@ -5,7 +5,6 @@ import {__} from "../../multilang/Multilang";
 import ProfileTablet from "./ProfileTablet";
 import Pagination from "../base/Pagination";
 import {useHttp} from "../../hooks/http.hook";
-import {AuthContext} from "../../context/AuthContext";
 
 const ProfileFriends = ({user}: {user: IUser}) => {
     const [friendsList, setFriendsList] = useState<IUser[]>([])
@@ -15,21 +14,21 @@ const ProfileFriends = ({user}: {user: IUser}) => {
     const [amountPages, setAmountPages] = useState<number>(0)
 
     const {request} = useHttp()
-    const {token} = useContext(AuthContext)
 
     const fetchFriends = useCallback(async () => {
-        const data = await request(`/api/user/friends/${user.id}`, 'GET')
-        setFriendsList(data.friends)
+        const data = await request(`/api/friend/friends/${user.id}`, 'GET')
+        setFriendsList(data.friends || [])
     }, [])
 
-    const removeFriend = useCallback(async (userID: number) => {
-        await request(`/api/user/remove-friend`, 'POST', {to: userID}, {authorization: `Bearer ${token}`})
-        setFriendsList(friendsList.filter((userItem: IUser) => userItem.id !== userID))
+    const removeFriendCallback = useCallback(async (user: IUser) => {
+        setFriendsList(friendsList.filter((userItem: IUser) => userItem.id !== user.id))
     }, [])
 
     useEffect(() => {
-        fetchFriends().catch()
-    }, [fetchFriends])
+        if (user.id) {
+            fetchFriends().catch()
+        }
+    }, [user])
 
     useEffect(() => {
         const newAmountPages = Math.ceil(friendsList.length / displayNumber)
@@ -52,19 +51,19 @@ const ProfileFriends = ({user}: {user: IUser}) => {
 
     return (
         <>
-            <h2 className="profile__heading mb12">{__('Ваши друзья')}</h2>
+            {!!amountPages && <><h2 className="profile__heading mb12">{__('Ваши друзья')}</h2>
             <div className="profile__teams-tablet mb24">
                 { displayFriendsList.map((friend, index) => (
-                    <ProfileTablet key={index} user={friend} actions={{removeFriend}} type="friend"/>
+                    <ProfileTablet key={index} user={friend} actions={{removeFriendCallback}} type="friend"/>
                 ))}
             </div>
-            {amountPages && <Pagination
+            <Pagination
                 page={page}
                 amountPages={amountPages}
                 setPage={setPage}
                 displayNumber={displayNumber}
                 setDisplayNumber={setDisplayNumber}
-            />}
+            /></>}
         </>
     );
 };

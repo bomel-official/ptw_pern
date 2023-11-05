@@ -10,6 +10,7 @@ const User = sequelize.define('user', {
     role: {type: DataTypes.STRING, defaultValue: 'USER'},
     status: {type: DataTypes.STRING, defaultValue: 'FREE'},
     twitch: {type: DataTypes.STRING, allowNull: true},
+    twitter: {type: DataTypes.STRING, allowNull: true},
     steam: {type: DataTypes.STRING, allowNull: true},
     vk: {type: DataTypes.STRING, allowNull: true},
     youtube: {type: DataTypes.STRING, allowNull: true},
@@ -18,7 +19,8 @@ const User = sequelize.define('user', {
     toursPlayed: {type: DataTypes.INTEGER, allowNull: true},
     averagePlace: {type: DataTypes.FLOAT, allowNull: true},
     bestPlace: {type: DataTypes.INTEGER, allowNull: true},
-    friends: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
+    friends: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    platform: {type: DataTypes.STRING, defaultValue: 'pc'}
     // cart: Cart   ------------------ done
     // friends: User(Many)   ------------------ done
 })
@@ -79,35 +81,11 @@ const Team = sequelize.define('team', {
 const Participant = sequelize.define('participant', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     points: {type: DataTypes.INTEGER, defaultValue: 0},
-    points1r: {type: DataTypes.INTEGER, defaultValue: 0},
-    points2r: {type: DataTypes.INTEGER, defaultValue: 0},
-    points3r: {type: DataTypes.INTEGER, defaultValue: 0},
-    points4r: {type: DataTypes.INTEGER, defaultValue: 0},
-    points5r: {type: DataTypes.INTEGER, defaultValue: 0},
-    ptsForPlace1r: {type: DataTypes.INTEGER, defaultValue: 0},
-    ptsForPlace2r: {type: DataTypes.INTEGER, defaultValue: 0},
-    ptsForPlace3r: {type: DataTypes.INTEGER, defaultValue: 0},
-    ptsForPlace4r: {type: DataTypes.INTEGER, defaultValue: 0},
-    ptsForPlace5r: {type: DataTypes.INTEGER, defaultValue: 0},
-    hide1r: {type: DataTypes.BOOLEAN, defaultValue: false},
-    hide2r: {type: DataTypes.BOOLEAN, defaultValue: false},
-    hide3r: {type: DataTypes.BOOLEAN, defaultValue: false},
-    hide4r: {type: DataTypes.BOOLEAN, defaultValue: false},
-    hide5r: {type: DataTypes.BOOLEAN, defaultValue: false}
-    // playerResults: PlayerResult(Many)   ------------------ done
+    dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
+    places: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
     // tournament: Tournament   ------------------ done
     // team: Team   ------------------ done
-})
-
-const PlayerResult = sequelize.define('player_result', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    kills1r: {type: DataTypes.INTEGER, defaultValue: 0},
-    kills2r: {type: DataTypes.INTEGER, defaultValue: 0},
-    kills3r: {type: DataTypes.INTEGER, defaultValue: 0},
-    kills4r: {type: DataTypes.INTEGER, defaultValue: 0},
-    kills5r: {type: DataTypes.INTEGER, defaultValue: 0}
-    // user: User
-    // participant: Participant
 })
 
 const Product = sequelize.define('product', {
@@ -160,20 +138,16 @@ Cart.belongsToMany(Product, {through: 'product_cart'})
 Product.belongsToMany(Cart, {through: 'product_cart'})
 
 FriendRequest.belongsTo(User, {as: 'user_from'})
-User.hasOne(FriendRequest, {as: 'user_to'})
+FriendRequest.belongsTo(User, {as: 'user_to'})
 
 Team.hasMany(TeamRequest)
 TeamRequest.belongsTo(Team)
 User.hasOne(TeamRequest)
 
 Tournament.hasMany(Participant, {as: 'participants'})
-Tournament.hasMany(PlayerResult, {as: 'playerResults'})
 Participant.belongsTo(Tournament)
 Team.hasOne(Participant)
 Participant.belongsTo(Team)
-Participant.hasMany(PlayerResult)
-PlayerResult.belongsTo(Participant)
-PlayerResult.belongsTo(Tournament)
 
 ProductCat.hasMany(Product)
 Product.belongsTo(ProductCat)
@@ -196,7 +170,6 @@ module.exports = {
     Build,
     ProductCat,
     Product,
-    PlayerResult,
     Participant,
     Team,
     Tournament,

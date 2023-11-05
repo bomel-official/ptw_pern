@@ -11,7 +11,7 @@ export const Platforms: Record<PlatformIds, {id: PlatformIds, icon: string, name
     'playstation': {
         id: 'playstation',
         icon: icons['playstation'],
-        name: 'Playstation'
+        name: 'Playstation',
     },
     'xbox': {
         id: 'xbox',

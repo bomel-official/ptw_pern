@@ -1,17 +1,25 @@
 import {IGame} from "./context/GameContext";
-
-export type IUserPlatform = 'pc' | 'xbox' | 'playstation'
+import {PlatformIds} from "./data/Platforms";
 
 export interface IMessageOptions {
     status: string,
     text: null|string
 }
 
+export type IFriendRequest = {
+    isAccepted: boolean,
+    id: number,
+    user_from: IUser,
+    user_to: IUser,
+    userToId: number,
+    userFromId: number
+}
+
 export type IUser = {
     id: number,
     nickname: string,
     avatar: string,
-    platform?: IUserPlatform,
+    platform: PlatformIds,
     role: string,
     activisionId?: string,
     createdAt?: string,

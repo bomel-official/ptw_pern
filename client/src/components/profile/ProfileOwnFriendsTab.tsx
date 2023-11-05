@@ -8,7 +8,7 @@ const ProfileOwnFriendsTab = ({user}: {user: IUser}) => {
     return (
         <div className="tournament pb104">
             <div className="tournament__content">
-                <ProfileFriendRequests/>
+                <ProfileFriendRequests user={user}/>
                 <ProfileFriends user={user}/>
                 <TeammateSearch/>
             </div>

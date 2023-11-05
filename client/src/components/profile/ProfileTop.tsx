@@ -5,6 +5,7 @@ import {ProfileTabs, ProfileTabsIds} from "../../data/Links";
 import {IUser} from "../../StoreTypes";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {AuthContext} from "../../context/AuthContext";
+import {getFile} from "../../functions/getFile";
 
 const ProfileTop = ({isOwn, user, setCurrentTab, currentTab}: {
     isOwn: boolean,
@@ -18,13 +19,13 @@ const ProfileTop = ({isOwn, user, setCurrentTab, currentTab}: {
 
     return (
         <div className="side__content-top blackShadow profile">
-            <img src={user?.avatar || DefaultUserPic} alt={`${user?.nickname} wallpaper`} className="side__content-top-bg"/>
+            <img src={user?.avatar ? getFile(user.avatar) : DefaultUserPic} alt={`${user?.nickname} wallpaper`} className="side__content-top-bg"/>
             <div className="side__container">
                 <div className="side__top-flex">
                     <div className="side__top-profile">
                         <div className="side__top-profile-flex">
                             <div className="side__top-profile-left flex">
-                                <img src={user?.avatar || DefaultUserPic} alt={user?.nickname} className="side__top-profile-avatar"/>
+                                <img src={user?.avatar ? getFile(user.avatar) : DefaultUserPic} alt={user?.nickname} className="side__top-profile-avatar"/>
                                 <div className="side__top-profile-info">
                                     <div className="side__top-profile-info-top flex">
                                         <h1 className="side__top-profile-nickname">{user?.nickname}</h1>

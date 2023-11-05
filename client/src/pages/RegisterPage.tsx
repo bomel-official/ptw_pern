@@ -33,7 +33,8 @@ export const RegisterPage = () => {
         })
     }, [error])
 
-    const registerHandler = async () => {
+    const registerHandler = async (e: any) => {
+        e.preventDefault()
         clearError()
         try {
             const data = await request('/api/user/register', 'POST', {...form})
@@ -127,7 +128,7 @@ export const RegisterPage = () => {
                             <NavLink to={'/auth'} className={"auth__gray-button"}>{__('Уже есть аккаунт')}</NavLink>
                             <button
                                 className="auth__submit"
-                                onClick={registerHandler}
+                                onClick={(e) => registerHandler(e)}
                                 disabled={loading}
                             >
                                 <span>{__('Продолжить')}</span>

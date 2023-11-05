@@ -36,10 +36,9 @@ const ProfileOwn = ({user}: {user: IUser}) => {
                             {currentTab === "friends" &&
                                 <ProfileOwnFriendsTab user={user}/>
                             }
-                            {currentTab === "teams" &&
-                                <ProfileOwnTeamsTab user={user}/>
-                            }
-
+                            {/*{currentTab === "teams" &&*/}
+                            {/*    <ProfileOwnTeamsTab user={user}/>*/}
+                            {/*}*/}
                             {currentTab === "settings" &&
                                 <ProfileOwnSettingsTab user={user}/>
                             }

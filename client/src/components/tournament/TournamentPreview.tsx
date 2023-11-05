@@ -5,11 +5,11 @@ import {IResultStatus, ResultStatuses} from "../../data/ResultStatuses";
 import {toDateTimeFormat} from "../../data/Functions";
 import {getFile} from "../../functions/getFile";
 
-export const TournamentPreview = ({item, status, columns}: {item: any, status: IResultStatus, columns: number}) => {
+export const TournamentPreview = ({item, status, columns}: {item: any, status: IResultStatus | undefined, columns: number}) => {
     const dateBegin = new Date(item.dateBegin)
     const dateEnd = new Date(item.dateEnd)
     return (
-        <li className={`previewVertical c${columns} ${status}`}>
+        <li className={`previewVertical c${columns} ${(new Date(Date.now()) <= dateEnd) ? 'active' : 'finished'}`}>
             <div className="previewVertical__top">
                 <img src={getFile(item.previewImg)} alt="Tournament name" className="previewVertical__img"/>
                 <span className="previewVertical__status active">{status ? ResultStatuses[status].previewName : ResultStatuses['active'].previewName}</span>

@@ -3,6 +3,7 @@ import {__} from "../../multilang/Multilang";
 import React, {Dispatch, useContext} from "react";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {AuthContext} from "../../context/AuthContext";
+import {getFile} from "../../functions/getFile";
 
 export const AccountButtons = (props: {
     mobileMenu: {
@@ -17,7 +18,7 @@ export const AccountButtons = (props: {
             <NavLink className="auth__authenticated" to={`/profile/${user?.nickname}`}>
                 <div className="rating__team-flex">
                     <div className="rating__team-images">
-                        <img src={user?.avatar || DefaultUserPic} alt="nickname"/>
+                        <img src={user?.avatar ? getFile(user.avatar) : DefaultUserPic} alt="nickname"/>
                     </div>
                     <div className="rating__team-nicks">
                         <div className="bold flex" style={{paddingTop: user?.activisionId ? 0 : '9px'}}>

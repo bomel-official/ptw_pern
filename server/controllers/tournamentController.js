@@ -189,9 +189,9 @@ class TournamentController {
                     {
                         game: game
                     },
-                    {
-                        type: type || 'tournament'
-                    }
+                    type ? {
+                        type: type
+                    } : {}
                 ]
             } ,
             limit: numberPosts === '-1' ? null : numberPosts

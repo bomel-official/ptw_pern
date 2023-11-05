@@ -1,31 +1,29 @@
-import React, {useEffect, useState} from 'react';
-import {IUser} from "../../StoreTypes";
-import UserAvatar from "../../static/icons/ANIME.jpg";
+import React, {useCallback, useEffect, useState} from 'react';
+import {IFriendRequest, IUser} from "../../StoreTypes";
 import {__} from "../../multilang/Multilang";
 import ProfileTablet from "./ProfileTablet";
 import Pagination from "../base/Pagination";
+import {useHttp} from "../../hooks/http.hook";
 
-const ProfileFriendRequests = () => {
-    const [friendsList, setFriendsList] = useState<IUser[]>([])
-    const [displayFriendsList, setDisplayFriendsList] = useState<IUser[]>([])
+const ProfileFriendRequests = ({user}: {user: IUser}) => {
+    const [friendsList, setFriendsList] = useState<IFriendRequest[]>([])
+    const [displayFriendsList, setDisplayFriendsList] = useState<IFriendRequest[]>([])
     const [displayNumber, setDisplayNumber] = useState<number>(4)
     const [page, setPage] = useState<number>(1)
     const [amountPages, setAmountPages] = useState<number>(0)
 
+    const {request} = useHttp()
+
+    const fetchFriends = useCallback(async () => {
+        const data = await request(`/api/friend/friend-requests/${user.id}`, 'GET')
+        setFriendsList(data.requests)
+    }, [])
+
     useEffect(() => {
-        let newFriendsList: IUser[] = [];
-        for (const value of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-            newFriendsList.push({
-                id: value,
-                nickname: `user${value}`,
-                avatar: UserAvatar,
-                platform: 'pc',
-                role: 'USER',
-                friends: []
-            })
+        if (user.id) {
+            fetchFriends().catch()
         }
-        setFriendsList(newFriendsList)
-    }, [setFriendsList])
+    }, [user])
 
     useEffect(() => {
         const newAmountPages = Math.ceil(friendsList.length / displayNumber)
@@ -48,19 +46,19 @@ const ProfileFriendRequests = () => {
 
     return (
         <>
-            <h2 className="profile__heading mb12">{__('Заявки в друзья')}</h2>
+            {!!amountPages && <><h2 className="profile__heading mb12">{__('Заявки в друзья')}</h2>
             <div className="profile__teams-tablet mb24">
                 { displayFriendsList.map((friend, index) => (
-                    <ProfileTablet key={index} user={friend} actions={{}} type="request"/>
+                    <ProfileTablet key={index} user={friend.user_from} actions={{}} type="request"/>
                 ))}
             </div>
-            {amountPages && <Pagination
+            <Pagination
                 page={page}
                 amountPages={amountPages}
                 setPage={setPage}
                 displayNumber={displayNumber}
                 setDisplayNumber={setDisplayNumber}
-            />}
+            /></>}
         </>
     );
 };
