@@ -14,6 +14,7 @@ import MetaBuildsPage from "./pages/MetaBuildsPage";
 import MetaBuildCreatePage from "./pages/MetaBuildCreatePage";
 import ShopPage from "./pages/ShopPage";
 import AdminTournamentsPage from "./components/adminPages/AdminTournamentsPage";
+import AdminMetaBuildsPage from "./components/adminPages/AdminMetaBuildsPage";
 
 export const useRoutes = () => {
     return (
@@ -33,6 +34,7 @@ export const useRoutes = () => {
             <Route path="/builds/create" element={<MetaBuildCreatePage/>} />
             <Route path="/shop" element={<ShopPage/>} />
             <Route path="/admin/tournaments" element={<AdminTournamentsPage/>} />
+            <Route path="/admin/builds" element={<AdminMetaBuildsPage/>} />
         </Routes>
     )
 }

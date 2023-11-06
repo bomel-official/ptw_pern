@@ -28,6 +28,12 @@ export const sideAdminMenuItems: Record<string, {to: string, icon: string, name:
         name: 'Турниры',
         isMarginBottom: false
     },
+    '/admin/builds': {
+        to: '/admin/builds',
+        icon: ComponentIcon,
+        name: 'Мета сборки',
+        isMarginBottom: false
+    },
     '/admin/products': {
         to: '/admin/products',
         icon: PackageOpenIcon,
