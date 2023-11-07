@@ -5,8 +5,6 @@ import {SideMenu} from "../base/SideMenu";
 import {sideAdminMenuItems} from "../../data/Links";
 import SideMobileMenu from "../base/SideMobileMenu";
 import {__} from "../../multilang/Multilang";
-import AdminTournamentCreate from "../admin/AdminTournamentCreate";
-import AdminEditTournaments from "../admin/AdminEditTournaments";
 import {Footer} from "../base/Footer";
 import AdminBuildFieldManage from "../admin/AdminBuildFieldManage";
 
@@ -33,6 +31,104 @@ const AdminMetaBuildsPage = () => {
                                 title={"Типы оружия"}
                                 createTitle={"Добавить тип оружия"}
                                 deleteTitle={"Удалить тип оружия"}
+                                fields={[
+                                    {
+                                        title: 'Название RU',
+                                        name: 'title_RU',
+                                        type: 'text'
+                                    },
+                                    {
+                                        title: 'Название EU',
+                                        name: 'title_EU',
+                                        type: 'text'
+                                    }
+                                ]}
+                            />
+                            <AdminBuildFieldManage
+                                slug={"weapon"}
+                                columns={2}
+                                title={"Оружие"}
+                                createTitle={"Добавить оружие"}
+                                deleteTitle={"Удалить оружие"}
+                                fields={[
+                                    {
+                                        title: 'Название RU',
+                                        name: 'title_RU',
+                                        type: 'text'
+                                    },
+                                    {
+                                        title: 'Название EU',
+                                        name: 'title_EU',
+                                        type: 'text'
+                                    },
+                                    {
+                                        title: 'Изображение',
+                                        name: 'image',
+                                        type: 'image'
+                                    },
+                                    {
+                                        title: 'Тип оружия',
+                                        name: 'buildWeaponTypeId',
+                                        type: 'select',
+                                        valuesName: 'weapon-type'
+                                    }
+                                ]}
+                            />
+                            <AdminBuildFieldManage
+                                slug={"attachment-type"}
+                                columns={2}
+                                title={"Типы обвесов"}
+                                createTitle={"Добавить тип обвеса"}
+                                deleteTitle={"Удалить тип обвеса"}
+                                fields={[
+                                    {
+                                        title: 'Название RU',
+                                        name: 'title_RU',
+                                        type: 'text'
+                                    },
+                                    {
+                                        title: 'Название EU',
+                                        name: 'title_EU',
+                                        type: 'text'
+                                    }
+                                ]}
+                            />
+                            <AdminBuildFieldManage
+                                slug={"attachment"}
+                                columns={2}
+                                title={"Обвесы"}
+                                createTitle={"Добавить обвес"}
+                                deleteTitle={"Удалить обвес"}
+                                fields={[
+                                    {
+                                        title: 'Название RU',
+                                        name: 'title_RU',
+                                        type: 'text'
+                                    },
+                                    {
+                                        title: 'Название EU',
+                                        name: 'title_EU',
+                                        type: 'text'
+                                    },
+                                    {
+                                        title: 'Тип обвеса',
+                                        name: 'buildAttachmentTypeId',
+                                        type: 'select',
+                                        valuesName: 'attachment-type'
+                                    },
+                                    {
+                                        title: 'Использовать диапазоны',
+                                        name: 'isNumerable',
+                                        type: 'checkbox'
+                                    }
+                                ]}
+                            />
+                            <AdminBuildFieldManage
+                                slug={"mode"}
+                                columns={2}
+                                title={"Режимы"}
+                                createTitle={"Добавить режим"}
+                                deleteTitle={"Удалить режим"}
                                 fields={[
                                     {
                                         title: 'Название RU',

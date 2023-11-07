@@ -114,7 +114,7 @@ const BuildWeapon = sequelize.define('build_weapon', {
     title_EU: {type: DataTypes.STRING, allowNull: true},
     image: {type: DataTypes.STRING, allowNull: true}
 })
-const BuildsWeaponType = sequelize.define('build_weapon_type', {
+const BuildWeaponType = sequelize.define('build_weapon_type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true}
@@ -130,14 +130,14 @@ const BuildAttachmentType = sequelize.define('build_attachment_type', {
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true}
 })
-const BuildAMode = sequelize.define('build_mode', {
+const BuildMode = sequelize.define('build_mode', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true}
 })
 
-BuildsWeaponType.hasMany(BuildWeapon)
-BuildWeapon.belongsTo(BuildsWeaponType)
+BuildWeaponType.hasMany(BuildWeapon)
+BuildWeapon.belongsTo(BuildWeaponType)
 
 BuildAttachmentType.hasMany(BuildAttachment)
 BuildAttachment.belongsTo(BuildAttachmentType)
@@ -209,5 +209,10 @@ module.exports = {
     Tournament,
     TeamRequest,
     FriendRequest,
-    ProductOrder
+    ProductOrder,
+    BuildWeapon,
+    BuildWeaponType,
+    BuildMode,
+    BuildAttachment,
+    BuildAttachmentType
 }

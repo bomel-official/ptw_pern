@@ -1,9 +1,11 @@
 const express = require('express')
 const CheckRoleMiddleware = require("../middleware/CheckRoleMiddleware");
-const TournamentController = require("../controllers/tournamentController");
+const BuildController = require("../controllers/buildController");
 const router = express.Router()
 
-router.post('/weapon-type/create', CheckRoleMiddleware("ADMIN"), TournamentController.create)
+router.post('/admin/:object/create', CheckRoleMiddleware("ADMIN"), BuildController.create)
+router.get('/admin/:object/get-all', BuildController.getAll)
+router.post('/admin/:object/delete', CheckRoleMiddleware("ADMIN"), BuildController.delete)
 
 
 module.exports = router
