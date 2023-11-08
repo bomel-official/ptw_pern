@@ -67,7 +67,7 @@ const AdminBuildFields = ({
                     {field.type === 'selectGame' && <Select
                         options={Object.values(GameVersions).map((ver: IGameVersionObject) => ({text: ver.name, value: ver.id}))}
                         changeValue={getNewItemEditor(field.name)}
-                        defaultText={newItem[field.name] ? GameVersions[newItem[field.name] || 'mw2'].name : field.title}
+                        defaultText={(newItem[field.name] && GameVersions[newItem[field.name] || 'mw2']) ? GameVersions[newItem[field.name] || 'mw2'].name : field.title}
                         defaultValue={newItem[field.name] || ''}
                     />}
                 </div>
