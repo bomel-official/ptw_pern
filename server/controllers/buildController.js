@@ -48,12 +48,13 @@ class BuildController {
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'attachment') {
-            const {title_RU, title_EU, isNumerable, gameVersion} = req.body
+            const {title_RU, title_EU, isNumerable, gameVersion, buildAttachmentTypeId} = req.body
             const newItem = await BuildAttachment.create({
                 title_EU,
                 title_RU,
                 isNumerable,
-                gameVersion
+                gameVersion,
+                buildAttachmentTypeId
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'attachment-type') {
@@ -119,14 +120,15 @@ class BuildController {
             await item.save()
             return res.json({message: 'Обновлено!', item})
         } else if (object === 'attachment') {
-            const {id, title_RU, title_EU, isNumerable, gameVersion} = req.body
+            const {id, title_RU, title_EU, isNumerable, gameVersion, buildAttachmentTypeId} = req.body
             const item = await BuildAttachment.findByPk(id)
 
             item.set({
                 title_EU,
                 title_RU,
                 isNumerable,
-                gameVersion
+                gameVersion,
+                buildAttachmentTypeId
             })
             await item.save()
             return res.json({message: 'Обновлено!', item})
