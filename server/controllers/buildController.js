@@ -1,4 +1,4 @@
-const {BuildWeaponType, BuildWeapon, BuildAttachment, BuildAttachmentType, BuildMode} = require("../models/models");
+const {BuildWeaponType, BuildWeapon, BuildAttachment, BuildAttachmentType, BuildMode, User} = require("../models/models");
 const uuid = require("uuid");
 const ApiError = require("../error/ApiError");
 const sharp = require("sharp");
@@ -9,14 +9,15 @@ class BuildController {
         const {object} = req.params
 
         if (object === 'weapon-type') {
-            const {title_RU, title_EU} = req.body
+            const {title_RU, title_EU, gameVersion} = req.body
             const newItem = await BuildWeaponType.create({
                 title_EU,
-                title_RU
+                title_RU,
+                gameVersion
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'weapon') {
-            const {title_RU, title_EU, buildWeaponTypeId} = req.body
+            const {title_RU, title_EU, buildWeaponTypeId, gameVersion} = req.body
             const {image} = req.files || {avatar: null}
             let filename = ''
 
@@ -42,35 +43,109 @@ class BuildController {
                 title_EU,
                 title_RU,
                 buildWeaponTypeId,
-                image: filename
+                image: filename,
+                gameVersion
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'attachment') {
-            const {title_RU, title_EU, isNumerable} = req.body
+            const {title_RU, title_EU, isNumerable, gameVersion} = req.body
             const newItem = await BuildAttachment.create({
                 title_EU,
                 title_RU,
-                isNumerable
+                isNumerable,
+                gameVersion
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'attachment-type') {
-            const {title_RU, title_EU} = req.body
+            const {title_RU, title_EU, gameVersion} = req.body
             const newItem = await BuildAttachmentType.create({
                 title_EU,
-                title_RU
-            })
-            return res.json({message: 'Добавлено!', item: newItem})
-        } else if (object === 'mode') {
-            const {title_RU, title_EU} = req.body
-            const newItem = await BuildMode.create({
-                title_EU,
-                title_RU
+                title_RU,
+                gameVersion
             })
             return res.json({message: 'Добавлено!', item: newItem})
         }
 
         return res.json({message: 'Ошибка...'})
     }
+
+    async edit(req, res, next) {
+        const {object} = req.params
+
+        if (object === 'weapon-type') {
+            const {id, title_RU, title_EU, gameVersion} = req.body
+            const item = await BuildWeaponType.findByPk(id)
+
+            item.set({
+                title_EU,
+                title_RU,
+                gameVersion
+            })
+            await item.save()
+
+            return res.json({message: 'Обновлено!', item})
+        } else if (object === 'weapon') {
+            const {id, title_RU, title_EU, buildWeaponTypeId, gameVersion} = req.body
+            const {image} = req.files || {avatar: null}
+            let filename = ''
+
+            const item = await BuildWeapon.findByPk(id)
+
+            if (image) {
+                try {
+                    filename = uuid.v4() + '.jpg'
+                    const allowedFiletypes = ['image/jpeg', 'image/png']
+                    if (!allowedFiletypes.find(type => type === image.mimetype)) {
+                        return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
+                    }
+                    await sharp(image.data).resize({
+                        width: 176,
+                        height: 90,
+                        fit: 'cover',
+                        background: {r: 255, g: 255, b: 255, alpha: 1}
+                    }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
+                } catch (e) {
+                    console.log(e)
+                    return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
+                }
+            }
+            item.set({
+                title_EU,
+                title_RU,
+                buildWeaponTypeId,
+                image: filename,
+                gameVersion
+            })
+            await item.save()
+            return res.json({message: 'Обновлено!', item})
+        } else if (object === 'attachment') {
+            const {id, title_RU, title_EU, isNumerable, gameVersion} = req.body
+            const item = await BuildAttachment.findByPk(id)
+
+            item.set({
+                title_EU,
+                title_RU,
+                isNumerable,
+                gameVersion
+            })
+            await item.save()
+            return res.json({message: 'Обновлено!', item})
+        } else if (object === 'attachment-type') {
+            const {id, title_RU, title_EU, gameVersion} = req.body
+            const item = await BuildAttachmentType.findByPk(id)
+
+            item.set({
+                title_EU,
+                title_RU,
+                gameVersion
+            })
+            await item.save()
+            return res.json({message: 'Обновлено!', item})
+        }
+
+        return res.json({message: 'Ошибка...'})
+    }
+
     async getAll(req, res, next) {
         const {object} = req.params
 
@@ -85,9 +160,6 @@ class BuildController {
             return res.json({items})
         } else if (object === 'attachment-type') {
             const {rows: items} = await BuildAttachmentType.findAndCountAll({})
-            return res.json({items})
-        } else if (object === 'mode') {
-            const {rows: items} = await BuildMode.findAndCountAll({})
             return res.json({items})
         }
 
@@ -108,9 +180,6 @@ class BuildController {
             return res.json({message: 'Удалено!'})
         } else if (object === 'attachment-type') {
             await BuildAttachmentType.destroy({where: {id: itemId}})
-            return res.json({message: 'Удалено!'})
-        } else if (object === 'mode') {
-            await BuildMode.destroy({where: {id: itemId}})
             return res.json({message: 'Удалено!'})
         }
 

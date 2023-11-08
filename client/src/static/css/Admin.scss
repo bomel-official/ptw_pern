@@ -36,16 +36,36 @@
     }
   }
 
+  &__build-edit-rows {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, 1fr);
+    padding-right: 32px;
+  }
+
+  &__submit-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 8px 0;
+  }
+
   &__build-items {
     list-style: none;
+    display: flex;
+    flex-wrap: wrap;
   }
   &__build-item {
-    background-color: $gray;
-    padding: 16px;
+    border: 1px solid $textWhite;
+    border-radius: 4px;
+    padding: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     color: $textHoverWhite;
+
+    &-text {
+      word-break: break-word;
+    }
   }
 }

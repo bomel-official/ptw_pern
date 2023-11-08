@@ -30,7 +30,7 @@ const AdminMetaBuildsPage = () => {
                                 columns={2}
                                 title={"Типы оружия"}
                                 createTitle={"Добавить тип оружия"}
-                                deleteTitle={"Удалить тип оружия"}
+                                deleteTitle={"Редактировать тип оружия"}
                                 fields={[
                                     {
                                         title: 'Название RU',
@@ -41,6 +41,11 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Название EU',
                                         name: 'title_EU',
                                         type: 'text'
+                                    },
+                                    {
+                                        title: 'Версия игры',
+                                        name: 'gameVersion',
+                                        type: 'selectGame'
                                     }
                                 ]}
                             />
@@ -49,7 +54,7 @@ const AdminMetaBuildsPage = () => {
                                 columns={2}
                                 title={"Оружие"}
                                 createTitle={"Добавить оружие"}
-                                deleteTitle={"Удалить оружие"}
+                                deleteTitle={"Редактировать оружие"}
                                 fields={[
                                     {
                                         title: 'Название RU',
@@ -71,6 +76,11 @@ const AdminMetaBuildsPage = () => {
                                         name: 'buildWeaponTypeId',
                                         type: 'select',
                                         valuesName: 'weapon-type'
+                                    },
+                                    {
+                                        title: 'Версия игры',
+                                        name: 'gameVersion',
+                                        type: 'selectGame'
                                     }
                                 ]}
                             />
@@ -79,7 +89,7 @@ const AdminMetaBuildsPage = () => {
                                 columns={2}
                                 title={"Типы обвесов"}
                                 createTitle={"Добавить тип обвеса"}
-                                deleteTitle={"Удалить тип обвеса"}
+                                deleteTitle={"Редактировать тип обвеса"}
                                 fields={[
                                     {
                                         title: 'Название RU',
@@ -90,6 +100,11 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Название EU',
                                         name: 'title_EU',
                                         type: 'text'
+                                    },
+                                    {
+                                        title: 'Версия игры',
+                                        name: 'gameVersion',
+                                        type: 'selectGame'
                                     }
                                 ]}
                             />
@@ -98,7 +113,7 @@ const AdminMetaBuildsPage = () => {
                                 columns={2}
                                 title={"Обвесы"}
                                 createTitle={"Добавить обвес"}
-                                deleteTitle={"Удалить обвес"}
+                                deleteTitle={"Редактировать обвес"}
                                 fields={[
                                     {
                                         title: 'Название RU',
@@ -117,28 +132,14 @@ const AdminMetaBuildsPage = () => {
                                         valuesName: 'attachment-type'
                                     },
                                     {
+                                        title: 'Версия игры',
+                                        name: 'gameVersion',
+                                        type: 'selectGame'
+                                    },
+                                    {
                                         title: 'Использовать диапазоны',
                                         name: 'isNumerable',
                                         type: 'checkbox'
-                                    }
-                                ]}
-                            />
-                            <AdminBuildFieldManage
-                                slug={"mode"}
-                                columns={2}
-                                title={"Режимы"}
-                                createTitle={"Добавить режим"}
-                                deleteTitle={"Удалить режим"}
-                                fields={[
-                                    {
-                                        title: 'Название RU',
-                                        name: 'title_RU',
-                                        type: 'text'
-                                    },
-                                    {
-                                        title: 'Название EU',
-                                        name: 'title_EU',
-                                        type: 'text'
                                     }
                                 ]}
                             />
