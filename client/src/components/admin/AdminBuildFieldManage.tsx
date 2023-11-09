@@ -25,7 +25,7 @@ const AdminBuildFieldManage = ({
     fields: Array<{
         title: string,
         name: string,
-        type: 'text' | 'image' | 'checkbox' | 'select' | 'selectGame',
+        type: 'text' | 'image' | 'checkbox' | 'select' | 'selectGame' | 'checkMatch',
         valuesName?: BuildFields
     }>
 }) => {
@@ -62,7 +62,7 @@ const AdminBuildFieldManage = ({
         try {
             for (let key in newItem) {
                 if (newItem.hasOwnProperty(key)) {
-                    formData.set(key, newItem[key])
+                    formData.set(key, Array.isArray(newItem[key]) ? JSON.stringify(newItem[key]) : newItem[key])
                 }
             } // add data to formData from form state
             const {message, item}: {message: string, item: Record<string, any>} = await request(`/api/build/admin/${slug}/create`, 'POST', formData, {
@@ -91,7 +91,7 @@ const AdminBuildFieldManage = ({
         try {
             for (let key in item) {
                 if (item.hasOwnProperty(key)) {
-                    formData.set(key, item[key])
+                    formData.set(key, Array.isArray(item[key]) ? JSON.stringify(item[key]) : item[key])
                 }
             }
             const {message, changedItem}: {message: string, changedItem: Record<string, any>} = await request(`/api/build/admin/${slug}/edit`, 'POST', formData, {
@@ -117,11 +117,40 @@ const AdminBuildFieldManage = ({
 
     useEffect(() => {
         getItems(slug).then((resItems) => setItems(resItems)).catch(e => {})
+        const associationsPromises: Array<Promise<any>> = []
         fields.forEach(field => {
             if (field.type === 'select') {
-                getItems(field.valuesName || 'null').then((resItems) => setAssociations({...associations,  [field.valuesName || 'null']: resItems})).catch(e => {})
+                associationsPromises.push(new Promise((resolve) => {
+                    getItems(field.valuesName || 'null').then(resItems => {
+                        resolve({
+                            name: field.valuesName,
+                            items: resItems
+                        })
+                    })
+                }))
+            }
+            if (field.type === 'checkMatch') {
+                associationsPromises.push(new Promise((resolve) => {
+                    getItems(field.valuesName || 'null').then(resItems => {
+                        resolve({
+                            name: field.valuesName,
+                            items: resItems
+                        })
+                    })
+                }))
+                changeNewItem(field.name, [])
             }
         });
+        Promise.all(associationsPromises).then(values => {
+            let newAssociations: Record<string, any> = {}
+            for (let value of values) {
+                newAssociations = {...newAssociations, [value.name]: value.items}
+            }
+            setAssociations({
+                ...associations,
+                ...newAssociations
+            })
+        }).catch(e => {})
     }, [])
 
 

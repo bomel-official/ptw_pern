@@ -68,4 +68,21 @@
       word-break: break-word;
     }
   }
+
+  &__check-match-wrapper {
+    width: 100%;
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    .admin__checkbox {
+      padding: 0;
+    }
+  }
+
+  &__check-match-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 0;
+  }
 }

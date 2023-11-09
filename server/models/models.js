@@ -128,6 +128,7 @@ const BuildAttachment = sequelize.define('build_attachment', {
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true},
     isNumerable: {type: DataTypes.BOOLEAN, defaultValue: true},
+    allowedWeapons: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
 })
 const BuildAttachmentType = sequelize.define('build_attachment_type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},

@@ -19,7 +19,7 @@ const AdminMetaBuildFieldItem = ({
     fields: Array<{
         title: string,
         name: string,
-        type: 'text' | 'image' | 'checkbox' | 'select' | 'selectGame',
+        type: 'text' | 'image' | 'checkbox' | 'select' | 'selectGame' | 'checkMatch',
         valuesName?: BuildFields
     }>
 }
@@ -49,12 +49,32 @@ const AdminMetaBuildFieldItem = ({
     const {request} = useHttp()
 
     useEffect(() => {
-        fields.forEach(field => {
-            if (field.type === 'select') {
-                getItems(field.valuesName || 'null').then((resItems) => setAssociations({...associations,  [field.valuesName || 'null']: resItems})).catch(e => {})
-            }
-        });
-    }, [])
+        if (isEditMode) {
+            const associationsPromises: Array<Promise<any>> = []
+            fields.forEach(field => {
+                if (field.type === 'checkMatch' || field.type === 'select') {
+                    associationsPromises.push(new Promise((resolve) => {
+                        getItems(field.valuesName || 'null').then(resItems => {
+                            resolve({
+                                name: field.valuesName,
+                                items: resItems
+                            })
+                        })
+                    }))
+                }
+            });
+            Promise.all(associationsPromises).then(values => {
+                let newAssociations: Record<string, any> = {}
+                for (let value of values) {
+                    newAssociations = {...newAssociations, [value.name]: value.items}
+                }
+                setAssociations({
+                    ...associations,
+                    ...newAssociations
+                })
+            }).catch(e => {})
+        }
+    }, [isEditMode])
 
     return (
         <li className="admin__build-item" style={isEditMode ? {
