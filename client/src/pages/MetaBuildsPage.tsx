@@ -11,11 +11,12 @@ import {useDebounce} from "../hooks/debounce.hook";
 import MetaBuildTablet from "../components/metaBuilds/MetaBuildTablet";
 import {NavLink} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
+import MetaBuildList from "../components/metaBuilds/MetaBuildList";
 
 
 const MetaBuildsPage = () => {
     const [buildType, setBuildType] = useState<IBuildType>('all')
-    const {isAuthenticated} = useContext(AuthContext)
+    const auth = useContext(AuthContext)
 
     const [searchString, setSearchString] = useState<string>('')
     const debouncedString = useDebounce(searchString)
@@ -31,7 +32,7 @@ const MetaBuildsPage = () => {
                         <div className="side__container">
                             <SideMobileMenu/>
                             <h1 className="side__title">{__(`Мета-сборки`)}</h1>
-                            { isAuthenticated && <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
+                            { auth.isAuthenticated && <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
                                 <h2 className="side__subtitle build__subheading">{__(`Выбирайте мета-сборки или составляйте свои и делитесь ими с игроками на нашей платформе.`)}</h2>
                                 <NavLink to="/builds/create"
                                          className="button-both-accent corner-margin build__create-button">
@@ -45,7 +46,7 @@ const MetaBuildsPage = () => {
                             </div>}
                             <div className="side__tab-headings">
                                 { Object.entries(BuildTypes).map(([currentBuildTypeId, currentBuildType], index) => (
-                                    (currentBuildTypeId === 'all' || isAuthenticated) && <button
+                                    (currentBuildTypeId === 'all' || auth.isAuthenticated) && <button
                                         key={index}
                                         className={buildType === currentBuildType.id ? "side__tab-heading active": "side__tab-heading"}
                                         onClick={() => setBuildType(currentBuildType.id)}
@@ -71,11 +72,7 @@ const MetaBuildsPage = () => {
                                     <path d="M17.5 17.5L13.875 13.875M15.8333 9.16667C15.8333 12.8486 12.8486 15.8333 9.16667 15.8333C5.48477 15.8333 2.5 12.8486 2.5 9.16667C2.5 5.48477 5.48477 2.5 9.16667 2.5C12.8486 2.5 15.8333 5.48477 15.8333 9.16667Z" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                             </label>
-                            <ul className="build__items">
-                                <MetaBuildTablet/>
-                                <MetaBuildTablet/>
-                                <MetaBuildTablet/>
-                            </ul>
+                            <MetaBuildList s={debouncedString} userId={(auth.isAuthenticated && buildType === 'own') ? auth.user?.id : ''}/>
                         </div>
                     </div>
                 </div>

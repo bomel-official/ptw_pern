@@ -1,9 +1,53 @@
 import {IGame} from "./context/GameContext";
 import {PlatformIds} from "./data/Platforms";
+import {IGameOnlyVersion} from "./data/Games";
 
 export interface IMessageOptions {
     status: string,
     text: null|string
+}
+
+export type IBuildWeapon = {
+    id: number,
+    gameVersion: IGameOnlyVersion,
+    title_RU: string,
+    title_EU: string,
+    image: string
+}
+
+export type IBuildAttachmentType = {
+    id: number,
+    title_RU: string,
+    title_EU: string,
+}
+
+export type IBuildAttachment = {
+    id: number,
+    gameVersion: IGameOnlyVersion,
+    buildAttachmentType: IBuildAttachmentType,
+    build_attachment_type: number,
+    title_RU: string,
+    title_EU: string,
+    isNumerable: boolean,
+    allowedWeapons: Array<number>,
+}
+
+export type IBuildWeaponType = {
+    id: number,
+    title_RU: string,
+    title_EU: string
+}
+
+export type IBuild = {
+    id: number,
+    gameVersion: IGameOnlyVersion,
+    attachments: Array<Array<number>>,
+    build_weapon: IBuildWeapon,
+    buildWeaponId: number,
+    build_weapon_type: IBuildWeaponType,
+    buildWeaponTypeId: number
+    user: IUser,
+    createdAt: string
 }
 
 export type IFriendRequest = {

@@ -3,6 +3,7 @@ import {__, _f} from "../../multilang/Multilang";
 import Select from "../base/Select";
 import {BuildFields} from "./AdminBuildFieldManage";
 import {GameVersions, IGameVersionObject} from "../../data/Games";
+import StateSelect from "../base/StateSelect";
 
 const AdminBuildFields = ({
     fields,
@@ -71,19 +72,17 @@ const AdminBuildFields = ({
                         <span className="admin__checkbox-rect"></span>
                         <span className="admin__checkbox-label">{__(field.title)}</span>
                     </label>}
-                    {field.type === 'select' && <Select key={index}
+                    {field.type === 'select' && <StateSelect key={index}
                         options={associations[field.valuesName || 'null'] ? associations[field.valuesName || 'null'].map((item) => ({value: item.id, text: _f(item, 'title')})) : []}
-                        changeValue={getNewItemEditor(field.name)}
-                        defaultText={newItem[field.name] && associations[field.valuesName || 'null']
+                        setValue={getNewItemEditor(field.name)}
+                        text={newItem[field.name] && associations[field.valuesName || 'null']
                             ? _f(associations[field.valuesName || 'null'].find(ass => ass.id === newItem[field.name]), 'title') || newItem[field.name]
                             : field.title}
-                        defaultValue={newItem[field.name] || ''}
                     />}
-                    {field.type === 'selectGame' && <Select key={index}
+                    {field.type === 'selectGame' && <StateSelect key={index}
                         options={Object.values(GameVersions).map((ver: IGameVersionObject) => ({text: ver.name, value: ver.id}))}
-                        changeValue={getNewItemEditor(field.name)}
-                        defaultText={(newItem[field.name] && GameVersions[newItem[field.name] || 'mw2']) ? GameVersions[newItem[field.name] || 'mw2'].name : field.title}
-                        defaultValue={newItem[field.name] || ''}
+                        setValue={getNewItemEditor(field.name)}
+                        text={(newItem[field.name] && GameVersions[newItem[field.name] || 'mw2']) ? GameVersions[newItem[field.name] || 'mw2'].name : field.title}
                     />}
                     {(field.type === 'checkMatch' && newItem[field.name] !== undefined && associations[field.valuesName || 'null']) && <div key={index} className="admin__check-match-wrapper">
                         <p className="build__label">{__(field.title)}</p>

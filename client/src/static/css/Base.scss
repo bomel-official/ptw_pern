@@ -299,6 +299,8 @@ input[type=file] {
     left: 0;
     right: 0;
     top: calc(100% + 4px);
+    max-height: 300px;
+    overflow-y: auto;
     z-index: 10;
     background-color: $hoverGray;
     border-radius: 2px;

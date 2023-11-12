@@ -41,11 +41,6 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Название EU',
                                         name: 'title_EU',
                                         type: 'text'
-                                    },
-                                    {
-                                        title: 'Версия игры',
-                                        name: 'gameVersion',
-                                        type: 'selectGame'
                                     }
                                 ]}
                             />
@@ -100,11 +95,6 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Название EU',
                                         name: 'title_EU',
                                         type: 'text'
-                                    },
-                                    {
-                                        title: 'Версия игры',
-                                        name: 'gameVersion',
-                                        type: 'selectGame'
                                     }
                                 ]}
                             />

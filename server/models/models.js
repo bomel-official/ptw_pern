@@ -106,9 +106,10 @@ const ProductCat = sequelize.define('product_cat', {
 const Build = sequelize.define('build', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     gameVersion: {type: DataTypes.STRING, allowNull: true},
-    // ... todo
-    // user: User   ------------------ done
+    attachments: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: []},
 })
+
+
 const BuildWeapon = sequelize.define('build_weapon', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     gameVersion: {type: DataTypes.STRING, allowNull: true},
@@ -118,7 +119,6 @@ const BuildWeapon = sequelize.define('build_weapon', {
 })
 const BuildWeaponType = sequelize.define('build_weapon_type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    gameVersion: {type: DataTypes.STRING, allowNull: true},
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true}
 })
@@ -132,7 +132,6 @@ const BuildAttachment = sequelize.define('build_attachment', {
 })
 const BuildAttachmentType = sequelize.define('build_attachment_type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    gameVersion: {type: DataTypes.STRING, allowNull: true},
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true}
 })
@@ -142,6 +141,11 @@ const BuildMode = sequelize.define('build_mode', {
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true}
 })
+
+BuildWeapon.hasMany(Build)
+Build.belongsTo(BuildWeapon)
+BuildWeaponType.hasMany(Build)
+Build.belongsTo(BuildWeaponType)
 
 BuildWeaponType.hasMany(BuildWeapon)
 BuildWeapon.belongsTo(BuildWeaponType)
