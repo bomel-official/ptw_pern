@@ -98,6 +98,10 @@ const MetaBuildCreatePage = () => {
                 },
                 true
             )
+
+            setWeapon(null)
+            setWeaponType(null)
+
             setMessageOptions({
                 status: 'pos', text: message
             })
