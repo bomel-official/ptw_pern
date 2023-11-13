@@ -254,7 +254,7 @@ $disabledGray: #292929;
 
 .full-height {
   background-color: $black;
-  min-height: 100vh;
+  min-height: 110vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -458,7 +458,9 @@ input[type=file] {
 }
 
 .tabs {
-  display: flex;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   position: relative;
   z-index: 3;
   margin-top: -1px;
@@ -501,19 +503,11 @@ input[type=file] {
       }
     }
   }
-
-  &.tabs-2 {
-    & > .tab {
-      width: 50%;
-    }
-  }
 }
 
 .side {
   display: flex;
   justify-content: flex-end;
-
-
 
   &__left {
     padding-right: 24px;

@@ -208,6 +208,10 @@ class TournamentController {
             tournament
         })
     }
+
+    async register (req, res, next) {
+
+    }
 }
 
 module.exports = new TournamentController()

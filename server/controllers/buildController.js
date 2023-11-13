@@ -256,7 +256,7 @@ class BuildController {
         const {buildId} = req.body
         try {
             const build = await Build.findByPk(buildId)
-            if (build.userId !== req.user.id) {
+            if (build.userId !== req.user.id && req.user.role !== "ADMIN") {
                 return next(ApiError.internal('Нет доступа'))
             }
             await build.destroy()
@@ -314,7 +314,7 @@ class BuildController {
                 ],
                 limit: 15,
                 order: [
-                    ['id', 'DESC']
+                    ['likesCount', 'DESC']
                 ]
             })
             return res.json({items})
@@ -339,6 +339,35 @@ class BuildController {
             console.log(e)
             return next(ApiError.internal('Некорректный запрос'))
         }
+    }
+
+    async like(req, res, next) {
+        const {buildId} = req.body
+        const build = await Build.findByPk(buildId)
+
+        try {
+            if (build) {
+                const userIdInt = parseInt(req.user.id)
+                if (build.likes.includes(userIdInt)) {
+                    const newLikes = build.likes.filter((item) => item !== userIdInt)
+                    build.set({
+                        likes: newLikes,
+                        likesCount: newLikes.length
+                    })
+                } else {
+                    const newLikes = [...build.likes, userIdInt]
+                    build.set({
+                        likes: newLikes,
+                        likesCount: newLikes.length
+                    })
+                }
+                await build.save()
+                return res.json({message: 'Успешно!', likes: build.likes})
+            }
+        } catch (e) {
+            console.log(e)
+        }
+        return next(ApiError.internal('Некорректный запрос'))
     }
 }
 

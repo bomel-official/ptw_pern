@@ -1,9 +1,9 @@
 import React, {Dispatch, useEffect, useState} from 'react';
 import {__} from "../../multilang/Multilang";
-import {ProfileTabsIds, ProfileTabs, ProfileViewTabs} from "../../data/Links";
+import {ProfileTabsIds, ProfileViewTabs} from "../../data/Links";
 
 
-const ProfileTabsMenu = ({currentTab, setCurrentTab}: {currentTab: ProfileTabsIds, setCurrentTab: Dispatch<ProfileTabsIds>}) => {
+const ProfileViewTabsMenu = ({currentTab, setCurrentTab}: {currentTab: ProfileTabsIds, setCurrentTab: Dispatch<ProfileTabsIds>}) => {
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
     const [defaultTab, setDefaultTab] = useState<{name: string, id: ProfileTabsIds}>({
         name: 'Просмотр',
@@ -25,13 +25,13 @@ const ProfileTabsMenu = ({currentTab, setCurrentTab}: {currentTab: ProfileTabsId
             >
                 <span>{__(defaultTab.name)}</span>
                 <span className="ml-auto">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 7.5L10 12.5L15 7.5" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    </span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 7.5L10 12.5L15 7.5" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </span>
             </button>
             <ul className={isDropdownActive ? "dropdown__values active" : "dropdown__values"}>
-                {Object.values(ProfileTabs).map((tab, index) => (
+                {Object.values(ProfileViewTabs).map((tab, index) => (
                     (tab && currentTab !== tab.id) && <li className="dropdown__value" key={index}>
                         <button
                             onClick={() => {
@@ -48,4 +48,4 @@ const ProfileTabsMenu = ({currentTab, setCurrentTab}: {currentTab: ProfileTabsId
     );
 };
 
-export default ProfileTabsMenu;
+export default ProfileViewTabsMenu;

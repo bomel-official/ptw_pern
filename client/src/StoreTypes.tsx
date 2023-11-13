@@ -47,7 +47,9 @@ export type IBuild = {
     build_weapon_type: IBuildWeaponType,
     buildWeaponTypeId: number
     user: IUser,
-    createdAt: string
+    createdAt: string,
+    likes: Array<number>,
+    likesCount: number
 }
 
 export type IFriendRequest = {
@@ -69,7 +71,11 @@ export type IUser = {
     createdAt?: string,
     averagePlace?: number,
     toursPlayed?: number,
-    friends: number[]
+    friends: number[],
+    discord?: string,
+    youtube?: string,
+    twitter?: string;
+    twitch?: string
 }
 export type ITournament = {
     id: number,

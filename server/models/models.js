@@ -107,6 +107,8 @@ const Build = sequelize.define('build', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     gameVersion: {type: DataTypes.STRING, allowNull: true},
     attachments: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: []},
+    likes: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    likesCount: {type: DataTypes.INTEGER, defaultValue: 0},
 })
 
 

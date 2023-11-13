@@ -1,17 +1,18 @@
 import React, {Dispatch, useContext} from 'react';
 import {icons} from "../../data/PlatformIcons";
 import {__} from "../../multilang/Multilang";
-import {ProfileTabs, ProfileTabsIds} from "../../data/Links";
+import {ProfileTabsIds} from "../../data/Links";
 import {IUser} from "../../StoreTypes";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {AuthContext} from "../../context/AuthContext";
 import {getFile} from "../../functions/getFile";
 
-const ProfileTop = ({isOwn, user, setCurrentTab, currentTab}: {
+const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
     isOwn: boolean,
     user: IUser | null,
     setCurrentTab?: Dispatch<ProfileTabsIds>,
-    currentTab?: ProfileTabsIds
+    currentTab?: ProfileTabsIds,
+    tabs:  Record<ProfileTabsIds, {name: string, id: ProfileTabsIds} | null>
 }) => {
     const {logout} = useContext(AuthContext)
 
@@ -53,16 +54,16 @@ const ProfileTop = ({isOwn, user, setCurrentTab, currentTab}: {
                         </div>
                     </div>
                 </div>
-                {isOwn && setCurrentTab && currentTab && <div className="side__tab-headings ds">
-                    { Object.values(ProfileTabs).map((tab, index) => (
-                        <button
+                {setCurrentTab && currentTab && <div className="side__tab-headings ds">
+                    { Object.values(tabs).map((tab, index) => (
+                        (tab) && <button
                             onClick={() => setCurrentTab(tab.id)}
                             key={index}
                             className={currentTab === tab.id ? "side__tab-heading active": "side__tab-heading"}
                         >
                             {__(`${tab.name}`)}
                         </button>
-                    )) }
+                    ))}
                 </div>}
             </div>
         </div>

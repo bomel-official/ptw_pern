@@ -11,6 +11,7 @@ router.get('/admin/:object/get-one', BuildController.getOne)
 router.post('/admin/:object/delete', CheckRoleMiddleware("ADMIN"), BuildController.delete)
 
 router.post('/create', AuthMiddleware, BuildController.buildCreate)
+router.post('/like', AuthMiddleware, BuildController.like)
 router.post('/delete', AuthMiddleware, BuildController.buildDelete)
 router.get('/search', BuildController.buildSearch)
 router.get('/attachment/get-all-included', BuildController.buildAttachmentGetAllIncluded)

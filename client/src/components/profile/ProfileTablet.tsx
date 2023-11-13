@@ -59,7 +59,7 @@ const ProfileTablet = ({user, actions, type}: {
                 </div>
                 <div className="rating__team-nicks">
                     <div className="bold flex">
-                        <span>{user.nickname}</span>
+                        <NavLink to={`/profile/${user.nickname}`}>{user.nickname}</NavLink>
                         <NavLink to={'MultiTwitch'} className="a-img">
                             <img src={icons.video} alt="MultiTwitch"/>
                         </NavLink>

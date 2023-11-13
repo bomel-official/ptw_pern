@@ -127,10 +127,8 @@ export const sideMenuItems: Record<string, {to: string, icon: string, name: stri
     }
 }
 
-export type ProfileTabsIds = 'general' | 'friends' | 'settings'
-
-
-export const ProfileTabs: Record<ProfileTabsIds, {name: string, id: ProfileTabsIds}> = {
+export type ProfileTabsIds = 'general' | 'friends' | 'settings' | 'builds' | 'teams'
+export const ProfileTabs: Record<ProfileTabsIds, {name: string, id: ProfileTabsIds} | null> = {
     'general': {
         name: 'Просмотр',
         id: 'general'
@@ -139,12 +137,26 @@ export const ProfileTabs: Record<ProfileTabsIds, {name: string, id: ProfileTabsI
         name: 'Друзья',
         id: 'friends'
     },
-    // 'teams': {
-    //     name: 'Команды',
-    //     id: 'teams'
-    // },
+    'teams': null,
     'settings': {
         name: 'Настройка',
         id: 'settings'
+    },
+    'builds': {
+        name: 'Мета-сборки',
+        id: 'builds'
     }
+}
+export const ProfileViewTabs: Record<ProfileTabsIds, {name: string, id: ProfileTabsIds} | null> = {
+    'general': {
+        name: 'Просмотр',
+        id: 'general'
+    },
+    'builds': {
+        name: 'Мета-сборки',
+        id: 'builds'
+    },
+    'friends': null,
+    'teams': null,
+    'settings': null,
 }

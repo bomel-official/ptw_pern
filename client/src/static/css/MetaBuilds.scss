@@ -116,6 +116,13 @@
   }
   &__mode {
     background: linear-gradient(90deg, #9400D3 0%, #4B0082 100%);
+    display: flex;
+    align-items: center;
+    height: 24px;
+
+    img {
+      height: 12px;
+    }
   }
   &__weapon-type {
     background: linear-gradient(90deg, #3793FB 0%, #4364F7 50%, #0052D4 100%);
@@ -129,15 +136,49 @@
     max-width: 176px;
     margin-left: auto;
   }
-  &__show-button {
-    @include rounded-button('accent', $BR: true, $TL: true, $padding: 14px 8px);
+  &__buttons {
     position: absolute;
     top: 50%;
-    right: 8px;
-    width: 24px;
-    height: 40px;
-    padding: 0;
+    right: 0;
     transform: translateY(-50%);
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 8px;
+
+    .dropdown {
+      width: 32px;
+
+      &__current {
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+  &__like-button {
+    @include rounded-button('accent', $BR: true, $TL: true, $padding: 14px 8px);
+    width: auto;
+    height: 32px;
+    margin-right: 8px;
+    margin-left: 8px;
+    padding: 0;
+
+    &.active {
+      svg path {
+        fill: $white;
+      }
+    }
+  }
+  &__show-button {
+    @include rounded-button('accent', $BR: true, $TL: true, $padding: 14px 8px);
+    width: 16px;
+    height: 32px;
+    margin-right: 8px;
+    margin-left: 8px;
+    padding: 0;
 
     span {
       display: block;

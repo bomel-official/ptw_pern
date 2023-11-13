@@ -79,6 +79,7 @@ const MetaBuildCreatePage = () => {
     const createHandler = async (event: any) => {
         event.preventDefault()
         clearError()
+        console.log(weaponType, weapon, attachments)
         try {
             const {message} = await request(
                 '/api/build/create',

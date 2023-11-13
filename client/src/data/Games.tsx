@@ -1,5 +1,10 @@
 import WZTab from "../static/icons/warzone.png";
 import CSGOTab from "../static/icons/csgo.png";
+
+import WZIcon from "../static/icons/wz.svg";
+import MW3Icon from "../static/icons/mw3.svg";
+import MW2Icon from "../static/icons/mw2.svg";
+
 import {IGameOnly} from "../context/GameContext";
 
 export type IGameOnlyVersion = 'mw2' | 'mw3' | 'wz'
@@ -13,27 +18,27 @@ export const Games: Record<IGameOnly, IGameObject> = {
         name: 'Warzone',
         icon: WZTab
     },
-    'csgo': {
-        id: 'csgo',
-        name: 'CSGO',
-        icon: CSGOTab
-    }
+    // 'csgo': {
+    //     id: 'csgo',
+    //     name: 'CSGO',
+    //     icon: CSGOTab
+    // }
 }
 
 export const GameVersions: Record<any, IGameVersionObject> = {
     'wz': {
         id: 'wz',
         name: 'Warzone',
-        icon: WZTab
+        icon: WZIcon
     },
     'mw2': {
         id: 'mw2',
         name: 'Modern Warfare 2',
-        icon: WZTab
+        icon: MW2Icon
     },
     'mw3': {
         id: 'mw3',
         name: 'Modern Warfare 3',
-        icon: CSGOTab
+        icon: MW3Icon
     }
 }
