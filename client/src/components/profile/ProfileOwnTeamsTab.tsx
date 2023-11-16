@@ -51,8 +51,8 @@ const ProfileOwnTeamsTab = ({user}: {user: IUser}) => {
                             name: `team${num}`,
                             avatar: null,
                             avatar_path: DefaultUserPic,
-                            capitan: null,
-                            players: []
+                            teamCapitan: null,
+                            teamPlayers: []
                         }
                         return (
                             <TeamTablet
@@ -73,8 +73,8 @@ const ProfileOwnTeamsTab = ({user}: {user: IUser}) => {
                             name: `team${num}`,
                             avatar: null,
                             avatar_path: DefaultUserPic,
-                            capitan: null,
-                            players: []
+                            teamCapitan: null,
+                            teamPlayers: []
                         }
                         return (
                             <TeamTablet

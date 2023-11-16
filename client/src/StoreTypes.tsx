@@ -105,9 +105,21 @@ export type ITournament = {
 }
 export type ITeam = {
     id: null | number,
-    capitan: null | number,
+    teamCapitan: null | number,
     avatar: null | File,
     name: null | string,
     avatar_path: null | string,
-    players: Array<IUser>,
+    teamPlayers: Array<IUser>,
+}
+
+export type IParticipant = {
+    id: number,
+    title: string,
+    users: Array<IUser>,
+    points: number,
+    dataArray: Array<Array<number>>,
+    places: Array<number>,
+    isRoundsHidden: Array<boolean>,
+    avatar: string,
+    players: Array<number>
 }

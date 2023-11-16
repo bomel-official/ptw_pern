@@ -13,6 +13,4 @@ router.get('/:id', UserController.getOne)
 router.get('/nickname/:nickname', UserController.getOneByNickname)
 router.post('/renew', UserController.renew)
 
-
-
 module.exports = router

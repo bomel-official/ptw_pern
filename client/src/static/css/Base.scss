@@ -152,6 +152,10 @@ $disabledGray: #292929;
 }
 // Style components
 
+.c-textTransparentWhite {
+  color: $textTransparentWhite;
+}
+
 .text {
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -783,6 +787,14 @@ input[type=file] {
     }
     &-right {
       width: 288px;
+    }
+    &-reg-inactive {
+      margin-left: auto;
+      color: $textWhite;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0;
     }
     &-reg-time {
       font-family: 'Inter', sans-serif;

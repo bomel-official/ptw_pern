@@ -1,13 +1,15 @@
 import {Dispatch, useCallback, useState} from "react";
 import {IUser} from "../StoreTypes";
 
-interface IRegisterForm {
+export interface IRegisterForm {
+    tournamentId: null | number,
     capitan: null | number,
     teamId: null | number,
     players: Array<IUser>,
 }
 
 const initRegisterForm: IRegisterForm = {
+    tournamentId: null,
     capitan: null,
     teamId: null,
     players: []
@@ -50,6 +52,8 @@ export const useTournamentRegistration = () => {
     return {
         isUserIdIncludedInRequest,
         changeRequestPlayers,
-        registerRequest
+        registerRequest,
+        changeRegisterForm,
+        setRegisterRequest
     }
 }

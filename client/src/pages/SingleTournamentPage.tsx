@@ -15,20 +15,29 @@ import {useTournamentRegistration} from "../hooks/tournamentRegistration.hook";
 import TeamRegisterPopup from "../components/base/TeamRegisterPopup";
 import TournamentRating from "../components/tournament/TournamentRating";
 import {AuthContext} from "../context/AuthContext";
-import {ITournament} from "../StoreTypes";
+import {IMessageOptions, ITournament} from "../StoreTypes";
 import {useHttp} from "../hooks/http.hook";
 import {Games} from "../data/Games";
 import {getDateString} from "../functions/getDateString";
 
 export const SingleTournamentPage = () => {
-    const {user} = useContext(AuthContext)
+    const {user, token} = useContext(AuthContext)
     const [playersInTeam, setPlayersInTeam] = useState<number>(3)
     const {slug, currentTab} = useParams()
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
     const [isRegisterFormActive, setIsRegisterFormActive] = useState<boolean>(false)
     const [tournament, setTournament] = useState<ITournament|null>(null)
+    const [isRegisterActive, setIsRegisterActive] = useState(false)
+    const {request, error, clearError} = useHttp()
+    const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
+        status: '', text: ''
+    })
 
-    const {request} = useHttp()
+    useEffect(() => {
+        setMessageOptions({
+            status: 'neg', text: error
+        })
+    }, [error])
 
     const fetchTournament = useCallback(async () => {
         const {tournament} = await request(`/api/tournament/${slug}`, 'GET')
@@ -36,11 +45,81 @@ export const SingleTournamentPage = () => {
     }, [])
 
     useEffect(() => {
+        const dateBegin = new Date(tournament?.dateBegin || 0)
+        let registerFlag = false
+        if (
+            (tournament) &&
+            (user) &&
+            (dateBegin.getTime() > Date.now()) &&
+            (tournament.isRegisterOn) &&
+            (!tournament.participantsList.includes(user.id))
+        ) {
+            registerFlag = true
+        }
+        setIsRegisterActive(registerFlag)
+    }, [tournament, user])
+
+    useEffect(() => {
         fetchTournament().catch(() => {})
     }, [slug])
-    
+
+
     const newTeamUsed = useNewTeam()
     const tournamentRegistrationUsed = useTournamentRegistration()
+
+    useEffect(() => {
+        if (user) {
+            newTeamUsed.setNewTeam({...newTeamUsed.newTeam, teamPlayers: [user], teamCapitan: user.id})
+            tournamentRegistrationUsed.setRegisterRequest({...tournamentRegistrationUsed.registerRequest, players: [user], capitan: user.id})
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (tournament && tournament.id) {
+            tournamentRegistrationUsed.changeRegisterForm('tournamentId', tournament.id)
+        }
+    }, [tournament])
+
+
+    const formData = new FormData()
+
+    const submitHandler = async () => {
+        clearError()
+        try {
+            const regKeys = Object.keys(tournamentRegistrationUsed.registerRequest) as Array<keyof typeof tournamentRegistrationUsed.registerRequest>
+            regKeys.forEach((key) => {
+                if (tournamentRegistrationUsed.registerRequest.hasOwnProperty(key)) {
+                    if (key === 'players') {
+                        formData.set(key, JSON.stringify(tournamentRegistrationUsed.registerRequest.players.map((pl => (pl.id)))))
+                    } else {
+                        formData.set(key, (tournamentRegistrationUsed.registerRequest[key]) ? JSON.stringify(tournamentRegistrationUsed.registerRequest[key]) : '')
+                    }
+                }
+            })
+            const teamKeys = Object.keys(newTeamUsed.newTeam) as Array<keyof typeof newTeamUsed.newTeam>
+            teamKeys.forEach((key) => {
+                if (newTeamUsed.newTeam.hasOwnProperty(key) && key !== 'avatar_path') {
+                    if (key === 'avatar') {
+                        formData.set(key, newTeamUsed.newTeam.avatar || '')
+                    } else if (key === 'teamPlayers') {
+                        formData.set(key, JSON.stringify(newTeamUsed.newTeam.teamPlayers.map((pl => (pl.id)))))
+                    } else {
+                        formData.set(key, (newTeamUsed.newTeam[key]) ? JSON.stringify(newTeamUsed.newTeam[key]) : '')
+                    }
+                }
+            })
+            const {isOk} = await request(`/api/tournament/register`, 'POST', formData, {
+                Authorization: `Bearer ${token}`
+            }, false)
+            if (isOk) {
+                setMessageOptions({
+                    status: 'pos', text: 'Вы зарегистрировалиь!!'
+                })
+                return true
+            }
+        } catch (e) {}
+        return false
+    }
 
     const dateBegin = new Date(tournament?.dateBegin || 0)
     const dateEnd = new Date(tournament?.dateEnd || 0)
@@ -58,7 +137,6 @@ export const SingleTournamentPage = () => {
                             <div className="side__top-flex">
                                 <div className="side__top-left">
                                     <div className="side__title">{_f(tournament, 'title')}</div>
-                                    {/*<div className="side__subtitle">{__('Ranked custom + solo')}</div>*/}
                                     <div className="side__top-info">
                                         <div className="side__top-info-item flex">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -93,12 +171,13 @@ export const SingleTournamentPage = () => {
                                 <div className="side__top-right">
                                     <div className="side__top-reg-time">{__('Регистрация до')} {getDateString(dateBegin, 'dd.mm.yyyy h:i')}</div>
                                     <div className="side__top-buttons flex">
-                                        <button
+                                        {isRegisterActive && <button
                                             className="side__top-register"
                                             onClick={() => setIsRegisterFormActive(true)}
                                         >
                                             {__('Принять участие')}
-                                        </button>
+                                        </button>}
+                                        {!isRegisterActive && <span className="side__top-reg-inactive">{__('Региистрация недоступна')}</span>}
                                         <NavLink to={tournament.twitchChannel} target="_blank" className="side__top-share">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.15833 11.2584L12.85 14.575M12.8417 5.42502L7.15833 8.74169M17.5 4.16669C17.5 5.5474 16.3807 6.66669 15 6.66669C13.6193 6.66669 12.5 5.5474 12.5 4.16669C12.5 2.78598 13.6193 1.66669 15 1.66669C16.3807 1.66669 17.5 2.78598 17.5 4.16669ZM7.5 10C7.5 11.3807 6.38071 12.5 5 12.5C3.61929 12.5 2.5 11.3807 2.5 10C2.5 8.61931 3.61929 7.50002 5 7.50002C6.38071 7.50002 7.5 8.61931 7.5 10ZM17.5 15.8334C17.5 17.2141 16.3807 18.3334 15 18.3334C13.6193 18.3334 12.5 17.2141 12.5 15.8334C12.5 14.4526 13.6193 13.3334 15 13.3334C16.3807 13.3334 17.5 14.4526 17.5 15.8334Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -327,7 +406,7 @@ export const SingleTournamentPage = () => {
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Участники турнира')}</h2>
                                     </div>
-                                    <TournamentRating/>
+                                    <TournamentRating tournament={tournament}/>
                                 </div>
                             </div> }
                             { (currentTab === 'rating') && <div className="rating pb104">
@@ -364,7 +443,7 @@ export const SingleTournamentPage = () => {
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Результаты турнира')}</h2>
                                     </div>
-                                    <TournamentRating/>
+                                    <TournamentRating tournament={tournament}/>
                                 </div>
                             </div> }
                             { (currentTab === 'rules') && <div className="tournament pb104">
@@ -381,11 +460,12 @@ export const SingleTournamentPage = () => {
             </div>
             <TeamRegisterPopup
                 newTeamUsed={newTeamUsed}
-                user={user}
                 tournamentRegistrationUsed={tournamentRegistrationUsed}
                 playersInTeam={tournament.playersInTeam}
                 isRegisterFormActive={isRegisterFormActive}
                 setIsRegisterFormActive={setIsRegisterFormActive}
+                submitHandler={submitHandler}
+                messageOptions={messageOptions}
             /></>}
 
             <Footer/>

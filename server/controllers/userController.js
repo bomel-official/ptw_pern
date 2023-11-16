@@ -112,16 +112,30 @@ class UserController {
     }
 
     async search (req, res, next) {
-        const {s} = req.query
+        const {s, friendOf} = req.query
+
+        let capitan = null
+        if (friendOf) {
+            capitan = await User.findByPk(friendOf)
+        }
         const {count, rows} = await User.findAndCountAll({
             where: {
-                [Op.or]: [
-                    {nickname: {
-                        [Op.like]: `%${s}%`
-                    }},
-                    {activisionId: {
-                        [Op.like]: `%${s}%`
-                    }}
+                [Op.and]: [
+                    {
+                        [Op.or]: [
+                            {nickname: {
+                                    [Op.like]: `%${s}%`
+                                }},
+                            {activisionId: {
+                                    [Op.like]: `%${s}%`
+                                }}
+                        ]
+                    },
+                    capitan ? {
+                        id: {
+                            [Op.in]: capitan.friends
+                        }
+                    }: {}
                 ]
             },
             limit: 10
@@ -133,15 +147,13 @@ class UserController {
     }
     async getOne (req, res, next) {
         const {id} = req.params
-        let result
+        let result = null
         try {
             result = await User.findByPk(id)
             if (!result) {
                 return res.json({message: 'Ничего не найдено'})
             }
-        } catch (e) {
-            result = null
-        }
+        } catch (e) {}
         return res.json({data: result})
     }
     async getOneByNickname (req, res, next) {
@@ -167,7 +179,8 @@ class UserController {
             twitch,
             twitter,
             password,
-            platform
+            platform,
+            oldPassword
         } = req.body
 
         const {avatar} = req.files || {avatar: null}
@@ -211,8 +224,18 @@ class UserController {
         user.twitter = twitter ? twitter : user.twitter
         user.platform = platform ? platform : user.platform
 
-        const hashPassword = await bcrypt.hash(password, 5)
-        user.password = password ? hashPassword : user.password
+        const hashPassword = password ? await bcrypt.hash(password, 5) : ''
+
+        if (password) {
+            if (oldPassword && bcrypt.compareSync(oldPassword, user.password)) {
+                user.password = hashPassword
+            } else {
+                return res.json({
+                    status: 'neg',
+                    text: 'Старый пароль введён неверно'
+                })
+            }
+        }
 
         await user.save()
 

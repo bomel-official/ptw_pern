@@ -1,22 +1,25 @@
-import React, {ChangeEvent, Dispatch, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, useContext, useEffect, useState} from 'react';
 import {__} from "../../multilang/Multilang";
 import {icons} from "../../data/PlatformIcons";
-import {NavLink} from "react-router-dom";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {Popup} from "./Popup";
-import PIC from "../../static/icons/PIC.jpg";
-import {IUser} from "../../StoreTypes";
+import {IMessageOptions, IUser} from "../../StoreTypes";
+import {getFile} from "../../functions/getFile";
+import {AuthContext} from "../../context/AuthContext";
 
-const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive}: {
+const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive, submitHandler, messageOptions}: {
     newTeamUsed: any,
-    user: IUser | null,
     tournamentRegistrationUsed: any,
     playersInTeam: number,
     isRegisterFormActive: boolean,
-    setIsRegisterFormActive: Dispatch<boolean>
+    setIsRegisterFormActive: Dispatch<boolean>,
+    submitHandler: () => Promise<boolean>,
+    messageOptions: IMessageOptions
 }) => {
     const [currentStep, setCurrentStep] = useState<number>(0)
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
+
+    const {user} = useContext(AuthContext)
 
     const {
         newTeam,
@@ -34,13 +37,6 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
         changeRequestPlayers,
         registerRequest
     } = tournamentRegistrationUsed
-
-    useEffect(() => {
-        if (user) {
-            newTeamUsed.changeNewTeamPlayers(user, 'add')
-            changeRequestPlayers({avatar: PIC, nickname: 'user2', id: 1})
-        }
-    }, [user])
 
     return (
         <Popup
@@ -98,6 +94,7 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
             { currentStep === 1 &&
                 <>
                     <div className="dropdown mb24">
+                        <div className="popup__smallText mb8 c-textTransparentWhite">{__('Пользователи должны быть у вас в друзьях')}</div>
                         <label
                             className="dropdown__current"
                             onClick={() => setIsDropdownActive(!isDropdownActive)}
@@ -117,15 +114,14 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
                                     <button
                                         onClick={() => {
                                             changeNewTeamPlayers(player, 'add')
-                                            setSearch('')
                                             clearNewPlayersSearch()
                                         }}
                                     >
                                         <div className="profileCard">
-                                            <img src={player.avatar || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
+                                            <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                             <div className="profileCard__top">
                                                 <span className="profileCard__nickname">{player.nickname}</span>
-                                                <img src={icons.pc} alt="User platform"/>
+                                                <img src={icons[player?.platform || 'pc']} alt="User platform"/>
                                             </div>
                                         </div>
                                     </button>
@@ -133,25 +129,23 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
                             ))}
                         </ul>
                     </div>
-                    {newTeam.players.length && <>
+                    {newTeam.teamPlayers.length && <>
                         <h4 className="popup__subtitle mb12">{__('Состав команды')}</h4>
                         <ul className="popup__players mb32">
-                            {newTeam.players.map((player: IUser, index: number) => (
+                            {newTeam.teamPlayers.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard">
-                                        <img src={player.avatar || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
+                                        <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                         <div className="profileCard__top">
                                             <span className="profileCard__nickname">{player.nickname}</span>
-                                            <img src={icons.pc} alt="User platform"/>
-                                            <NavLink to={'userTwitch'}>
-                                                <img src={icons.twitchUser} alt="User twitch"/>
-                                            </NavLink>
+                                            <img src={icons[player?.platform || 'pc']} alt="User platform"/>
                                         </div>
                                     </div>
                                     {player.id !== user?.id && <button
                                         className="popup__player-cross"
                                         onClick={() => {
                                             changeNewTeamPlayers(player, 'remove')
+                                            clearNewPlayersSearch()
                                         }}
                                     >
                                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -184,12 +178,9 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
                                 <div className="rating__team-nicks">
                                     <div className="bold flex">
                                         <span>{newTeam.name}</span>
-                                        <NavLink to={'MultiTwitch'}>
-                                            <img src={icons.video} alt="MultiTwitch"/>
-                                        </NavLink>
                                     </div>
                                     <div className="text flex">
-                                        <span>{newTeam.players.length} {__('человек')}</span>
+                                        <span>{newTeam.teamPlayers.length} {__('человек')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -203,23 +194,20 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
                             </svg>
                         </button>
                     </div>
-                    {newTeam.players.length && <>
+                    {newTeam.teamPlayers.length && <>
                         <h4 className="popup__subtitle flex mb12">
                             <span className="mr-auto">{__('Выберите участников турнира')}</span>
                             <span className="white-text">{registerRequest.players.length}</span>
                             <span className="white-hoverText">/{playersInTeam}</span>
                         </h4>
                         <ul className="popup__players mb32">
-                            {newTeam.players.map((player: IUser, index: number) => (
+                            {newTeam.teamPlayers.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard mr-auto">
-                                        <img src={player.avatar || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
+                                        <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                         <div className="profileCard__top">
                                             <span className="profileCard__nickname">{player.nickname}</span>
-                                            <img src={icons.pc} alt="User platform"/>
-                                            <NavLink to={'userTwitch'}>
-                                                <img src={icons.twitchUser} alt="User twitch"/>
-                                            </NavLink>
+                                            <img src={icons[user?.platform || 'pc']} alt="User platform"/>
                                         </div>
                                     </div>
                                     {player.id !== user?.id && <button
@@ -235,9 +223,15 @@ const TeamRegisterPopup = ({newTeamUsed, user, tournamentRegistrationUsed, playe
                                 </li>
                             ))}
                         </ul>
+                        { messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
                         <button
                             className="button-both-accent popup__accentButton"
-                            onClick={() => setCurrentStep(currentStep + 1)}
+                            onClick={async () => {
+                                const response = await submitHandler()
+                                if (response) {
+                                    setCurrentStep(currentStep + 1)
+                                }
+                            }}
                         >
                             <span>{__('Принять участие')}</span>
                         </button>

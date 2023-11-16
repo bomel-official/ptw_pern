@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const userRouter = require('./userRouter')
+const authRouter = require('./authRouter')
 const buildRouter = require('./buildRouter')
 const cartRouter = require('./cartRouter')
 const orderRouter = require('./orderRouter')
@@ -11,6 +12,7 @@ const friendsRouter = require('./friendsRouter')
 
 
 router.use('/user', userRouter)
+router.use('/auth', authRouter)
 router.use('/build', buildRouter)
 router.use('/cart', cartRouter)
 router.use('/order', orderRouter)

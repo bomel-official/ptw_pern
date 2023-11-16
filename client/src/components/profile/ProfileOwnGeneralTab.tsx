@@ -64,8 +64,8 @@ const ProfileOwnGeneralTab = (
                             name: `team${num}`,
                             avatar: null,
                             avatar_path: DefaultUserPic,
-                            capitan: null,
-                            players: []
+                            teamCapitan: null,
+                            teamPlayers: []
                         }
                         return (
                             <TeamTablet

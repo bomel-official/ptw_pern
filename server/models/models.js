@@ -84,8 +84,15 @@ const Participant = sequelize.define('participant', {
     dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
     places: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
+    players: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    avatar: {type: DataTypes.STRING, allowNull: true},
+    title: {type: DataTypes.STRING, allowNull: true},
     // tournament: Tournament   ------------------ done
     // team: Team   ------------------ done
+})
+
+const ParticipantUser = sequelize.define('participant_user', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
 const Product = sequelize.define('product', {
@@ -196,6 +203,9 @@ Participant.belongsTo(Tournament)
 Team.hasOne(Participant)
 Participant.belongsTo(Team)
 
+Participant.belongsToMany(User, {through: 'participant_user'})
+User.belongsToMany(Participant, {through: 'participant_user'})
+
 ProductCat.hasMany(Product)
 Product.belongsTo(ProductCat)
 
@@ -227,5 +237,6 @@ module.exports = {
     BuildWeaponType,
     BuildMode,
     BuildAttachment,
-    BuildAttachmentType
+    BuildAttachmentType,
+    ParticipantUser
 }

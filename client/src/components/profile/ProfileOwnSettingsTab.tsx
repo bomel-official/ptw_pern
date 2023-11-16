@@ -10,9 +10,7 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
     const [isPasswordHidden, setIsPasswordHidden] = useState(true)
     const [isOldPasswordHidden, setIsOldPasswordHidden] = useState(true)
 
-    const [oldPassword, setOldPassword] = useState<string>('')
-
-    const [changedUser, setChangedUser] = useState<any>(user)
+    const [changedUser, setChangedUser] = useState<any>({...user, password: '', oldPassword: ''})
     const {request, error, clearError} = useHttp()
     const [messageOptionsProfile, setMessageOptionsProfile] = useState<IMessageOptions>({
         status: '', text: ''
@@ -45,10 +43,10 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
                     formData.set(key, changedUser[key])
                 }
             } // add data to formData from form state
-            const {message} = await request('/api/user/edit', 'POST', formData, {
+            const {message, status, text} = await request('/api/user/edit', 'POST', formData, {
                 Authorization: `Bearer ${auth.token}`
             }, false)
-            return {status: 'pos', text: message}
+            return {status: status || 'pos', text: message || text}
         } catch (e) {}
         return {status: 'neg', text: 'Что-то пошло не так...'}
     }
@@ -70,14 +68,9 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
     const savePassword = async (event: any) => {
         event.preventDefault()
         clearError()
-        if (oldPassword === changedUser.password) {
-            const messageData = await saveChanges()
-            setMessageOptionsPasswords(messageData)
-        } else {
-            setMessageOptionsPasswords({
-                status: 'neg', text: 'Пароли не совпадают'
-            })
-        }
+        console.log(changedUser)
+        const messageData = await saveChanges()
+        setMessageOptionsPasswords(messageData)
     }
 
     const saveProfile = async (event: any) => {
@@ -170,13 +163,13 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
                         </button>
                     </label>
                     <p className="text corner-margin mb8">{__('Введите старый пароль')}</p>
-                    <label htmlFor="oldpassword" className="auth__password mb24 input-both">
+                    <label htmlFor="oldPassword" className="auth__password mb24 input-both">
                         <input
                             type={isOldPasswordHidden ? "password" : "text"}
-                            id="oldpassword"
-                            name="oldpassword"
+                            id="oldPassword"
+                            name="oldPassword"
                             placeholder={__("Введите старый пароль")}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserField('oldPassword', e.target.value)}
                         />
                         <button
                             className={isOldPasswordHidden ? "auth__password-hide" : "auth__password-hide show"}

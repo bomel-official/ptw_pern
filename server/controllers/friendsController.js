@@ -6,17 +6,13 @@ const {Op} = require("sequelize");
 class FriendsController {
     async addFriend(req, res, next) {
         const {to} = req.body
-        const token = req.headers.authorization.split(' ')[1]
-        if (!token) {
-            return res.status(401).json({message: 'Не авторизован'})
-        }
-        const from = jwt.verify(token, process.env.JWT_SECRET_KEY).id
+        const from = req.user.id
 
         const toUser = await User.findByPk(to)
         const fromUser = await User.findByPk(from)
 
         if (toUser.friends?.includes(from) && fromUser.friends?.includes(to)) {
-            return res.json({message: 'Пользователь итак является вашим другом'})
+            return res.json({message: 'Пользователь является вашим другом'})
         }
 
         const prevRequest = await FriendRequest.findOne({
@@ -34,19 +30,11 @@ class FriendsController {
             let message = 'Пользователь добавлен в друзья!'
             await Promise.all([
                 new Promise((resolve) => {
-                    if (toUser.friends?.length) {
-                        toUser.friends.push(from)
-                    } else {
-                        toUser.friends = [from]
-                    }
+                    toUser.set({friends: [...toUser.friends, from]})
                     toUser.save().then(resolve)
                 }),
                 new Promise((resolve) => {
-                    if (fromUser.friends?.length) {
-                        fromUser.friends.push(to)
-                    } else {
-                        fromUser.friends = [to]
-                    }
+                    fromUser.set({friends: [...fromUser.friends, to]})
                     fromUser.save().then(resolve)
                 }),
                 new Promise((resolve) => {
@@ -69,11 +57,7 @@ class FriendsController {
 
     async removeFriend(req, res, next) {
         const {to} = req.body
-        const token = req.headers.authorization.split(' ')[1]
-        if (!token) {
-            return res.status(401).json({message: 'Не авторизован'})
-        }
-        const from = jwt.verify(token, process.env.JWT_SECRET_KEY).id
+        const from = req.user.id
 
         const toUser = await User.findByPk(to)
         const fromUser = await User.findByPk(from)

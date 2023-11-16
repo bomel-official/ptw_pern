@@ -180,7 +180,7 @@ class BuildController {
             }
         } catch (e) {
             console.log(e)
-            return next(ApiError.internal('Некорректный запрос'))
+            return next(ApiError.badRequest('Некорректный запрос'))
         }
 
         return res.json({items: []})
@@ -205,7 +205,7 @@ class BuildController {
             }
         } catch (e) {
             console.log(e)
-            return next(ApiError.internal('Некорректный запрос'))
+            return next(ApiError.badRequest('Некорректный запрос'))
         }
 
         return res.json({items: []})
@@ -245,7 +245,7 @@ class BuildController {
             })
         } catch (e) {
             console.log(e)
-            return next(ApiError.internal('Поля заполнены некорректно...'))
+            return next(ApiError.badRequest('Поля заполнены некорректно...'))
         }
 
 
@@ -257,12 +257,12 @@ class BuildController {
         try {
             const build = await Build.findByPk(buildId)
             if (build.userId !== req.user.id && req.user.role !== "ADMIN") {
-                return next(ApiError.internal('Нет доступа'))
+                return next(ApiError.forbidden('Нет доступа'))
             }
             await build.destroy()
         } catch (e) {
             console.log(e)
-            return next(ApiError.internal('Ошибка...'))
+            return next(ApiError.badRequest('Ошибка...'))
         }
 
         return res.json({message: 'Сборка успешно удалена!'})
@@ -320,7 +320,7 @@ class BuildController {
             return res.json({items})
         } catch (e) {
             console.log(e)
-            return next(ApiError.internal('Некорректный запрос'))
+            return next(ApiError.badRequest('Некорректный запрос'))
         }
     }
 
@@ -337,7 +337,7 @@ class BuildController {
             return res.json({items})
         } catch (e) {
             console.log(e)
-            return next(ApiError.internal('Некорректный запрос'))
+            return next(ApiError.badRequest('Некорректный запрос'))
         }
     }
 
@@ -367,7 +367,7 @@ class BuildController {
         } catch (e) {
             console.log(e)
         }
-        return next(ApiError.internal('Некорректный запрос'))
+        return next(ApiError.badRequest('Некорректный запрос'))
     }
 }
 

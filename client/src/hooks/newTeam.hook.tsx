@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDebounce} from "./debounce.hook";
 
-import PIC from '../static/icons/PIC.jpg'
 import {ITeam, IUser} from "../StoreTypes";
 import {useHttp} from "./http.hook";
 
@@ -10,8 +9,8 @@ export const initNewTeam: ITeam = {
     name: null,
     avatar: null,
     avatar_path: null,
-    capitan: null,
-    players: []
+    teamCapitan: null,
+    teamPlayers: []
 }
 
 export const useNewTeam = () => {
@@ -36,7 +35,7 @@ export const useNewTeam = () => {
     }
 
     const isUserIdIncluded = (userId: number) => {
-        for (const player of newTeam.players) {
+        for (const player of newTeam.teamPlayers) {
             if (player.id === userId) {
                 return true
             }
@@ -46,10 +45,10 @@ export const useNewTeam = () => {
 
     const changeNewTeamPlayers = (requestPlayer: IUser, action: 'remove' | 'add') => {
         if (action === 'remove') {
-            changeNewTeam('players', newTeam.players.filter((player: IUser) => player.id !== requestPlayer.id))
+            changeNewTeam('teamPlayers', newTeam.teamPlayers.filter((player: IUser) => player.id !== requestPlayer.id))
         } else if (action === 'add') {
             if (!isUserIdIncluded(requestPlayer.id)) {
-                changeNewTeam('players', [...newTeam.players, requestPlayer])
+                changeNewTeam('teamPlayers', [...newTeam.teamPlayers, requestPlayer])
             }
         }
     }
@@ -61,9 +60,9 @@ export const useNewTeam = () => {
     const [playersSearch, setPlayersSearch] = useState<Array<IUser>>([])
 
     const fetchPlayersSearch = useCallback(async (debounced: string) => {
-        const {rows} = debounced.length ? await request(`/api/user/?s=${debounced}`, 'GET') : {rows: []}
+        const {rows} = newTeam.teamCapitan ? await request(`/api/user/?s=${debounced}&friendOf=${newTeam.teamCapitan}`, 'GET') : {rows: []}
         setPlayersSearch(rows)
-    }, [])
+    }, [newTeam])
 
     useEffect(() => {
         fetchPlayersSearch(debounced).catch(() => {})
