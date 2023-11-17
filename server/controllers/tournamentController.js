@@ -259,7 +259,7 @@ class TournamentController {
             players,
             isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
             dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
-            places: Array(AMOUNT_ROUNDS).fill(-1),
+            places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
             avatar: filename
         })
         try {
@@ -298,6 +298,36 @@ class TournamentController {
         })
 
         return res.json({participants})
+    }
+
+    async editRegister(req, res, next) {
+        const {participants} = req.body
+        try {
+            const requestPromises = []
+            for (let participant of participants) {
+                requestPromises.push(new Promise((resolve, reject) => {
+                    let points = 0
+                    for (let i = 0; i < AMOUNT_ROUNDS; i++) {
+                        points += participant.places[i][1]
+                        for (let j = 0; j < participant.players; j++) {
+                            points += participant.dataArray[j][i]
+                        }
+                    }
+                    Participant.findByPk(participant.id).then(item => {
+                        item.dataArray = participant.dataArray
+                        item.places = participant.places
+                        item.points = points
+                        item.save().then(resolve)
+                    })
+                }))
+            }
+            await Promise.all(requestPromises).catch(e => {
+                return res.json({isOk: false, message: e.message})
+            })
+            return res.json({isOk: true, message: 'Данные обновлены!'})
+        } catch (e) {
+            return res.json({isOk: false, message: e.message})
+        }
     }
 }
 

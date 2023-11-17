@@ -216,8 +216,12 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
             <div className="tournament__sidebar-box">
                 <ProfilePlatform
                     userPlatform={changedUser.platform}
-                    changeHandler={(value) => {
+                    userDevice={changedUser.device}
+                    changePlatformHandler={(value) => {
                         changeUserField('platform', value)
+                    }}
+                    changeDeviceHandler={(value) => {
+                        changeUserField('device', value)
                     }}
                     submitHandler={savePlatform}
                     messageOptions={messageOptionsPlatform}

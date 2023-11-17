@@ -52,7 +52,8 @@ export const SingleTournamentPage = () => {
             (user) &&
             (dateBegin.getTime() > Date.now()) &&
             (tournament.isRegisterOn) &&
-            (!tournament.participantsList.includes(user.id))
+            (!tournament.participantsList.includes(user.id)) &&
+            (tournament.participantsList.length + playersInTeam <= tournament.maxUsers)
         ) {
             registerFlag = true
         }

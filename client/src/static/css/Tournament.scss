@@ -487,4 +487,15 @@
       }
     }
   }
+  &__place {
+    margin-left: 8px;
+    background-color: $accent;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    color: $white;
+  }
 }

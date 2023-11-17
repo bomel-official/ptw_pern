@@ -10,6 +10,7 @@ router.get('/get-all', TournamentController.getAll)
 router.get('/get-participants', TournamentController.getParticipants)
 router.get('/:slug', TournamentController.getById)
 router.post('/register', AuthMiddleware, TournamentController.register)
+router.post('/edit-register', CheckRoleMiddleware("ADMIN"), TournamentController.editRegister)
 
 
 module.exports = router

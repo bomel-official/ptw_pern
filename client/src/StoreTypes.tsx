@@ -1,5 +1,5 @@
 import {IGame} from "./context/GameContext";
-import {PlatformIds} from "./data/Platforms";
+import {DeviceIds, PlatformIds} from "./data/Platforms";
 import {IGameOnlyVersion} from "./data/Games";
 
 export interface IMessageOptions {
@@ -66,6 +66,7 @@ export type IUser = {
     nickname: string,
     avatar: string,
     platform: PlatformIds,
+    device: DeviceIds,
     role: string,
     activisionId?: string,
     createdAt?: string,
@@ -118,7 +119,7 @@ export type IParticipant = {
     users: Array<IUser>,
     points: number,
     dataArray: Array<Array<number>>,
-    places: Array<number>,
+    places: Array<[number, number]>,
     isRoundsHidden: Array<boolean>,
     avatar: string,
     players: Array<number>

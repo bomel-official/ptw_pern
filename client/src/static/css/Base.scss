@@ -360,6 +360,35 @@ input[type=file] {
   @include rounded-button('gray', $fontWeight: 400, $padding: 0, $color: $textWhite);
 }
 
+.input-text {
+  background: none;
+  display: inline-block;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  color: $textWhite;
+  max-width: 50px;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  &[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  &.small {
+    max-width: 30px;
+  }
+
+  &:focus {
+    color: $textHoverWhite;
+  }
+}
+
 .input-tl,
 .input-br,
 .input-both,

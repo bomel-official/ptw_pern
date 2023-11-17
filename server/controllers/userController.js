@@ -180,7 +180,8 @@ class UserController {
             twitter,
             password,
             platform,
-            oldPassword
+            oldPassword,
+            device
         } = req.body
 
         const {avatar} = req.files || {avatar: null}
@@ -223,6 +224,7 @@ class UserController {
         user.twitch = twitch ? twitch : user.twitch
         user.twitter = twitter ? twitter : user.twitter
         user.platform = platform ? platform : user.platform
+        user.device = device ? device : user.device
 
         const hashPassword = password ? await bcrypt.hash(password, 5) : ''
 

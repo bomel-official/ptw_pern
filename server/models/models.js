@@ -20,7 +20,8 @@ const User = sequelize.define('user', {
     averagePlace: {type: DataTypes.FLOAT, allowNull: true},
     bestPlace: {type: DataTypes.INTEGER, allowNull: true},
     friends: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
-    platform: {type: DataTypes.STRING, defaultValue: 'pc'}
+    platform: {type: DataTypes.STRING, defaultValue: 'pc'},
+    device: {type: DataTypes.STRING, defaultValue: 'km'}
     // cart: Cart   ------------------ done
     // friends: User(Many)   ------------------ done
 })
@@ -82,7 +83,7 @@ const Participant = sequelize.define('participant', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     points: {type: DataTypes.INTEGER, defaultValue: 0},
     dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
-    places: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: []},
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
     players: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
     avatar: {type: DataTypes.STRING, allowNull: true},
