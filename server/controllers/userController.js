@@ -228,6 +228,7 @@ class UserController {
 
         const hashPassword = password ? await bcrypt.hash(password, 5) : ''
 
+
         if (password) {
             if (oldPassword && bcrypt.compareSync(oldPassword, user.password)) {
                 user.password = hashPassword

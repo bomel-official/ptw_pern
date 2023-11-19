@@ -12,7 +12,8 @@ export type IBuildWeapon = {
     gameVersion: IGameOnlyVersion,
     title_RU: string,
     title_EU: string,
-    image: string
+    image: string,
+    allowedAttachments: Array<number>,
 }
 
 export type IBuildAttachmentType = {
@@ -28,8 +29,7 @@ export type IBuildAttachment = {
     build_attachment_type: number,
     title_RU: string,
     title_EU: string,
-    isNumerable: boolean,
-    allowedWeapons: Array<number>,
+    isNumerable: boolean
 }
 
 export type IBuildWeaponType = {

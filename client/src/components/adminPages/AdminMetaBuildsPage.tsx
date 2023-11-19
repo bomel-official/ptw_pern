@@ -76,6 +76,12 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Версия игры',
                                         name: 'gameVersion',
                                         type: 'selectGame'
+                                    },
+                                    {
+                                        title: 'Подходящие обвесы',
+                                        name: 'allowedAttachments',
+                                        type: 'checkMatch',
+                                        valuesName: 'attachment'
                                     }
                                 ]}
                             />
@@ -130,12 +136,6 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Использовать диапазоны',
                                         name: 'isNumerable',
                                         type: 'checkbox'
-                                    },
-                                    {
-                                        title: 'Подходит для',
-                                        name: 'allowedWeapons',
-                                        type: 'checkMatch',
-                                        valuesName: 'weapon'
                                     }
                                 ]}
                             />

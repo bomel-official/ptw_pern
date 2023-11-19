@@ -60,7 +60,7 @@ const MetaBuildCreatePage = () => {
             const availableAttachments = await getItems('attachment', {buildAttachmentTypeId: value.id})
             newAttachments[setIndex] = {
                 ...newAttachments[setIndex],
-                availableAttachments: availableAttachments.filter(((avAtt: any) => (avAtt.allowedWeapons.includes(weapon.id))))
+                availableAttachments: availableAttachments.filter((avAtt: any) => (weapon.allowedAttachments.includes(avAtt.id)))
             }
         }
         setAttachments(newAttachments)
@@ -79,7 +79,6 @@ const MetaBuildCreatePage = () => {
     const createHandler = async (event: any) => {
         event.preventDefault()
         clearError()
-        console.log(weaponType, weapon, attachments)
         try {
             const {message} = await request(
                 '/api/build/create',

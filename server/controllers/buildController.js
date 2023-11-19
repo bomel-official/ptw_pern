@@ -30,7 +30,7 @@ class BuildController {
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'weapon') {
-            const {title_RU, title_EU, buildWeaponTypeId, gameVersion} = req.body
+            const {title_RU, title_EU, buildWeaponTypeId, gameVersion, allowedAttachments} = req.body
             const {image} = req.files || {avatar: null}
             let filename = ''
 
@@ -57,18 +57,18 @@ class BuildController {
                 title_RU,
                 buildWeaponTypeId,
                 image: filename,
-                gameVersion
+                gameVersion,
+                allowedAttachments: JSON.parse(allowedAttachments)
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'attachment') {
-            const {title_RU, title_EU, isNumerable, gameVersion, buildAttachmentTypeId, allowedWeapons} = req.body
+            const {title_RU, title_EU, isNumerable, gameVersion, buildAttachmentTypeId} = req.body
             const newItem = await BuildAttachment.create({
                 title_EU,
                 title_RU,
                 isNumerable,
                 gameVersion,
-                buildAttachmentTypeId,
-                allowedWeapons: JSON.parse(allowedWeapons)
+                buildAttachmentTypeId
             })
             return res.json({message: 'Добавлено!', item: newItem})
         } else if (object === 'attachment-type') {
@@ -98,7 +98,7 @@ class BuildController {
 
             return res.json({message: 'Обновлено!', item})
         } else if (object === 'weapon') {
-            const {id, title_RU, title_EU, buildWeaponTypeId, gameVersion} = req.body
+            const {id, title_RU, title_EU, buildWeaponTypeId, gameVersion, allowedAttachments} = req.body
             const {image} = req.files || {avatar: null}
             let filename = ''
 
@@ -127,12 +127,13 @@ class BuildController {
                 title_RU,
                 buildWeaponTypeId,
                 image: filename,
-                gameVersion
+                gameVersion,
+                allowedAttachments: JSON.parse(allowedAttachments)
             })
             await item.save()
             return res.json({message: 'Обновлено!', item})
         } else if (object === 'attachment') {
-            const {id, title_RU, title_EU, isNumerable, gameVersion, buildAttachmentTypeId, allowedWeapons} = req.body
+            const {id, title_RU, title_EU, isNumerable, gameVersion, buildAttachmentTypeId} = req.body
             const item = await BuildAttachment.findByPk(id)
 
             item.set({
@@ -140,8 +141,7 @@ class BuildController {
                 title_RU,
                 isNumerable,
                 gameVersion,
-                buildAttachmentTypeId,
-                allowedWeapons: JSON.parse(allowedWeapons)
+                buildAttachmentTypeId
             })
 
             await item.save()

@@ -125,7 +125,8 @@ const BuildWeapon = sequelize.define('build_weapon', {
     gameVersion: {type: DataTypes.STRING, allowNull: true},
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true},
-    image: {type: DataTypes.STRING, allowNull: true}
+    image: {type: DataTypes.STRING, allowNull: true},
+    allowedAttachments: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
 })
 const BuildWeaponType = sequelize.define('build_weapon_type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -137,8 +138,7 @@ const BuildAttachment = sequelize.define('build_attachment', {
     gameVersion: {type: DataTypes.STRING, allowNull: true},
     title_RU: {type: DataTypes.STRING, allowNull: true},
     title_EU: {type: DataTypes.STRING, allowNull: true},
-    isNumerable: {type: DataTypes.BOOLEAN, defaultValue: true},
-    allowedWeapons: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
+    isNumerable: {type: DataTypes.BOOLEAN, defaultValue: true}
 })
 const BuildAttachmentType = sequelize.define('build_attachment_type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},

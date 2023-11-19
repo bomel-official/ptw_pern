@@ -27,13 +27,11 @@ const AdminBuildFields = ({
 }) => {
     const checkMatchChange = (itemId: number, key: string) => {
         let editedFieldItems: any[] = [...newItem[key]]
-        console.log(editedFieldItems)
         if (editedFieldItems.includes(itemId)) {
             editedFieldItems = editedFieldItems.filter((toFindItemId: number) => toFindItemId !== itemId)
         } else {
             editedFieldItems.push(itemId)
         }
-        console.log(editedFieldItems)
         changeNewItem(key, editedFieldItems)
     }
     const isCheckMatchIncluded = (itemId: number, key: string) => {
