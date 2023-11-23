@@ -81,7 +81,8 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Подходящие обвесы',
                                         name: 'allowedAttachments',
                                         type: 'checkMatch',
-                                        valuesName: 'attachment'
+                                        valuesName: 'attachment-list',
+                                        includedName: 'build_attachments'
                                     }
                                 ]}
                             />

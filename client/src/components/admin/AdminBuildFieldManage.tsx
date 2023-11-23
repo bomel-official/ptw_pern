@@ -7,7 +7,7 @@ import Select from "../base/Select";
 import AdminMetaBuildFieldItem from "./AdminMetaBuildFieldItem";
 import AdminBuildFields from "./AdminBuildFields";
 
-export type BuildFields = 'weapon' | 'weapon-type' | 'attachment' | 'attachment-type' | 'mode'
+export type BuildFields = 'weapon' | 'weapon-type' | 'attachment' | 'attachment-type' | 'attachment-list'
 
 const AdminBuildFieldManage = ({
    slug,
@@ -26,7 +26,8 @@ const AdminBuildFieldManage = ({
         title: string,
         name: string,
         type: 'text' | 'image' | 'checkbox' | 'select' | 'selectGame' | 'checkMatch',
-        valuesName?: BuildFields
+        valuesName?: BuildFields,
+        includedName?: string
     }>
 }) => {
     const [newItem, setNewItem] = useState<Record<string, any>>({})
@@ -35,6 +36,7 @@ const AdminBuildFieldManage = ({
         status: '', text: ''
     })
     const [associations, setAssociations] = useState<Record<string, Array<any>>>({})
+    const [isEditShown, setIsEditShown] = useState(false)
 
     const changeNewItem = (key: string, value: any) => {
         setNewItem({...newItem, [key]: value})
@@ -180,8 +182,17 @@ const AdminBuildFieldManage = ({
                     <button className="button-both-accent">{__("Добавить")}</button>
                 </div>
             </form>
-            {!!items.length && <div className="build__data-block">
-                <p className="build__label">{__(deleteTitle)}</p>
+            <p className="build__label">{__(deleteTitle)}</p>
+            <button
+                className="button-both-gray corner-margin"
+                onClick={(e) => {
+                    e.preventDefault()
+                    setIsEditShown(!isEditShown)
+                }}
+            >
+                {isEditShown ? __('Скрыть') : __('Показать')}
+            </button>
+            {isEditShown && !!items.length && <div className="build__data-block">
                 <div className="build__grid-row admin__build-items">
                     {items.map((item) => (
                         <AdminMetaBuildFieldItem
@@ -195,6 +206,15 @@ const AdminBuildFieldManage = ({
                     ))}
                 </div>
             </div>}
+            {isEditShown && !!items.length && <button
+                className="button-both-gray corner-margin"
+                onClick={(e) => {
+                    e.preventDefault()
+                    setIsEditShown(!isEditShown)
+                }}
+            >
+                {__('Скрыть')}
+            </button>}
         </div>
     );
 };

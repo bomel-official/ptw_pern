@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {__, _f} from "../../multilang/Multilang";
 import Select from "../base/Select";
 import {BuildFields} from "./AdminBuildFieldManage";
@@ -22,9 +22,11 @@ const AdminBuildFields = ({
         title: string,
         name: string,
         type: 'text' | 'image' | 'checkbox' | 'select' | 'selectGame' | 'checkMatch',
-        valuesName?: BuildFields
+        valuesName?: BuildFields,
+        includedName?: string
     }>
 }) => {
+    const [isCheckMatchShown, setIsCheckMatchShown] = useState(false)
     const checkMatchChange = (itemId: number, key: string) => {
         let editedFieldItems: any[] = [...newItem[key]]
         if (editedFieldItems.includes(itemId)) {
@@ -84,18 +86,43 @@ const AdminBuildFields = ({
                     />}
                     {(field.type === 'checkMatch' && newItem[field.name] !== undefined && associations[field.valuesName || 'null']) && <div key={index} className="admin__check-match-wrapper">
                         <p className="build__label">{__(field.title)}</p>
-                        <div className="admin__check-match-items">
+                        <button
+                            className="button-both-gray corner-margin"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                setIsCheckMatchShown(!isCheckMatchShown)
+                            }}
+                        >
+                            {isCheckMatchShown ? __('Скрыть') : __('Показать')}
+                        </button>
+                        {isCheckMatchShown && <div className="admin__check-match-items-wrapper">
                             {associations[field.valuesName || 'null'].map(checkMatchItem =>
-                                (<label
-                                    className={isCheckMatchIncluded(checkMatchItem.id, field.name) ? "admin__checkbox active" : "admin__checkbox"}
-                                    onClick={e => checkMatchChange(checkMatchItem.id, field.name)}
-                                    key={checkMatchItem.id}
-                                >
-                                    <span className="admin__checkbox-rect"></span>
-                                    <span className="admin__checkbox-label">{_f(checkMatchItem, 'title')}</span>
-                                </label>)
+                                <div className="admin__check-match-item">
+                                    <p className="build__label">{_f(checkMatchItem, 'title')}</p>
+                                    <div className="admin__check-match-items">
+                                        {checkMatchItem[field.includedName || 'null'] && checkMatchItem[field.includedName || 'null'].map((includedItem: any) => (
+                                            <label
+                                                className={isCheckMatchIncluded(includedItem.id, field.name) ? "admin__checkbox active" : "admin__checkbox"}
+                                                onClick={e => checkMatchChange(includedItem.id, field.name)}
+                                                key={includedItem.id}
+                                            >
+                                                <span className="admin__checkbox-rect"></span>
+                                                <span
+                                                    className="admin__checkbox-label">{_f(includedItem, 'title')}</span>
+                                            </label>))}
+                                    </div>
+                                </div>
                             )}
-                        </div>
+                        </div>}
+                        {isCheckMatchShown && <button
+                            className="button-both-gray corner-margin"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                setIsCheckMatchShown(!isCheckMatchShown)
+                            }}
+                        >
+                            {__('Скрыть')}
+                        </button>}
                     </div>}
                 </>
             ))}
