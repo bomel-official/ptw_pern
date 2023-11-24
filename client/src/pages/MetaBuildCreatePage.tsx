@@ -57,6 +57,7 @@ const MetaBuildCreatePage = () => {
         const newAttachments = [...attachments]
         newAttachments[setIndex] = {...newAttachments[setIndex], [key]: value}
         if (key === 'attachmentType') {
+            newAttachments[setIndex].attachment = null
             const availableAttachments = await getItems('attachment', {buildAttachmentTypeId: value.id})
             newAttachments[setIndex] = {
                 ...newAttachments[setIndex],
