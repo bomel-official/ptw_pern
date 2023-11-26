@@ -6,7 +6,7 @@ const parseCookie = require("../funtions/parseCookie");
 
 class AuthController {
     async discord(req, res, next) {
-        const url = 'https://discord.com/api/oauth2/authorize?client_id=1128760670603710535&redirect_uri=http%3A%2F%2Flocalhost%3A7000%2Fapi%2Fauth%2Fdiscord-redirect&response_type=code&scope=identify%20guilds%20email'
+        const url = process.env.DISCORD_AUTH_URL
         res.redirect(url)
     }
     async discordRedirect(req, res, next) {
