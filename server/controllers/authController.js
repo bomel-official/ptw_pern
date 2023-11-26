@@ -1,5 +1,8 @@
 const ApiError = require("../error/ApiError");
 const axios = require('axios')
+const {User} = require("../models/models");
+const genJwt = require("../funtions/genJwt");
+const parseCookie = require("../funtions/parseCookie");
 
 class AuthController {
     async discord(req, res, next) {
@@ -36,11 +39,43 @@ class AuthController {
                     ...headers
                 }
             })
-            const { id, username, avatar } = userResponse.data;
-            return res.json({data: userResponse.data})
+            const { id, username, avatar, email } = userResponse.data;
+            const UserAlreadyExist = await User.findOne({where: {email}})
+            if (UserAlreadyExist) {
+                UserAlreadyExist.discord_id = id
+                UserAlreadyExist.discord_avatar = `https://cdn.discordapp.com/avatars/${id}/${avatar}`
+                await UserAlreadyExist.save()
+
+                const token = genJwt(UserAlreadyExist.id, UserAlreadyExist.email, UserAlreadyExist.role, UserAlreadyExist.nickname)
+
+                res.cookie('token', token, {maxAge: 1000 * 60 * 15, httpOnly: true});
+                return res.redirect(process.env.CLIENT_URL + `/profile/${UserAlreadyExist.nickname}`);
+            } else {
+                const newUser = await User.create({
+                    email: email.trim(),
+                    discord_id: id,
+                    discord_avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`
+                })
+                newUser.nickname = `${username}${newUser.id}`
+                await newUser.save()
+
+                const token = genJwt(newUser.id, newUser.email, newUser.role, newUser.nickname)
+
+                res.cookie('token', token, {maxAge: 1000 * 60 * 15, httpOnly: true});
+                return res.redirect(process.env.CLIENT_URL + `/profile/${newUser.nickname}`);
+            }
         } catch (e) {
             console.log(e)
             return next(ApiError.badRequest('Некорректный запрос'))
+        }
+    }
+    async getUserByCookie(req, res, next) {
+        const cookies = parseCookie(req.headers.cookie)
+        if (cookies.token) {
+            res.clearCookie('token');
+            return res.json({token: cookies.token})
+        } else {
+            return res.json({token: null})
         }
     }
 }

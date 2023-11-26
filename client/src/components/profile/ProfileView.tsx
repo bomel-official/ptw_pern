@@ -10,6 +10,8 @@ import ProfileOwnSettingsTab from "./ProfileOwnSettingsTab";
 import ProfileViewGeneralTab from "./ProfileViewGeneralTab";
 import ProfileViewTabsMenu from "./ProfileViewTabs";
 import MetaBuildList from "../metaBuilds/MetaBuildList";
+import {__} from "../../multilang/Multilang";
+import {NavLink} from "react-router-dom";
 
 const ProfileView = ({user}: {user: IUser | null}) => {
     const [currentTab, setCurrentTab] = useState<ProfileTabsIds>('general')
@@ -29,7 +31,10 @@ const ProfileView = ({user}: {user: IUser | null}) => {
                                 <ProfileViewGeneralTab user={user}/>
                             }
                             {currentTab === "builds" &&
-                                <MetaBuildList userId={user.id}/>
+                                <>
+                                    <h1 className="side__title">{__(`Мета-сборки`)}</h1>
+                                    <MetaBuildList userId={user.id}/>
+                                </>
                             }
                         </div>
                     </div>

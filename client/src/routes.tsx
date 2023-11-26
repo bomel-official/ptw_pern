@@ -15,14 +15,16 @@ import MetaBuildCreatePage from "./pages/MetaBuildCreatePage";
 import ShopPage from "./pages/ShopPage";
 import AdminTournamentsPage from "./components/adminPages/AdminTournamentsPage";
 import AdminMetaBuildsPage from "./components/adminPages/AdminMetaBuildsPage";
+import {DiscordAuthPage} from "./pages/DiscordAuth";
 
 export const useRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<MainPage/>} />
             <Route path="/feedback" element={<PanelsPage/>} />
-            <Route path="/auth" element={<AuthPage/>} />
-            <Route path="/register" element={<RegisterPage/>} />
+            <Route path="/auth" element={<DiscordAuthPage/>} />
+            {/*<Route path="/auth" element={<AuthPage/>} />*/}
+            {/*<Route path="/register" element={<RegisterPage/>} />*/}
             <Route path="/lost-password" element={<LostPasswordPage/>} />
             <Route path="/tournaments" element={<TournamentsPage type="tournament"/>} />
             <Route path="/hubs" element={<TournamentsPage type="hub"/>} />

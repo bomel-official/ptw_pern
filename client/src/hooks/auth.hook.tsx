@@ -1,7 +1,8 @@
 import {useState, useCallback, useEffect} from 'react'
 import jwt_decode from "jwt-decode";
 import {IUser} from "../StoreTypes";
-import {useHttp} from "./http.hook";
+import {API_URL, useHttp} from "./http.hook";
+import axios from 'axios';
 
 const storageName = 'userData'
 
@@ -40,6 +41,14 @@ export const useAuth = () => {
         login(data.token)
     }, [])
 
+    const getUserByCookie = async() => {
+        const {data} = await axios.get(API_URL + '/api/auth/get-user-by-cookie', {
+            withCredentials: true
+        })
+        if (data.token) {
+            login(data.token)
+        }
+    }
 
     const logout = useCallback(() => {
         setToken(null)
@@ -60,6 +69,8 @@ export const useAuth = () => {
             } else if ((decodedToken.exp * 1000 >= (Date.now() - 6*24*60*60*1000))) {
                 login(token)
             }
+        } else {
+            getUserByCookie().catch()
         }
         setReady(true)
     }, [login])

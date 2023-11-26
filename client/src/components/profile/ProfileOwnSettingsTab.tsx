@@ -137,62 +137,62 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
                         <span>{__('Сохранить')}</span>
                     </button>
                 </div>
-                <h2 className="profile__heading mb12">{__('Безопасность')}</h2>
-                <div className="tournament__sidebar-block mb48">
-                    { messageOptionsPasswords.text && <div className={`${messageOptionsPasswords.status}-message mb24`}>{__(messageOptionsPasswords.text)}</div>}
-                    <p className="text corner-margin mb8">{__('Введите новый пароль')}</p>
-                    <label htmlFor="password" className="auth__password mb12 input-both">
-                        <input
-                            type={isPasswordHidden ? "password" : "text"}
-                            id="password"
-                            name="password"
-                            placeholder={__("Новый пароль")}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserField('password', e.target.value)}
-                        />
-                        <button
-                            className={isPasswordHidden ? "auth__password-hide" : "auth__password-hide show"}
-                            onClick={(e) => {
-                                e.preventDefault()
-                                setIsPasswordHidden(!isPasswordHidden)
-                            }}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1.66797 10.0003C1.66797 10.0003 4.16797 4.16699 10.0013 4.16699C15.8346 4.16699 18.3346 10.0003 18.3346 10.0003C18.3346 10.0003 15.8346 15.8337 10.0013 15.8337C4.16797 15.8337 1.66797 10.0003 1.66797 10.0003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M10.0013 12.5003C11.382 12.5003 12.5013 11.381 12.5013 10.0003C12.5013 8.61961 11.382 7.50033 10.0013 7.50033C8.62059 7.50033 7.5013 8.61961 7.5013 10.0003C7.5013 11.381 8.62059 12.5003 10.0013 12.5003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                    </label>
-                    <p className="text corner-margin mb8">{__('Введите старый пароль')}</p>
-                    <label htmlFor="oldPassword" className="auth__password mb24 input-both">
-                        <input
-                            type={isOldPasswordHidden ? "password" : "text"}
-                            id="oldPassword"
-                            name="oldPassword"
-                            placeholder={__("Введите старый пароль")}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserField('oldPassword', e.target.value)}
-                        />
-                        <button
-                            className={isOldPasswordHidden ? "auth__password-hide" : "auth__password-hide show"}
-                            onClick={(e) => {
-                                e.preventDefault()
-                                setIsOldPasswordHidden(!isOldPasswordHidden)
-                            }}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1.66797 10.0003C1.66797 10.0003 4.16797 4.16699 10.0013 4.16699C15.8346 4.16699 18.3346 10.0003 18.3346 10.0003C18.3346 10.0003 15.8346 15.8337 10.0013 15.8337C4.16797 15.8337 1.66797 10.0003 1.66797 10.0003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M10.0013 12.5003C11.382 12.5003 12.5013 11.381 12.5013 10.0003C12.5013 8.61961 11.382 7.50033 10.0013 7.50033C8.62059 7.50033 7.5013 8.61961 7.5013 10.0003C7.5013 11.381 8.62059 12.5003 10.0013 12.5003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                    </label>
-                    <button className="button-both-accent corner-margin" onClick={savePassword}>
-                        <span>{__('Сменить пароль')}</span>
-                    </button>
-                </div>
+                {/*<h2 className="profile__heading mb12">{__('Безопасность')}</h2>*/}
+                {/*<div className="tournament__sidebar-block mb48">*/}
+                {/*    { messageOptionsPasswords.text && <div className={`${messageOptionsPasswords.status}-message mb24`}>{__(messageOptionsPasswords.text)}</div>}*/}
+                {/*    <p className="text corner-margin mb8">{__('Введите новый пароль')}</p>*/}
+                {/*    <label htmlFor="password" className="auth__password mb12 input-both">*/}
+                {/*        <input*/}
+                {/*            type={isPasswordHidden ? "password" : "text"}*/}
+                {/*            id="password"*/}
+                {/*            name="password"*/}
+                {/*            placeholder={__("Новый пароль")}*/}
+                {/*            onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserField('password', e.target.value)}*/}
+                {/*        />*/}
+                {/*        <button*/}
+                {/*            className={isPasswordHidden ? "auth__password-hide" : "auth__password-hide show"}*/}
+                {/*            onClick={(e) => {*/}
+                {/*                e.preventDefault()*/}
+                {/*                setIsPasswordHidden(!isPasswordHidden)*/}
+                {/*            }}*/}
+                {/*        >*/}
+                {/*            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
+                {/*                <path d="M1.66797 10.0003C1.66797 10.0003 4.16797 4.16699 10.0013 4.16699C15.8346 4.16699 18.3346 10.0003 18.3346 10.0003C18.3346 10.0003 15.8346 15.8337 10.0013 15.8337C4.16797 15.8337 1.66797 10.0003 1.66797 10.0003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                {/*                <path d="M10.0013 12.5003C11.382 12.5003 12.5013 11.381 12.5013 10.0003C12.5013 8.61961 11.382 7.50033 10.0013 7.50033C8.62059 7.50033 7.5013 8.61961 7.5013 10.0003C7.5013 11.381 8.62059 12.5003 10.0013 12.5003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                {/*            </svg>*/}
+                {/*        </button>*/}
+                {/*    </label>*/}
+                {/*    <p className="text corner-margin mb8">{__('Введите старый пароль')}</p>*/}
+                {/*    <label htmlFor="oldPassword" className="auth__password mb24 input-both">*/}
+                {/*        <input*/}
+                {/*            type={isOldPasswordHidden ? "password" : "text"}*/}
+                {/*            id="oldPassword"*/}
+                {/*            name="oldPassword"*/}
+                {/*            placeholder={__("Введите старый пароль")}*/}
+                {/*            onChange={(e: ChangeEvent<HTMLInputElement>) => changeUserField('oldPassword', e.target.value)}*/}
+                {/*        />*/}
+                {/*        <button*/}
+                {/*            className={isOldPasswordHidden ? "auth__password-hide" : "auth__password-hide show"}*/}
+                {/*            onClick={(e) => {*/}
+                {/*                e.preventDefault()*/}
+                {/*                setIsOldPasswordHidden(!isOldPasswordHidden)*/}
+                {/*            }}*/}
+                {/*        >*/}
+                {/*            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
+                {/*                <path d="M1.66797 10.0003C1.66797 10.0003 4.16797 4.16699 10.0013 4.16699C15.8346 4.16699 18.3346 10.0003 18.3346 10.0003C18.3346 10.0003 15.8346 15.8337 10.0013 15.8337C4.16797 15.8337 1.66797 10.0003 1.66797 10.0003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                {/*                <path d="M10.0013 12.5003C11.382 12.5003 12.5013 11.381 12.5013 10.0003C12.5013 8.61961 11.382 7.50033 10.0013 7.50033C8.62059 7.50033 7.5013 8.61961 7.5013 10.0003C7.5013 11.381 8.62059 12.5003 10.0013 12.5003Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                {/*            </svg>*/}
+                {/*        </button>*/}
+                {/*    </label>*/}
+                {/*    <button className="button-both-accent corner-margin" onClick={savePassword}>*/}
+                {/*        <span>{__('Сменить пароль')}</span>*/}
+                {/*    </button>*/}
+                {/*</div>*/}
                 <h2 className="profile__heading mb12">{__('Социальные сети')}</h2>
                 <div className="tournament__sidebar-block mb48">
                     { messageOptionsSocial.text && <div className={`${messageOptionsSocial.status}-message mb24`}>{__(messageOptionsSocial.text)}</div>}
                     <div className="pb12">
-                        {socialItems.map((item, index) => (
+                        {socialItems.map((item, index) => item.name !== 'Discord' ? (
                             <div className="flex mb12" key={index}>
                                 <img src={item.icon} alt="" style={{marginRight: '8px', width: '24px', height: '24px'}}/>
                                 <label htmlFor={item.name.toLowerCase()} className="input-both" style={{flexGrow: 1}}>
@@ -206,7 +206,7 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
                                     />
                                 </label>
                             </div>
-                        ))}
+                        ) : <></>)}
                     </div>
                     <button className="button-both-accent corner-margin mt" onClick={saveSocial}>
                         <span>{__('Сохранить')}</span>

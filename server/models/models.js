@@ -3,7 +3,7 @@ const {DataTypes} = require('sequelize')
 
 const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    nickname: {type: DataTypes.STRING, allowNull: true},
+    nickname: {type: DataTypes.STRING, allowNull: true, unique: true},
     avatar: {type: DataTypes.STRING, allowNull: true},
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING, defaultValue: 'password'},
@@ -15,7 +15,8 @@ const User = sequelize.define('user', {
     vk: {type: DataTypes.STRING, allowNull: true},
     youtube: {type: DataTypes.STRING, allowNull: true},
     activisionId: {type: DataTypes.STRING, allowNull: true},
-    discord: {type: DataTypes.STRING, allowNull: true},
+    discord_id: {type: DataTypes.STRING, allowNull: true},
+    discord_avatar: {type: DataTypes.STRING, allowNull: true},
     toursPlayed: {type: DataTypes.INTEGER, allowNull: true},
     averagePlace: {type: DataTypes.FLOAT, allowNull: true},
     bestPlace: {type: DataTypes.INTEGER, allowNull: true},
