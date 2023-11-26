@@ -51,13 +51,18 @@ class AuthController {
                 res.cookie('token', token, {maxAge: 1000 * 60 * 15, httpOnly: true});
                 return res.redirect(process.env.CLIENT_URL + `/profile/${UserAlreadyExist.nickname}`);
             } else {
+                let counter = 0
+                let UsernameTaken = await User.findOne({where: {nickname: username}})
+                while (UsernameTaken) {
+                    counter += 1
+                    UsernameTaken = await User.findOne({where: {nickname: `${username}${counter}`}})
+                }
                 const newUser = await User.create({
                     email: email.trim(),
                     discord_id: id,
-                    discord_avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`
+                    discord_avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
+                    nickname: `${username}${counter ? counter : ''}`
                 })
-                newUser.nickname = `${username}${newUser.id}`
-                await newUser.save()
 
                 const token = genJwt(newUser.id, newUser.email, newUser.role, newUser.nickname)
 
