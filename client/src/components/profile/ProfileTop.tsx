@@ -6,6 +6,7 @@ import {IUser} from "../../StoreTypes";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {AuthContext} from "../../context/AuthContext";
 import {getFile} from "../../functions/getFile";
+import DiscordIcon from "./../../static/icons/discord-white.svg"
 
 const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
     isOwn: boolean,
@@ -33,6 +34,10 @@ const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
                                         <div className="flex-clear mb"></div>
                                         <img className="side__top-profile-platform" alt={user?.platform} src={icons[user?.platform || 'pc']}/>
                                         {user?.activisionId && <div className="side__top-profile-tag">{user?.activisionId}</div>}
+                                        {user?.discord_username && <div className="side__top-profile-ds">
+                                            <img src={DiscordIcon} alt="Discord"/>
+                                            <span>{user?.discord_username}</span>
+                                        </div>}
                                     </div>
                                     <div className="side__top-profile-info-bottom">
                                         <span>{__('Играет с')} {`${dateCreated.getDate() < 10 ? '0' + dateCreated.getDate() : dateCreated.getDate()}.${(dateCreated.getMonth() + 1) < 10 ? '0' + (dateCreated.getMonth() + 1) : dateCreated.getMonth() + 1}.${dateCreated.getFullYear()}`}</span>

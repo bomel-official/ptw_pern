@@ -715,7 +715,6 @@ input[type=file] {
       background-color: $black;
       border-radius: 4px;
       flex-grow: 1;
-      margin-right: 16px;
 
       &-avatar {
         width: 64px;
@@ -728,7 +727,7 @@ input[type=file] {
         align-items: center;
       }
       &-left.flex {
-        align-items: stretch;
+        align-items: center;
         margin-right: auto;
       }
       &-info {
@@ -738,7 +737,11 @@ input[type=file] {
         align-items: flex-start;
 
         &-top {
+          gap: 6px;
           margin-bottom: auto;
+        }
+        &-bottom {
+          padding-top: 12px;
         }
       }
       &-nickname {
@@ -748,14 +751,12 @@ input[type=file] {
         line-height: 32px;
         letter-spacing: 0;
         text-align: left;
-        margin-right: 12px;
       }
       &-platform {
         width: 32px;
         height: 32px;
         object-fit: contain;
         object-position: center center;
-        margin-right: 12px;
       }
       &-tag {
         font-family: 'Inter', sans-serif;
@@ -766,6 +767,27 @@ input[type=file] {
         text-align: center;
         padding: 6px 12px;
         background: $gray;
+        border-radius: 4px;
+      }
+      &-ds {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0;
+        text-align: center;
+        padding: 4px 12px;
+        background: #7289DA;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        img {
+          height: 24px;
+          width: 24px;
+          object-fit: contain;
+        }
       }
       &-logout {
         @include rounded-button('gray', $BR: true, $TL: true, $padding: 0);

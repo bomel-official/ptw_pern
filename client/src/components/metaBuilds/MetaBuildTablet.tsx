@@ -78,7 +78,7 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                         </div>
                         <img src={getFile(build.build_weapon.image)} alt={_f(build.build_weapon, 'title')} className="meta-build__weapon-image"/>
                         <div className="meta-build__buttons">
-                            {user && (build.user.id === user.id || user.role === "ADMIN") && <>
+                            {user && (build.user.id === user.id || (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN')) && <>
                                 <div className="dropdown dropdown-mini">
                                     <button
                                         className="dropdown__current"

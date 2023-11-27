@@ -73,7 +73,9 @@ export type IUser = {
     averagePlace?: number,
     toursPlayed?: number,
     friends: number[],
-    discord?: string,
+    discord_id?: string,
+    discord_username?: string,
+    discord_avatar?: string,
     youtube?: string,
     twitter?: string;
     twitch?: string

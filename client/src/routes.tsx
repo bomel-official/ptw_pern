@@ -16,6 +16,7 @@ import ShopPage from "./pages/ShopPage";
 import AdminTournamentsPage from "./components/adminPages/AdminTournamentsPage";
 import AdminMetaBuildsPage from "./components/adminPages/AdminMetaBuildsPage";
 import {DiscordAuthPage} from "./pages/DiscordAuth";
+import AdminRoleEditorPage from "./components/adminPages/AdminRoleEditorPage";
 
 export const useRoutes = () => {
     return (
@@ -37,6 +38,7 @@ export const useRoutes = () => {
             <Route path="/shop" element={<ShopPage/>} />
             <Route path="/admin/tournaments" element={<AdminTournamentsPage/>} />
             <Route path="/admin/builds" element={<AdminMetaBuildsPage/>} />
+            <Route path="/admin/roles" element={<AdminRoleEditorPage/>} />
         </Routes>
     )
 }

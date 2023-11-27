@@ -33,7 +33,7 @@ export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) 
                                 </NavLink>
                             </li>
                         }) }
-                        {user?.role === 'ADMIN' && <li className="mobileMenu__item">
+                        {(user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && <li className="mobileMenu__item">
                             <NavLink
                                 to={adminMenuItem.to}
                                 onClick={() => setIsMobileMenuActive(!isMobileMenuActive)}
@@ -89,7 +89,7 @@ export const Header = (props: {isBackToMain?: boolean, borderBottom?: boolean}) 
                             { menuItems.map((value, index) => {
                                 return <li className="header__navLink" key={index}><NavLink to={value.to}>{__(value['name'])}</NavLink></li>
                             }) }
-                            { user?.role === 'ADMIN' && <li className="header__navLink"><NavLink
+                            { (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && <li className="header__navLink"><NavLink
                                 to={adminMenuItem.to}>{adminMenuItem.name}</NavLink></li>}
                         </ul>
                         <LanguageSwitcher/>

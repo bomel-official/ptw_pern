@@ -43,6 +43,7 @@ class AuthController {
             const UserAlreadyExist = await User.findOne({where: {email}})
             if (UserAlreadyExist) {
                 UserAlreadyExist.discord_id = id
+                UserAlreadyExist.discord_username = username
                 UserAlreadyExist.discord_avatar = `https://cdn.discordapp.com/avatars/${id}/${avatar}`
                 await UserAlreadyExist.save()
 
@@ -61,6 +62,7 @@ class AuthController {
                     email: email.trim(),
                     discord_id: id,
                     discord_avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
+                    discord_username: username,
                     nickname: `${username}${counter ? counter : ''}`
                 })
 

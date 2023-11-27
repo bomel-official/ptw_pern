@@ -14,6 +14,7 @@ import YoutubeIcon from "./../static/icons/youtube-white.svg"
 import ComponentIcon from "./../static/icons/component.svg"
 import BarChartIcon from "./../static/icons/bar-chart-3.svg"
 import UserPlusIcon from "./../static/icons/user-plus.svg"
+import UserSettingsIcon from "./../static/icons/user-cog.svg"
 
 export const adminMenuItem = {
     to: '/admin/tournaments',
@@ -33,6 +34,12 @@ export const sideAdminMenuItems: Record<string, {to: string, icon: string, name:
         icon: ComponentIcon,
         name: 'Мета сборки',
         isMarginBottom: false
+    },
+    '/admin/roles': {
+        to: '/admin/roles',
+        icon: UserSettingsIcon,
+        name: 'Настройки доступа',
+        isMarginBottom: true
     },
     '/admin/products': {
         to: '/admin/products',

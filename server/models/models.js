@@ -16,6 +16,7 @@ const User = sequelize.define('user', {
     youtube: {type: DataTypes.STRING, allowNull: true},
     activisionId: {type: DataTypes.STRING, allowNull: true},
     discord_id: {type: DataTypes.STRING, allowNull: true},
+    discord_username: {type: DataTypes.STRING, allowNull: true},
     discord_avatar: {type: DataTypes.STRING, allowNull: true},
     toursPlayed: {type: DataTypes.INTEGER, allowNull: true},
     averagePlace: {type: DataTypes.FLOAT, allowNull: true},

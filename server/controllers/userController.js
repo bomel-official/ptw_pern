@@ -116,10 +116,10 @@ class UserController {
                     {
                         [Op.or]: [
                             {nickname: {
-                                    [Op.like]: `%${s}%`
+                                    [Op.iLike]: `%${s}%`
                                 }},
                             {activisionId: {
-                                    [Op.like]: `%${s}%`
+                                    [Op.iLike]: `%${s}%`
                                 }}
                         ]
                     },
@@ -237,6 +237,29 @@ class UserController {
         return res.json({
             message: 'Данные успешно обновлены!'
         })
+    }
+
+    async getAdmins(req, res, next) {
+        const {count, rows} = await User.findAndCountAll({
+            where: {
+                role: 'ADMIN'
+            }
+        })
+        res.json({rows})
+    }
+    async setRole(req, res, next) {
+        const {userId, role} = req.body
+        try {
+            await User.update({role}, {
+                where: {
+                    id: userId,
+                },
+            });
+            return res.json({message: 'Успех!'})
+        } catch(e) {
+            console.log(e)
+            return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
+        }
     }
 }
 

@@ -79,10 +79,10 @@ const TournamentRating = ({tournament}: {
     return (
         <>
             <div className="rating">
-                {user && user.role === 'ADMIN' && !isEditActive && <button className="button-both-accent mb8 corner-margin" onClick={() => setIsEditActive(true)}>
+                {user && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && !isEditActive && <button className="button-both-accent mb8 corner-margin" onClick={() => setIsEditActive(true)}>
                     <span>{__('Редактировать')}</span>
                 </button>}
-                {user && user.role === 'ADMIN' && isEditActive && <div className="flex pt12 pb12" style={{gap: '8px'}}>
+                {user && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && isEditActive && <div className="flex pt12 pb12" style={{gap: '8px'}}>
                     <button
                         className="button-tl-accent mb8 corner-margin"
                         onClick={saveHandler}
@@ -93,7 +93,7 @@ const TournamentRating = ({tournament}: {
                         <span>{__('Отмена')}</span>
                     </button>
                 </div>}
-                {user && user.role === 'ADMIN' && messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
+                {user && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
                 <table>
                     <thead>
                     <tr>
