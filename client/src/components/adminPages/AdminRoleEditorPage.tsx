@@ -74,33 +74,35 @@ const AdminRoleEditorPage = () => {
                     </div>
                     <div className="side__content-bottom">
                         <div className="side__container pb104">
-                            <h2 className="profile__heading mb12">{__('Админы')}</h2>
-                            <div className="profile__teams-tablet mb24">
-                                {admins.map((user) => (
-                                    <AdminUserRoleTablet user={user} setRole={setRole} key={user.id}/>
-                                ))}
-                                {admins.length === 0 && <>
-                                    <p className="text">{__('Пользователи не найдены')}</p>
-                                </>}
-                            </div>
-                            <h2 className="profile__heading mb12">{__('Поиск пользователей')}</h2>
-                            <label htmlFor="nickname" className="profile__search input-tl mb12">
-                                <input
-                                    type="text"
-                                    name="nickname"
-                                    placeholder={__('Никнейм игрока')}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)}
-                                    value={searchString}
-                                />
-                            </label>
-                            <div className="profile__teams-tablet mb24">
-                                {searchList.map((user) => (
-                                    <AdminUserRoleTablet user={user} setRole={setRole} key={user.id}/>
-                                ))}
-                                {searchList.length === 0 && <>
-                                    <p className="text">{__('Пользователи не найдены')}</p>
-                                </>}
-                            </div>
+                            {auth.user && auth.user.role === 'SUPERADMIN' ? <>
+                                <h2 className="profile__heading mb12">{__('Админы')}</h2>
+                                <div className="profile__teams-tablet mb24">
+                                    {admins.map((user) => (
+                                        <AdminUserRoleTablet user={user} setRole={setRole} key={user.id}/>
+                                    ))}
+                                    {admins.length === 0 && <>
+                                        <p className="text">{__('Пользователи не найдены')}</p>
+                                    </>}
+                                </div>
+                                <h2 className="profile__heading mb12">{__('Поиск пользователей')}</h2>
+                                <label htmlFor="nickname" className="profile__search input-tl mb12">
+                                    <input
+                                        type="text"
+                                        name="nickname"
+                                        placeholder={__('Никнейм игрока')}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)}
+                                        value={searchString}
+                                    />
+                                </label>
+                                <div className="profile__teams-tablet mb24">
+                                    {searchList.map((user) => (
+                                        <AdminUserRoleTablet user={user} setRole={setRole} key={user.id}/>
+                                    ))}
+                                    {searchList.length === 0 && <>
+                                        <p className="text">{__('Пользователи не найдены')}</p>
+                                    </>}
+                                </div>
+                            </> : <h2 className="side__subtitle">{__('Нет доступа...')}</h2>}
                         </div>
                     </div>
                 </div>
