@@ -183,7 +183,6 @@ class UserController {
             where: { nickname: nickname.trim() },
             attributes: ['id']
         })
-
         if (nicknameCandidate && (nicknameCandidate?.id !== parseInt(id))) {
             return next(ApiError.badRequest('Пользователь с таким никнеймом уже существует'))
         }
@@ -207,7 +206,7 @@ class UserController {
                 return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
             }
         }
-        user.nickname = nickname ? nickname : user.nickname
+        user.nickname = nickname ? nickname.trim() : user.nickname
         user.activisionId = activisionId ? activisionId : user.activisionId
         user.discord = discord ? discord : user.discord
         user.vk = vk ? vk : user.vk

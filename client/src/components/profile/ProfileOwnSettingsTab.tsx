@@ -47,8 +47,9 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
                 Authorization: `Bearer ${auth.token}`
             }, false)
             return {status: status || 'pos', text: message || text}
-        } catch (e) {}
-        return {status: 'neg', text: 'Что-то пошло не так...'}
+        } catch (e: any) {
+            return {status: 'neg', text: e.message}
+        }
     }
 
     const savePlatform = async (event: any) => {
@@ -63,14 +64,6 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
         clearError()
         const messageData = await saveChanges()
         setMessageOptionsSocial(messageData)
-    }
-
-    const savePassword = async (event: any) => {
-        event.preventDefault()
-        clearError()
-        console.log(changedUser)
-        const messageData = await saveChanges()
-        setMessageOptionsPasswords(messageData)
     }
 
     const saveProfile = async (event: any) => {
