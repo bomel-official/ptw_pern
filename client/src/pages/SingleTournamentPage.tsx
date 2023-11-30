@@ -110,7 +110,6 @@ export const SingleTournamentPage = () => {
                 teamId = team.id
                 newTeamUsed.changeNewTeam('id', team.id)
             }
-            console.log(teamId, newTeamUsed.newTeam)
             const {isOk} = await request(`/api/tournament/register`, 'POST', {
                 teamId: teamId,
                 tournamentId: tournamentRegistrationUsed.registerRequest.tournamentId,

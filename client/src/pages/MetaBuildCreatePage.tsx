@@ -15,12 +15,25 @@ import {AuthContext} from "../context/AuthContext";
 import {IMessageOptions} from "../StoreTypes";
 
 const MAX_ATTACHMENTS = 5
+const default_actives = [false, false, false, false, false]
 
 type IMetaBuildData = Record<string, string|number|null>
 type Attachment = {attachmentType: any, availableAttachments: Array<any>, attachment: any, range: [number, number]}
 const newAttachment: Attachment = {attachmentType: null, availableAttachments: [], attachment: null, range: [0, 0]}
 
 const MetaBuildCreatePage = () => {
+    const [actives, setActives] = useState<Array<boolean>>(default_actives)
+
+
+    const activeControlled = {
+        isActive: actives,
+        clickFunction: (index: number) => {
+            setActives(default_actives.map((_, i) => (i === index ? !actives[index] : false)))
+        },
+        selectFunction: () => {
+            setActives(default_actives)
+        }
+    }
 
     const [gameVersion, setGameVersion] = useState<IGameOnlyVersion>('wz')
     const [weaponType, setWeaponType] = useState<any>(null)
@@ -161,16 +174,19 @@ const MetaBuildCreatePage = () => {
                                             options={Object.values(GameVersions).map((ver: IGameVersionObject) => ({text: ver.name, value: ver.id}))}
                                             setValue={setGameVersion}
                                             text={__(GameVersions[gameVersion].name || 'Выберите игру')}
+                                            activeControlled={{...activeControlled, index: 0}}
                                     />
                                     <StateSelect
                                         options={weaponTypes.map(type => ({text: _f(type, 'title'), value: type}))}
                                         setValue={setWeaponType}
                                         text={_f(weaponType, 'title') || __("Тип оружия")}
+                                        activeControlled={{...activeControlled, index: 1}}
                                     />
                                     <StateSelect
                                         options={weapons.map(weapon => ({text: _f(weapon, 'title'), value: weapon}))}
                                         setValue={setWeapon}
                                         text={_f(weapon, 'title') || __("Оружие")}
+                                        activeControlled={{...activeControlled, index: 2}}
                                     />
                                 </div>
                             </div>
@@ -184,12 +200,13 @@ const MetaBuildCreatePage = () => {
                                         }))}
                                         setValue={(value) => setAttachmentItem(index, 'attachmentType', value)}
                                         text={_f(attachment.attachmentType, 'title') || __('Тип обвеса')}
+                                        activeControlled={{...activeControlled, index: 3}}
                                     />
                                     <StateSelect
                                         options={attachment.availableAttachments.map(weapon => ({text: _f(weapon, 'title'), value: weapon}))}
                                         setValue={(value) => setAttachmentItem(index, 'attachment', value)}
-                                        text={_f(attachment.attachment, 'title') || __('Обвес')
-                                        }
+                                        text={_f(attachment.attachment, 'title') || __('Обвес')}
+                                        activeControlled={{...activeControlled, index: 4}}
                                     />
                                     {attachment.attachment && attachment.attachment.isNumerable && <div className="build__grid-row" style={{padding: 0}}>
                                         <label htmlFor="range_V" className="input-tl">
