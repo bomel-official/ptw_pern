@@ -1,4 +1,4 @@
-import React, {Dispatch} from 'react';
+import React, {Dispatch, useContext} from 'react';
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {NavLink} from "react-router-dom";
 import {icons} from "../../data/PlatformIcons";
@@ -6,18 +6,25 @@ import {__} from "../../multilang/Multilang";
 import {ITeam} from "../../StoreTypes";
 import TeamMoreActionsDropdown from "./TeamMoreActionsDropdown";
 import TeamEditButton from "./TeamEditButton";
+import {AuthContext} from "../../context/AuthContext";
+import {getFile} from "../../functions/getFile";
+
+export type ITeamActions = {
+    setTeamToEditAndActivatePopup: (team: ITeam) => void,
+    deleteOrLeaveCallback: (team: ITeam) => void,
+    editCallback: (team: ITeam) => void,
+}
 
 const TeamTablet = ({team, actions}: {
     team: ITeam,
-    actions: {
-        setTeamToEditAndActivatePopup: () => void
-    }
+    actions: ITeamActions
 }) => {
+    const {user} = useContext(AuthContext)
     return (
         <div className="team__tablet">
             <div className="rating__team-flex">
                 <div className="rating__team-images">
-                    <img src={team.avatar_path ? team.avatar_path : DefaultUserPic} alt="nickname"/>
+                    <img src={getFile(team.avatar) || DefaultUserPic} alt="nickname"/>
                 </div>
                 <div className="rating__team-nicks">
                     <div className="bold flex">
@@ -27,16 +34,16 @@ const TeamTablet = ({team, actions}: {
                         </NavLink>
                     </div>
                     <div className="text flex">
-                        <span>5 {__('игроков')}</span>
+                        <span>{team.players.length} {__('игроков')}</span>
                     </div>
                 </div>
             </div>
-            { team.id && team.id % 2 === 0 && <div className="team__tablet-right flex ds">
-                <TeamEditButton setTeamToEditAndActivatePopup={actions.setTeamToEditAndActivatePopup}/>
+            { user && team.capitanId === user.id && <div className="team__tablet-right flex ds">
+                <TeamEditButton team={team} actions={actions} />
             </div> }
-            <TeamMoreActionsDropdown team={team}/>
-            { team.id && team.id % 2 === 0 && <div className="team__tablet-bottom flex mb">
-                <TeamEditButton setTeamToEditAndActivatePopup={actions.setTeamToEditAndActivatePopup}/>
+            <TeamMoreActionsDropdown team={team} actions={actions} />
+            { user && team.capitanId === user.id && <div className="team__tablet-bottom flex mb">
+                <TeamEditButton team={team} actions={actions} />
             </div> }
         </div>
     );

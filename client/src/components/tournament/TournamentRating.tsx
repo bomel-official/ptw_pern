@@ -59,7 +59,7 @@ const TournamentRating = ({tournament}: {
             const {isOk, message}: {isOk: boolean, message: string} = await request(
                 '/api/tournament/edit-register',
                 'POST',
-                {participants: participants.map(p => ({dataArray: p.dataArray, places: p.places, id: p.id, players: p.players.length}))},
+                {participants: participants.map(p => ({dataArray: p.dataArray, places: p.places, id: p.id, players: p.users.length}))},
                 {
                 Authorization: `Bearer ${token}`
             }, true)
@@ -70,7 +70,9 @@ const TournamentRating = ({tournament}: {
                 await fetchParticipants()
                 setIsEditActive(false)
             }
-        } catch (e) {}
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     if (!tournament) {
@@ -143,13 +145,13 @@ const TournamentRating = ({tournament}: {
                                         <input
                                             className="input-text small"
                                             type="number"
-                                            value={participant.places[i][0]}
+                                            value={participant.places[i][0] || -1}
                                             onChange={(e) => setParticipantPlaces(index, i, 0, parseInt(e.target.value))}
                                         />
                                         <input
                                             className="input-text small"
                                             type="number"
-                                            value={participant.places[i][1]}
+                                            value={participant.places[i][1] || 0}
                                             onChange={(e) => setParticipantPlaces(index, i, 1, parseInt(e.target.value))}
                                         />
                                     </div>}
@@ -162,11 +164,11 @@ const TournamentRating = ({tournament}: {
                             <td className="rating__team">
                                 <div className="rating__team-flex">
                                     <div className="rating__team-images">
-                                        <img src={getFile(participant.avatar) || DefaultUserPic} alt="nickname"/>
+                                        <img src={getFile(participant.team.avatar) || DefaultUserPic} alt="nickname"/>
                                     </div>
                                     <div className="rating__team-nicks">
                                         <div className="bold flex">
-                                            <span>{participant.title}</span>
+                                            <span>{participant.team.name}</span>
                                         </div>
                                         {participant.users && participant.users.map((reqUser) => (
                                             <div className="text flex" key={`user-${reqUser.id}`}>

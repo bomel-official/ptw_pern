@@ -212,73 +212,52 @@ class TournamentController {
     }
 
     async register (req, res, next) {
-        const {avatar} = req.files || {avatar: null}
-        const {capitan, teamId, players: playersJson, name, id, tournamentId, teamPlayers: teamPlayersJSON, teamCapitan} = req.body
-        const players = JSON.parse(playersJson)
-        const teamPlayers = JSON.parse(teamPlayersJSON)
+        const {teamId, players, tournamentId} = req.body
 
-        let filename = null
-        if (avatar) {
-            try {
-                filename = uuid.v4() + '.jpg'
-                const allowedFiletypes = ['image/jpeg', 'image/png']
-                if (!allowedFiletypes.find(type => type === avatar.mimetype)) {
-                    return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                }
-                await sharp(avatar.data).resize({
-                    width: 120,
-                    height: 120,
-                    fit: 'cover',
-                    background: {r: 255, g: 255, b: 255, alpha: 1}
-                }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
-            } catch (e) {
-                console.log(e)
-                return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
-            }
-        }
-        const tournament = await Tournament.findByPk(tournamentId)
-        if (!tournament || !teamCapitan || !capitan || teamCapitan !== capitan || req.user.id !== parseInt(teamCapitan)) {
-            return next(ApiError.badRequest('Ошибка, некорректный запрос'))
-        }
-        if (!players || players.length !== tournament.playersInTeam) {
-            return next(ApiError.badRequest('Некорректное количество участников'))
-        }
-        if (name.length < 3) {
-            return next(ApiError.badRequest('Название команды должно быть 3 и больше символов'))
-        }
-        for (let playerId of players) {
-            if (tournament.participantsList.includes(parseInt(playerId))) {
-                const usedUser = await User.findByPk(playerId)
-                return next(ApiError.badRequest(`${usedUser.nickname} - уже учавствует`))
-            }
-        }
-
-        const newReq = await Participant.create({
-            tournamentId,
-            points: 0,
-            players,
-            isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
-            dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
-            places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
-            avatar: filename
-        })
         try {
-            players.forEach(playerId => {
-                User.findByPk(playerId).then((player => {
-                    if (player) {
-                        newReq.addUser(player)
-                    } else {
-                        return next(ApiError.badRequest('Ошибка, некорректный запрос'))
-                    }
-                }))
+            const tournament = await Tournament.findByPk(tournamentId)
+            const team = await Team.findByPk(teamId)
+            if (!tournament || !team || team.capitanId !== req.user.id) {
+                return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+            }
+
+            for (let playerId of players) {
+                if (tournament.participantsList.includes(parseInt(playerId))) {
+                    const usedUser = await User.findByPk(playerId)
+                    return next(ApiError.badRequest(`${usedUser.nickname} - уже учавствует`))
+                }
+            }
+
+            const newReq = await Participant.create({
+                tournamentId,
+                points: 0,
+                players,
+                teamId,
+                isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
+                dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
+                places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
             })
+            try {
+                players.forEach(playerId => {
+                    User.findByPk(playerId).then((player => {
+                        if (player) {
+                            newReq.addUser(player)
+                        } else {
+                            return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+                        }
+                    }))
+                })
+            } catch (e) {
+                return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+            }
+            tournament.set({participantsList: [...tournament.participantsList, ...players]})
+            await tournament.save()
+
+            res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
         } catch (e) {
+            console.log(e)
             return next(ApiError.badRequest('Ошибка, некорректный запрос'))
         }
-        tournament.set({participantsList: [...tournament.participantsList, ...players]})
-        await tournament.save()
-
-        res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
     }
 
     async getParticipants(req, res, next) {
@@ -294,7 +273,7 @@ class TournamentController {
                 ['points', 'DESC'],
                 ['id', 'DESC'],
             ],
-            include: [{model: User}]
+            include: [{model: User}, {model: Team}]
         })
 
         return res.json({participants})

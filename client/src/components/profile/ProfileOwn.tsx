@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Header} from "../base/Header";
 import {GameTabs} from "../base/GameTabs";
 import {SideMenu} from "../base/SideMenu";
 import {ProfileTabs, ProfileTabsIds, sideMenuItems} from "../../data/Links";
 import {Footer} from "../base/Footer";
-import {IUser} from "../../StoreTypes";
+import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import ProfileTop from "./ProfileTop";
 import ProfileTabsMenu from "./ProfileTabs";
 import ProfileOwnGeneralTab from "./ProfileOwnGeneralTab";
@@ -14,11 +14,77 @@ import MetaBuildList from "../metaBuilds/MetaBuildList";
 import {__} from "../../multilang/Multilang";
 import {NavLink} from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext";
+import ProfileOwnTeamsTab from './ProfileOwnTeamsTab';
+import {useHttp} from "../../hooks/http.hook";
+import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 
 
 const ProfileOwn = ({user}: {user: IUser}) => {
     const [currentTab, setCurrentTab] = useState<ProfileTabsIds>('general')
-    const auth = useContext(AuthContext)
+    const [teamToEdit, setTeamToEdit] = useState<ITeam>(initNewTeam)
+    const [isEditTeamFormActive, setIsEditTeamFormActive] = useState<boolean>(false)
+    const [currentStep, setCurrentStep] = useState<number>(0)
+    const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
+        status: '', text: ''
+    })
+
+    const {token} = useContext(AuthContext)
+
+    const newTeamUsed = useNewTeam()
+    const {request, error, clearError} = useHttp()
+
+    const setTeamToEditAndActivatePopup = (team: ITeam) => {
+        clearError()
+        setTeamToEdit(team)
+        setIsEditTeamFormActive(true)
+        setCurrentStep(0)
+    }
+
+    const formData = new FormData()
+
+    useEffect(() => {
+        if (error) {
+            setMessageOptions({
+                status: 'neg',
+                text: error
+            })
+        }
+    }, [error])
+
+    const saveTeamToEdit = async () => {
+        clearError()
+        setMessageOptions({
+            status: '', text: ''
+        })
+        try {
+            const teamKeys = Object.keys(newTeamUsed.newTeam) as Array<keyof typeof newTeamUsed.newTeam>
+            teamKeys.forEach((key) => {
+                if (newTeamUsed.newTeam.hasOwnProperty(key) && key !== 'avatar_path') {
+                    if (key === 'avatar') {
+                        formData.set(key, newTeamUsed.newTeam.avatar || '')
+                    } else if (key === 'players') {
+                        formData.set(key, JSON.stringify(newTeamUsed.newTeam.players.map((pl => (pl.id)))))
+                    } else {
+                        formData.set(key, (newTeamUsed.newTeam[key]) ? JSON.stringify(newTeamUsed.newTeam[key]) : '')
+                    }
+                }
+            })
+            const {message, team} = await request(`/api/team/save-create`, 'POST', formData, {
+                Authorization: `Bearer ${token}`
+            }, false)
+            if (team && team.id) {
+                newTeamUsed.setNewTeam(team)
+                setMessageOptions({
+                    status: 'pos', text: message
+                })
+                return team
+            }
+        } catch (e: any) {
+            setMessageOptions({
+                status: 'neg', text: e.message
+            })
+        }
+    }
 
     return (
         <div className="ProfilePage full-height header-padding">
@@ -35,14 +101,34 @@ const ProfileOwn = ({user}: {user: IUser}) => {
                                 <ProfileOwnGeneralTab
                                     user={user}
                                     setCurrentTab={setCurrentTab}
+                                    saveTeamToEdit={saveTeamToEdit}
+                                    setIsEditTeamFormActive={setIsEditTeamFormActive}
+                                    setCurrentStep={setCurrentStep}
+                                    currentStep={currentStep}
+                                    isEditTeamFormActive={isEditTeamFormActive}
+                                    setTeamToEditAndActivatePopup={setTeamToEditAndActivatePopup}
+                                    messageOptions={messageOptions}
+                                    newTeamUsed={newTeamUsed}
+                                    teamToEdit={teamToEdit}
                                 />
                             }
                             {currentTab === "friends" &&
                                 <ProfileOwnFriendsTab user={user}/>
                             }
-                            {/*{currentTab === "teams" &&*/}
-                            {/*    <ProfileOwnTeamsTab user={user}/>*/}
-                            {/*}*/}
+                            {currentTab === "teams" &&
+                                <ProfileOwnTeamsTab
+                                    user={user}
+                                    saveTeamToEdit={saveTeamToEdit}
+                                    setIsEditTeamFormActive={setIsEditTeamFormActive}
+                                    setCurrentStep={setCurrentStep}
+                                    currentStep={currentStep}
+                                    isEditTeamFormActive={isEditTeamFormActive}
+                                    setTeamToEditAndActivatePopup={setTeamToEditAndActivatePopup}
+                                    messageOptions={messageOptions}
+                                    newTeamUsed={newTeamUsed}
+                                    teamToEdit={teamToEdit}
+                                />
+                            }
                             {currentTab === "settings" &&
                                 <ProfileOwnSettingsTab user={user}/>
                             }

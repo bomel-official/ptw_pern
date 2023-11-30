@@ -1,11 +1,13 @@
-import React, {ChangeEvent, Dispatch, useContext, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, useCallback, useContext, useEffect, useState} from 'react';
 import {__} from "../../multilang/Multilang";
 import {icons} from "../../data/PlatformIcons";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {Popup} from "./Popup";
-import {IMessageOptions, IUser} from "../../StoreTypes";
+import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import {getFile} from "../../functions/getFile";
 import {AuthContext} from "../../context/AuthContext";
+import {useHttp} from "../../hooks/http.hook";
+import {initNewTeam} from "../../hooks/newTeam.hook";
 
 const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive, submitHandler, messageOptions}: {
     newTeamUsed: any,
@@ -18,8 +20,20 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
 }) => {
     const [currentStep, setCurrentStep] = useState<number>(0)
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
-
+    const [teams, setTeams] = useState<Array<ITeam>>([])
     const {user} = useContext(AuthContext)
+    const {request} = useHttp()
+
+    const fetchTeams = useCallback(async () => {
+        if (user && user.id) {
+            const {rows} = await request(`/api/team/search?userId=${user.id}&type=own`, 'GET')
+            setTeams(rows)
+        }
+    }, [user])
+
+    useEffect(() => {
+        fetchTeams().catch()
+    }, [fetchTeams, user])
 
     const {
         newTeam,
@@ -29,7 +43,8 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
         playersSearch,
         changeNewTeamPlayers,
         clearNewPlayersSearch,
-        isUserIdIncluded
+        isUserIdIncluded,
+        setNewTeam,
     } = newTeamUsed
 
     const {
@@ -38,6 +53,14 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
         registerRequest
     } = tournamentRegistrationUsed
 
+    useEffect(() => {
+        if (user && user.id) {
+            if (!newTeam.id && !newTeam.capitanId) {
+                setNewTeam({...newTeam, capitanId: user.id, players: [user]})
+            }
+        }
+    }, [newTeam, user])
+
     return (
         <Popup
             isActive={isRegisterFormActive}
@@ -45,14 +68,68 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
             title={__('Принять участие')}
         >
             <div className="popup__smallText mb8">
-                { currentStep === 0 && __('Шаг 1. Создание команды')}
+                { currentStep === 0 && __('Шаг 1. Выбор команды')}
                 { currentStep === 1 && __('Шаг 2. Создание команды')}
-                { currentStep === 2 && __('Шаг 3. Сбор состава')}
+                { currentStep === 2 && __('Шаг 3. Создание команды')}
+                { currentStep === 3 && __('Шаг 4. Сбор состава')}
             </div>
             <div className="popup__progressbar mb12">
-                <div className="popup__progressbar-value" style={{width: `${(currentStep / 3 * 100).toFixed(2)}%`}}></div>
+                <div className="popup__progressbar-value" style={{width: `${(currentStep / 4 * 100).toFixed(2)}%`}}></div>
             </div>
             { currentStep === 0 &&
+                <>
+                    {!!teams.length && <div className="dropdown mb24">
+                        <label
+                            className="dropdown__current"
+                            onClick={() => setIsDropdownActive(!isDropdownActive)}
+                        >
+                            {newTeam.id && <div className="profileCard">
+                                <img src={getFile(newTeam.avatar) || DefaultUserPic} alt={newTeam.name || 'Team avatar'}
+                                     className="profileCard__avatar"/>
+                                <div className="profileCard__top">
+                                    <span className="profileCard__nickname">{newTeam.name}</span>
+                                </div>
+                            </div>}
+                            {!newTeam.id &&<span>{__('Выберите команду')}</span>}
+                        </label>
+                        <ul className={isDropdownActive ? "dropdown__values active" : "dropdown__values"}>
+                            {teams.map((team: ITeam) => (
+                                <li className="dropdown__value" key={team.id}>
+                                    <button
+                                        onClick={() => {
+                                            setNewTeam(team)
+                                            setIsDropdownActive(!isDropdownActive)
+                                            setCurrentStep(3)
+                                        }}
+                                    >
+                                        <div className="profileCard">
+                                            <img src={getFile(team.avatar) || DefaultUserPic} alt={team.name || 'Team avatar'}
+                                                 className="profileCard__avatar"/>
+                                            <div className="profileCard__top">
+                                                <span className="profileCard__nickname">{team.name}</span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>}
+                    {teams.length < 5 && <button
+                        className="button-both-accent popup__accentButton"
+                        onClick={() => {
+                            setNewTeam(initNewTeam)
+                            setCurrentStep(currentStep + 1)
+                        }}
+                    >
+                        <span>{__('Создать новую команду')}</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.16669 10H15.8334M15.8334 10L10 4.16669M15.8334 10L10 15.8334" stroke="white"
+                                  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>}
+                </>
+            }
+            { currentStep === 1 &&
                 <>
                     <label htmlFor="teamName" className="input-tl mb12">
                         <input
@@ -91,7 +168,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                     </button>
                 </>
             }
-            { currentStep === 1 &&
+            { currentStep === 2 &&
                 <>
                     <div className="dropdown mb24">
                         <div className="popup__smallText mb8 c-textTransparentWhite">{__('Пользователи должны быть у вас в друзьях')}</div>
@@ -107,9 +184,9 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                                 value={search}
                             />
                         </label>
-                        <ul className={playersSearch.length ? "dropdown__values active" : "dropdown__values"}>
+                        <ul className={!!playersSearch.length ? "dropdown__values active" : "dropdown__values"}>
                             {playersSearch.map((player: IUser) => (
-                                (player.id !== user?.id && !isUserIdIncluded(player.id)) &&
+                                (user && player.id !== user.id && !isUserIdIncluded(player.id)) &&
                                 <li className="dropdown__value" key={player.id}>
                                     <button
                                         onClick={() => {
@@ -129,10 +206,10 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                             ))}
                         </ul>
                     </div>
-                    {newTeam.teamPlayers.length && <>
+                    {!!newTeam.players.length && <>
                         <h4 className="popup__subtitle mb12">{__('Состав команды')}</h4>
                         <ul className="popup__players mb32">
-                            {newTeam.teamPlayers.map((player: IUser, index: number) => (
+                            {newTeam.players.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard">
                                         <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
@@ -167,7 +244,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                     </>}
                 </>
             }
-            { currentStep === 2 &&
+            { currentStep === 3 &&
                 <>
                     <div className="popup__newTeam mb24">
                         <div className="rating__team">
@@ -180,28 +257,28 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                                         <span>{newTeam.name}</span>
                                     </div>
                                     <div className="text flex">
-                                        <span>{newTeam.teamPlayers.length} {__('человек')}</span>
+                                        <span>{newTeam.players.length} {__('человек')}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <button
                             className="popup__cross"
-                            onClick={() => setCurrentStep(0)}
+                            onClick={() => (newTeam.id ? setCurrentStep(0) : setCurrentStep(1))}
                         >
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14.1667 1.66666L17.5 4.99999M17.5 4.99999L14.1667 8.33332M17.5 4.99999H5.83333C4.94928 4.99999 4.10143 5.35118 3.47631 5.9763C2.85119 6.60142 2.5 7.44927 2.5 8.33332V9.16666M5.83333 18.3333L2.5 15M2.5 15L5.83333 11.6667M2.5 15H14.1667C15.0507 15 15.8986 14.6488 16.5237 14.0237C17.1488 13.3986 17.5 12.5507 17.5 11.6667V10.8333" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
                     </div>
-                    {newTeam.teamPlayers.length && <>
+                    {!!newTeam.players.length && <>
                         <h4 className="popup__subtitle flex mb12">
                             <span className="mr-auto">{__('Выберите участников турнира')}</span>
                             <span className="white-text">{registerRequest.players.length}</span>
                             <span className="white-hoverText">/{playersInTeam}</span>
                         </h4>
                         <ul className="popup__players mb32">
-                            {newTeam.teamPlayers.map((player: IUser, index: number) => (
+                            {newTeam.players.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard mr-auto">
                                         <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>

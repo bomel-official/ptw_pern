@@ -70,7 +70,7 @@ export const SingleTournamentPage = () => {
 
     useEffect(() => {
         if (user) {
-            newTeamUsed.setNewTeam({...newTeamUsed.newTeam, teamPlayers: [user], teamCapitan: user.id})
+            newTeamUsed.setNewTeam({...newTeamUsed.newTeam, players: [user], capitanId: user.id})
             tournamentRegistrationUsed.setRegisterRequest({...tournamentRegistrationUsed.registerRequest, players: [user], capitan: user.id})
         }
     }, [user])
@@ -87,31 +87,37 @@ export const SingleTournamentPage = () => {
     const submitHandler = async () => {
         clearError()
         try {
-            const regKeys = Object.keys(tournamentRegistrationUsed.registerRequest) as Array<keyof typeof tournamentRegistrationUsed.registerRequest>
-            regKeys.forEach((key) => {
-                if (tournamentRegistrationUsed.registerRequest.hasOwnProperty(key)) {
-                    if (key === 'players') {
-                        formData.set(key, JSON.stringify(tournamentRegistrationUsed.registerRequest.players.map((pl => (pl.id)))))
-                    } else {
-                        formData.set(key, (tournamentRegistrationUsed.registerRequest[key]) ? JSON.stringify(tournamentRegistrationUsed.registerRequest[key]) : '')
+            let teamId = newTeamUsed.newTeam.id
+            if (teamId === null) {
+                const teamKeys = Object.keys(newTeamUsed.newTeam) as Array<keyof typeof newTeamUsed.newTeam>
+                teamKeys.forEach((key) => {
+                    if (newTeamUsed.newTeam.hasOwnProperty(key) && key !== 'avatar_path') {
+                        if (key === 'avatar') {
+                            formData.set(key, newTeamUsed.newTeam.avatar || '')
+                        } else if (key === 'players') {
+                            formData.set(key, JSON.stringify(newTeamUsed.newTeam.players.map((pl => (pl.id)))))
+                        } else {
+                            formData.set(key, (newTeamUsed.newTeam[key]) ? JSON.stringify(newTeamUsed.newTeam[key]) : '')
+                        }
                     }
+                })
+                const {team} = await request(`/api/team/save-create`, 'POST', formData, {
+                    Authorization: `Bearer ${token}`
+                }, false)
+                if (!team) {
+                    return false
                 }
-            })
-            const teamKeys = Object.keys(newTeamUsed.newTeam) as Array<keyof typeof newTeamUsed.newTeam>
-            teamKeys.forEach((key) => {
-                if (newTeamUsed.newTeam.hasOwnProperty(key) && key !== 'avatar_path') {
-                    if (key === 'avatar') {
-                        formData.set(key, newTeamUsed.newTeam.avatar || '')
-                    } else if (key === 'teamPlayers') {
-                        formData.set(key, JSON.stringify(newTeamUsed.newTeam.teamPlayers.map((pl => (pl.id)))))
-                    } else {
-                        formData.set(key, (newTeamUsed.newTeam[key]) ? JSON.stringify(newTeamUsed.newTeam[key]) : '')
-                    }
-                }
-            })
-            const {isOk} = await request(`/api/tournament/register`, 'POST', formData, {
+                teamId = team.id
+                newTeamUsed.changeNewTeam('id', team.id)
+            }
+            console.log(teamId, newTeamUsed.newTeam)
+            const {isOk} = await request(`/api/tournament/register`, 'POST', {
+                teamId: teamId,
+                tournamentId: tournamentRegistrationUsed.registerRequest.tournamentId,
+                players: tournamentRegistrationUsed.registerRequest.players.map(pl => pl.id)
+            }, {
                 Authorization: `Bearer ${token}`
-            }, false)
+            }, true)
             if (isOk) {
                 setMessageOptions({
                     status: 'pos', text: 'Вы зарегистрировалиь!!'

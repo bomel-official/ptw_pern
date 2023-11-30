@@ -1,33 +1,36 @@
-import React, {ChangeEvent, Dispatch, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, useContext, useEffect, useState} from 'react';
 import {__} from "../../multilang/Multilang";
 import {icons} from "../../data/PlatformIcons";
 import {NavLink} from "react-router-dom";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {Popup} from "./Popup";
 import PIC from "../../static/icons/PIC.jpg";
-import {ITeam, IUser} from "../../StoreTypes";
+import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
+import {AuthContext} from "../../context/AuthContext";
+import {getFile} from "../../functions/getFile";
 
 const TeamEditPopup = (
 {
     newTeamUsed,
-    userId,
     isEditTeamFormActive,
     setIsEditTeamFormActive,
     saveTeamToEdit,
     teamToEdit,
     currentStep,
-    setCurrentStep
+    setCurrentStep,
+    messageOptions
 }: {
     newTeamUsed: any,
-    userId: number | null,
     isEditTeamFormActive: boolean,
     setIsEditTeamFormActive: Dispatch<boolean>,
     saveTeamToEdit: (team: ITeam) => void,
     teamToEdit: ITeam,
     currentStep: number,
-    setCurrentStep: Dispatch<number>
+    setCurrentStep: Dispatch<number>,
+    messageOptions: IMessageOptions
 }) => {
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
+    const {user} = useContext(AuthContext)
 
     const {
         newTeam,
@@ -42,14 +45,14 @@ const TeamEditPopup = (
     } = newTeamUsed
 
     useEffect(() => {
-        setNewTeam({...teamToEdit})
-    }, [teamToEdit])
-
-    useEffect(() => {
-        if (userId !== null) {
-            newTeamUsed.changeNewTeamPlayers({avatar: PIC, nickname: 'user2', id: 1}, 'add')
+        if (user && user.id) {
+            if (teamToEdit.id && teamToEdit.capitanId) {
+                setNewTeam({...teamToEdit, players: teamToEdit.players})
+            } else {
+                setNewTeam({...teamToEdit, capitanId: user.id, players: [user]})
+            }
         }
-    }, [userId, newTeam])
+    }, [teamToEdit, user])
 
     return (
         <Popup
@@ -77,7 +80,7 @@ const TeamEditPopup = (
                         />
                     </label>
                     <label htmlFor="teamAvatarImage" className="fileInput input mb32">
-                        <span className="fileInput__text">{newTeam.avatar ? newTeam.avatar.name : __('Загрузить аватар')}</span>
+                        <span className="fileInput__text">{newTeam.avatar ? __('Изменить аватар') : __('Загрузить аватар')}</span>
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 12.5L15.4283 9.92833C15.1158 9.61588 14.6919 9.44036 14.25 9.44036C13.8081 9.44036 13.3842 9.61588 13.0717 9.92833L5.5 17.5M4.66667 2.5H16.3333C17.2538 2.5 18 3.24619 18 4.16667V15.8333C18 16.7538 17.2538 17.5 16.3333 17.5H4.66667C3.74619 17.5 3 16.7538 3 15.8333V4.16667C3 3.24619 3.74619 2.5 4.66667 2.5ZM9.66667 7.5C9.66667 8.42047 8.92047 9.16667 8 9.16667C7.07953 9.16667 6.33333 8.42047 6.33333 7.5C6.33333 6.57953 7.07953 5.83333 8 5.83333C8.92047 5.83333 9.66667 6.57953 9.66667 7.5Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -106,6 +109,7 @@ const TeamEditPopup = (
             { currentStep === 1 &&
                 <>
                     <div className="dropdown mb24">
+                        <div className="popup__smallText mb8 c-textTransparentWhite">{__('Пользователи должны быть у вас в друзьях')}</div>
                         <label
                             className="dropdown__current"
                             onClick={() => setIsDropdownActive(!isDropdownActive)}
@@ -114,26 +118,27 @@ const TeamEditPopup = (
                                 type="text"
                                 name="nickname"
                                 placeholder={__('Никнейм игрока')}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                    setSearch(e.target.value)
+                                }}
                                 value={search}
                             />
                         </label>
-                        <ul className={playersSearch.length ? "dropdown__values active" : "dropdown__values"}>
+                        <ul className={playersSearch && playersSearch.length ? "dropdown__values active" : "dropdown__values"}>
                             {playersSearch.map((player: IUser) => (
-                                (player.id !== userId && !isUserIdIncluded(player.id)) &&
+                                (user && player.id !== user.id && !isUserIdIncluded(player.id)) &&
                                 <li className="dropdown__value" key={player.id}>
                                     <button
                                         onClick={() => {
                                             changeNewTeamPlayers(player, 'add')
-                                            setSearch('')
                                             clearNewPlayersSearch()
                                         }}
                                     >
                                         <div className="profileCard">
-                                            <img src={player.avatar} alt={player.nickname} className="profileCard__avatar"/>
+                                            <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                             <div className="profileCard__top">
                                                 <span className="profileCard__nickname">{player.nickname}</span>
-                                                <img src={icons.pc} alt="User platform"/>
+                                                <img src={icons[player?.platform || 'pc']} alt="User platform"/>
                                             </div>
                                         </div>
                                     </button>
@@ -147,16 +152,13 @@ const TeamEditPopup = (
                             {newTeam.players.map((player: IUser, index: number) => (
                                 <li className="popup__player" key={index}>
                                     <div className="profileCard">
-                                        <img src={player.avatar} alt={player.nickname} className="profileCard__avatar"/>
+                                        <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                         <div className="profileCard__top">
                                             <span className="profileCard__nickname">{player.nickname}</span>
-                                            <img src={icons.pc} alt="User platform"/>
-                                            <NavLink to={'userTwitch'}>
-                                                <img src={icons.twitchUser} alt="User twitch"/>
-                                            </NavLink>
+                                            <img src={icons[player?.platform || 'pc']} alt="User platform"/>
                                         </div>
                                     </div>
-                                    {player.id !== userId && <button
+                                    {user && player.id !== user.id && <button
                                         className="popup__player-cross"
                                         onClick={() => {
                                             changeNewTeamPlayers(player, 'remove')
@@ -170,6 +172,7 @@ const TeamEditPopup = (
                             ))}
                         </ul>
                     </>}
+                    { messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
                     <div className="popup__buttons">
                         <button
                             className="button-tl-gray popup__grayButton"

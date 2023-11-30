@@ -1,33 +1,45 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, useEffect, useState} from 'react';
 import {__} from "../../multilang/Multilang";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import TeamTablet from "./TeamTablet";
 import TeamEditPopup from "../base/TeamEditPopup";
-import {ITeam, IUser} from "../../StoreTypes";
+import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
+import {useHttp} from "../../hooks/http.hook";
 
-const ProfileOwnTeamsTab = ({user}: {user: IUser}) => {
-    const [userId, setUserId] = useState<number | null>(null)
-    const [teamToEdit, setTeamToEdit] = useState<ITeam>(initNewTeam)
-    const [isEditTeamFormActive, setIsEditTeamFormActive] = useState<boolean>(false)
-    const [currentStep, setCurrentStep] = useState<number>(0)
+const ProfileOwnTeamsTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
+    user: IUser,
+    setTeamToEditAndActivatePopup: (team: ITeam) => void,
+    saveTeamToEdit: () => Promise<void>,
+    currentStep: number,
+    setCurrentStep: Dispatch<number>,
+    isEditTeamFormActive: boolean,
+    setIsEditTeamFormActive: Dispatch<boolean>,
+    newTeamUsed: any,
+    teamToEdit: ITeam,
+    messageOptions: IMessageOptions
+}) => {
 
-    const newTeamUsed = useNewTeam()
+    const [ownTeams, setOwnTeams] = useState<Array<ITeam>>([])
+    const [partTeams, setPartTeams] = useState<Array<ITeam>>([])
+
+    const {request} = useHttp()
+
+    const fetchTeamsByType = async (type: 'own' | 'part') => {
+        const {rows} = await request(`/api/team/search?userId=${user.id}&type=${type}`, 'GET')
+        return rows
+    }
 
     useEffect(() => {
-        setUserId(1)
-    }, [])
-
-    const saveTeamToEdit = (team: ITeam) => {
-        newTeamUsed.setNewTeam(initNewTeam)
-        setIsEditTeamFormActive(false)
-    }
-
-    const setTeamToEditAndActivatePopup = (team: ITeam) => {
-        setTeamToEdit(team)
-        setIsEditTeamFormActive(true)
-        setCurrentStep(0)
-    }
+        if (user && user.id) {
+            fetchTeamsByType('own').then(oTeams => {
+                setOwnTeams(oTeams)
+            })
+            fetchTeamsByType('part').then(pTeams => {
+                setPartTeams(pTeams)
+            })
+        }
+    }, [user])
 
     return (
         <div className="tournament pb104">
@@ -43,60 +55,56 @@ const ProfileOwnTeamsTab = ({user}: {user: IUser}) => {
                     </svg>
                     <span>{__('создать новую команду')}</span>
                 </button>
-                <h2 className="profile__heading mb12">{__('Созданные вами команды')}</h2>
-                <div className="profile__teams-tablet mb48">
-                    { [2, 4, 6].map((num, index) => {
-                        const team = {
-                            id: num,
-                            name: `team${num}`,
-                            avatar: null,
-                            avatar_path: DefaultUserPic,
-                            teamCapitan: null,
-                            teamPlayers: []
-                        }
-                        return (
+                {!!ownTeams.length && <>
+                    <h2 className="profile__heading mb12">{__('Созданные вами команды')}</h2>
+                    <div className="profile__teams-tablet mb48">
+                        {ownTeams.map((team, index) => (
                             <TeamTablet
-                                key={index}
+                                key={team.id}
                                 team={team}
                                 actions={{
-                                    setTeamToEditAndActivatePopup: () => setTeamToEditAndActivatePopup(team)
+                                    setTeamToEditAndActivatePopup,
+                                    deleteOrLeaveCallback: (team: ITeam) => {
+                                        setOwnTeams(ownTeams.filter(fTeam => fTeam.id !== team.id))
+                                    },
+                                    editCallback: () => {
+                                    }
                                 }}
                             />
-                        )
-                    })}
-                </div>
-                <h2 className="profile__heading mb12">{__('Команды в которых вы состоите')}</h2>
+                        ))}
+                    </div>
+                </>}
+                {!!partTeams.length && <>
+                    <h2 className="profile__heading mb12">{__('Команды в которых вы состоите')}</h2>
+                    <div className="profile__teams-tablet mb48">
+                        {partTeams.map((team, index) => (
+                            <TeamTablet
+                                key={team.id}
+                                team={team}
+                                actions={{
+                                    setTeamToEditAndActivatePopup,
+                                    deleteOrLeaveCallback: (team: ITeam) => {
+                                        setPartTeams(partTeams.filter(fTeam => fTeam.id !== team.id))
+                                    },
+                                    editCallback: () => {
+                                    }
+                                }}
+                            />
+                        ))}
+                    </div>
+                </>}
                 <div className="profile__teams-tablet">
-                    { [1,3,5,7,9].map((num, index) => {
-                        const team = {
-                            id: num,
-                            name: `team${num}`,
-                            avatar: null,
-                            avatar_path: DefaultUserPic,
-                            teamCapitan: null,
-                            teamPlayers: []
-                        }
-                        return (
-                            <TeamTablet
-                                key={index}
-                                team={team}
-                                actions={{
-                                    setTeamToEditAndActivatePopup: () => setTeamToEditAndActivatePopup(team)
-                                }}
-                            />
-                        )
-                    })}
                 </div>
             </div>
             <TeamEditPopup
                 newTeamUsed={newTeamUsed}
-                userId={userId}
                 isEditTeamFormActive={isEditTeamFormActive}
                 setIsEditTeamFormActive={setIsEditTeamFormActive}
                 saveTeamToEdit={saveTeamToEdit}
                 teamToEdit={teamToEdit}
                 currentStep={currentStep}
                 setCurrentStep={setCurrentStep}
+                messageOptions={messageOptions}
             />
         </div>
     );

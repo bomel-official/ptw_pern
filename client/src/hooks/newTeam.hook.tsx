@@ -9,8 +9,8 @@ export const initNewTeam: ITeam = {
     name: null,
     avatar: null,
     avatar_path: null,
-    teamCapitan: null,
-    teamPlayers: []
+    capitanId: null,
+    players: []
 }
 
 export const useNewTeam = () => {
@@ -35,7 +35,7 @@ export const useNewTeam = () => {
     }
 
     const isUserIdIncluded = (userId: number) => {
-        for (const player of newTeam.teamPlayers) {
+        for (const player of newTeam.players) {
             if (player.id === userId) {
                 return true
             }
@@ -45,10 +45,10 @@ export const useNewTeam = () => {
 
     const changeNewTeamPlayers = (requestPlayer: IUser, action: 'remove' | 'add') => {
         if (action === 'remove') {
-            changeNewTeam('teamPlayers', newTeam.teamPlayers.filter((player: IUser) => player.id !== requestPlayer.id))
+            changeNewTeam('players', newTeam.players.filter((player: IUser) => player.id !== requestPlayer.id))
         } else if (action === 'add') {
             if (!isUserIdIncluded(requestPlayer.id)) {
-                changeNewTeam('teamPlayers', [...newTeam.teamPlayers, requestPlayer])
+                changeNewTeam('players', [...newTeam.players, requestPlayer])
             }
         }
     }
@@ -60,7 +60,7 @@ export const useNewTeam = () => {
     const [playersSearch, setPlayersSearch] = useState<Array<IUser>>([])
 
     const fetchPlayersSearch = useCallback(async (debounced: string) => {
-        const {rows} = newTeam.teamCapitan ? await request(`/api/user/?s=${debounced}&friendOf=${newTeam.teamCapitan}`, 'GET') : {rows: []}
+        const {rows} = newTeam.capitanId ? await request(`/api/user/?s=${debounced}&friendOf=${newTeam.capitanId}`, 'GET') : {rows: []}
         setPlayersSearch(rows)
     }, [newTeam])
 
@@ -81,6 +81,6 @@ export const useNewTeam = () => {
         changeNewTeamPlayers,
         clearNewPlayersSearch,
         isUserIdIncluded,
-        setNewTeam
+        setNewTeam,
     }
 }

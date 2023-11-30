@@ -37,7 +37,6 @@ const FriendRequest = sequelize.define('friend_request', {
 
 const TeamRequest = sequelize.define('team_request', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    isAccepted: {type: DataTypes.BOOLEAN, defaultValue: false}
     // team: Team   ------------------ done
     // userTo: User   ------------------ done
 })
@@ -73,9 +72,9 @@ const Tournament = sequelize.define('tournament', {
 
 const Team = sequelize.define('team', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    slug: {type: DataTypes.STRING, allowNull: false},
-    title: {type: DataTypes.STRING, allowNull: false},
-    img: {type: DataTypes.STRING, allowNull: true},
+    slug: {type: DataTypes.STRING, allowNull: true},
+    name: {type: DataTypes.STRING, allowNull: true},
+    avatar: {type: DataTypes.STRING, allowNull: true},
     // requests: TeamRequest(Many)   ------------------ done
     // players: User(Many)   ------------------ done
     // capitan: User   ------------------ done
@@ -87,9 +86,6 @@ const Participant = sequelize.define('participant', {
     dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
     places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: []},
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
-    players: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
-    avatar: {type: DataTypes.STRING, allowNull: true},
-    title: {type: DataTypes.STRING, allowNull: true},
     // tournament: Tournament   ------------------ done
     // team: Team   ------------------ done
 })
@@ -197,10 +193,6 @@ Product.belongsToMany(Cart, {through: 'product_cart'})
 FriendRequest.belongsTo(User, {as: 'user_from'})
 FriendRequest.belongsTo(User, {as: 'user_to'})
 
-Team.hasMany(TeamRequest)
-TeamRequest.belongsTo(Team)
-User.hasOne(TeamRequest)
-
 Tournament.hasMany(Participant, {as: 'participants'})
 Participant.belongsTo(Tournament)
 Team.hasOne(Participant)
@@ -208,6 +200,11 @@ Participant.belongsTo(Team)
 
 Participant.belongsToMany(User, {through: 'participant_user'})
 User.belongsToMany(Participant, {through: 'participant_user'})
+
+Team.belongsToMany(User, {as: 'players', through: 'team_request'})
+User.belongsToMany(Team, {as: 'teams', through: 'team_request'})
+Team.belongsTo(User, {as: 'capitan'})
+User.hasMany(Team, {as: 'own_teams'})
 
 ProductCat.hasMany(Product)
 Product.belongsTo(ProductCat)
@@ -240,6 +237,5 @@ module.exports = {
     BuildWeaponType,
     BuildMode,
     BuildAttachment,
-    BuildAttachmentType,
-    ParticipantUser
+    BuildAttachmentType
 }

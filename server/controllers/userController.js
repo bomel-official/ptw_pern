@@ -105,37 +105,43 @@ class UserController {
 
     async search (req, res, next) {
         const {s, friendOf} = req.query
-
-        let capitan = null
-        if (friendOf) {
-            capitan = await User.findByPk(friendOf)
+        try {
+            let capitan = null
+            if (friendOf) {
+                capitan = await User.findByPk(friendOf)
+            }
+            const {count, rows} = await User.findAndCountAll({
+                where: {
+                    [Op.and]: [
+                        {
+                            [Op.or]: [
+                                {nickname: {
+                                        [Op.iLike]: `%${s}%`
+                                    }},
+                                {activisionId: {
+                                        [Op.iLike]: `%${s}%`
+                                    }}
+                            ]
+                        },
+                        capitan ? {
+                            id: {
+                                [Op.in]: capitan.friends
+                            }
+                        }: {}
+                    ]
+                },
+                limit: 10
+            })
+            return res.json({
+                message: `Пользователей найдено: ${count}`,
+                rows
+            })
+        } catch (e) {
+            return res.json({
+                message: `Пользователей найдено: ${0}`,
+                rows: []
+            })
         }
-        const {count, rows} = await User.findAndCountAll({
-            where: {
-                [Op.and]: [
-                    {
-                        [Op.or]: [
-                            {nickname: {
-                                    [Op.iLike]: `%${s}%`
-                                }},
-                            {activisionId: {
-                                    [Op.iLike]: `%${s}%`
-                                }}
-                        ]
-                    },
-                    capitan ? {
-                        id: {
-                            [Op.in]: capitan.friends
-                        }
-                    }: {}
-                ]
-            },
-            limit: 10
-        })
-        return res.json({
-            message: `Пользователей найдено: ${count}`,
-            rows
-        })
     }
     async getOne (req, res, next) {
         const {id} = req.params

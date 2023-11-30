@@ -1,10 +1,10 @@
-import React, {Dispatch, useCallback, useEffect, useState} from 'react';
+import React, {Dispatch, useCallback, useContext, useEffect, useState} from 'react';
 import ProfileStats from "./ProfileStats";
 import {__} from "../../multilang/Multilang";
 import TeamTablet from "./TeamTablet";
 import TournamentTablet from "../tournament/TournamentTablet";
 import ProfilePlatform from "./ProfilePlatform";
-import {ITeam, IUser} from "../../StoreTypes";
+import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import {ProfileTabsIds, socialItems} from "../../data/Links";
 import ProfileTablet from "./ProfileTablet";
 import UserAvatar from "../../static/icons/ANIME.jpg";
@@ -14,85 +14,80 @@ import TeamEditPopup from "../base/TeamEditPopup";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {TournamentsList} from "../tournament/TournamentsList";
 import {useHttp} from "../../hooks/http.hook";
+import {AuthContext} from "../../context/AuthContext";
 
-const ProfileOwnGeneralTab = (
-    {user, setCurrentTab}: {
-        user: IUser | null,
-        setCurrentTab: Dispatch<ProfileTabsIds>,
-    }) => {
+const ProfileOwnGeneralTab = ({user, setCurrentTab, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
+    setCurrentTab: Dispatch<ProfileTabsIds>,
+    user: IUser,
+    setTeamToEditAndActivatePopup: (team: ITeam) => void,
+    saveTeamToEdit: () => Promise<ITeam|void>,
+    currentStep: number,
+    setCurrentStep: Dispatch<number>,
+    isEditTeamFormActive: boolean,
+    setIsEditTeamFormActive: Dispatch<boolean>,
+    newTeamUsed: any,
+    teamToEdit: ITeam,
+    messageOptions: IMessageOptions
+}) => {
     const [friendsList, setFriendsList] = useState<IUser[]>([])
-    const [teamToEdit, setTeamToEdit] = useState<ITeam>(initNewTeam)
-    const [isEditTeamFormActive, setIsEditTeamFormActive] = useState<boolean>(false)
-    const [currentStep, setCurrentStep] = useState<number>(0)
-
-    const newTeamUsed = useNewTeam()
     const {request} = useHttp()
+    const [teams, setTeams] = useState<Array<ITeam>>([])
 
     const fetchFriends = useCallback(async () => {
-        const data = await request(`/api/friend/friends/${user?.id}`, 'GET')
+        const data = await request(`/api/friend/friends/${user.id}`, 'GET')
         setFriendsList(data.friends || [])
     }, [])
 
+    const fetchTeams = useCallback(async () => {
+        const {rows} = await request(`/api/team/search?userId=${user.id}&type=part`, 'GET')
+        setTeams(rows)
+    }, [])
+
     useEffect(() => {
-        if (user?.id) {
+        if (user && user.id) {
             fetchFriends().catch()
+            fetchTeams().catch()
         }
     }, [user])
-
-
-    const saveTeamToEdit = (team: ITeam) => {
-        newTeamUsed.setNewTeam(initNewTeam)
-        setIsEditTeamFormActive(false)
-    }
-
-    const setTeamToEditAndActivatePopup = (team: ITeam) => {
-        setTeamToEdit(team)
-        setIsEditTeamFormActive(true)
-        setCurrentStep(0)
-    }
 
 
     return (
         <div className="tournament pb104">
             <div className="tournament__content">
                 <ProfileStats user={user}/>
-                {false && <><h2 className="profile__heading mb12">{__('Ваши команды')}</h2>
-                <div className="profile__teams-tablet mb48">
-                    {[1, 2, 3, 4].map((num, index) => {
-                        const team = {
-                            id: num,
-                            name: `team${num}`,
-                            avatar: null,
-                            avatar_path: DefaultUserPic,
-                            teamCapitan: null,
-                            teamPlayers: []
-                        }
-                        return (
+                {!!teams.length && <>
+                    <h2 className="profile__heading mb12">{__('Ваши команды')}</h2>
+                    <div className="profile__teams-tablet mb48">
+                        {teams.map((team, index) => (
                             <TeamTablet
-                                key={index}
+                                key={team.id}
                                 team={team}
                                 actions={{
-                                    setTeamToEditAndActivatePopup: () => setTeamToEditAndActivatePopup(team)
+                                    setTeamToEditAndActivatePopup,
+                                    deleteOrLeaveCallback: (team: ITeam) => {
+                                        setTeams(teams.filter(fTeam => fTeam.id !== team.id))
+                                    },
+                                    editCallback: () => {
+                                    }
                                 }}
                             />
-                        )
-                    })}
-                    <div className="profile__teams-tablet-bottom">
-                        <button
-                            className="profile__teams-tablet-more"
-                            // onClick={() => setCurrentTab('teams')}
-                        >
-                            <span>{__('Перейти к командам')}</span>
-                        </button>
+                        ))}
+                        <div className="profile__teams-tablet-bottom">
+                            <button
+                                className="profile__teams-tablet-more"
+                                onClick={() => setCurrentTab('teams')}
+                            >
+                                <span>{__('Перейти к командам')}</span>
+                            </button>
+                        </div>
                     </div>
-                </div></>}
+                </>}
                 <h2 className="profile__heading mb12 ds">{__('Участие в турнирах')}</h2>
                 <div className="profile__tournaments-tablet ds">
                     <TournamentsList columns={2}/>
                 </div>
             </div>
             <div className="tournament__sidebar-box">
-                {/*<ProfilePlatform/>*/}
                 <>
                     <h2 className="profile__heading mb12">{__('Ваши друзья')}</h2>
                     <div className="tournament__sidebar-block mb32">
@@ -133,13 +128,18 @@ const ProfileOwnGeneralTab = (
             </div>
             <TeamEditPopup
                 newTeamUsed={newTeamUsed}
-                userId={user?.id || null}
                 isEditTeamFormActive={isEditTeamFormActive}
                 setIsEditTeamFormActive={setIsEditTeamFormActive}
-                saveTeamToEdit={saveTeamToEdit}
+                saveTeamToEdit={async () => {
+                    const team = await saveTeamToEdit()
+                    if (team) {
+                        setTeams(teams.map(mTeam => (mTeam.id === team.id ? team : mTeam)))
+                    }
+                }}
                 teamToEdit={teamToEdit}
                 currentStep={currentStep}
                 setCurrentStep={setCurrentStep}
+                messageOptions={messageOptions}
             />
         </div>
     );

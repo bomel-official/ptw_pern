@@ -1,12 +1,13 @@
 import React from 'react';
 import {__} from "../../multilang/Multilang";
 import {ITeam} from "../../StoreTypes";
+import {ITeamActions} from "./TeamTablet";
 
-const TeamEditButton = ({setTeamToEditAndActivatePopup}: {setTeamToEditAndActivatePopup: () => void}) => {
+const TeamEditButton = ({team, actions}: {team: ITeam, actions: ITeamActions}) => {
     return (
         <button
             className="team__tablet-edit"
-            onClick={setTeamToEditAndActivatePopup}
+            onClick={() => actions.setTeamToEditAndActivatePopup(team)}
         >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path

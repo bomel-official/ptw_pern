@@ -144,7 +144,10 @@ export const ProfileTabs: Record<ProfileTabsIds, {name: string, id: ProfileTabsI
         name: 'Друзья',
         id: 'friends'
     },
-    'teams': null,
+    'teams': {
+        name: 'Команды',
+        id: 'teams'
+    },
     'settings': {
         name: 'Настройка',
         id: 'settings'
