@@ -150,6 +150,14 @@ const BuildMode = sequelize.define('build_mode', {
     title_EU: {type: DataTypes.STRING, allowNull: true}
 })
 
+const Question = sequelize.define('question', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    question_RU: {type: DataTypes.STRING, allowNull: true},
+    question_EU: {type: DataTypes.STRING, allowNull: true},
+    answer_RU: {type: DataTypes.STRING, allowNull: true},
+    answer_EU: {type: DataTypes.STRING, allowNull: true}
+})
+
 BuildWeapon.hasMany(Build)
 Build.belongsTo(BuildWeapon)
 BuildWeaponType.hasMany(Build)
@@ -237,5 +245,6 @@ module.exports = {
     BuildWeaponType,
     BuildMode,
     BuildAttachment,
-    BuildAttachmentType
+    BuildAttachmentType,
+    Question
 }

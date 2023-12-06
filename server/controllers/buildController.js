@@ -131,7 +131,7 @@ class BuildController {
                     title_EU,
                     title_RU,
                     buildWeaponTypeId,
-                    image: filename,
+                    image: filename || item.image,
                     gameVersion,
                     allowedAttachments: JSON.parse(allowedAttachments)
                 })
@@ -272,7 +272,7 @@ class BuildController {
         const {buildId} = req.body
         try {
             const build = await Build.findByPk(buildId)
-            if (build.userId !== req.user.id && req.user.role !== "ADMIN") {
+            if (build.userId !== req.user.id && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN") {
                 return next(ApiError.forbidden('Нет доступа'))
             }
             await build.destroy()
