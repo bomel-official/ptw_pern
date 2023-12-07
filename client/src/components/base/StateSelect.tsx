@@ -6,18 +6,16 @@ const StateSelect = ({text = "Выбрать", options, setValue, activeControll
     options: Array<{ value: any, text: string }>,
     setValue: (value: any) => void,
     activeControlled?: {
-        index: number,
-        clickFunction: (index: number) => void,
-        selectFunction: () => void,
-        isActive: Array<boolean>
+        clickFunction: () => void,
+        isActive: boolean
     }
 }) => {
     const [isActive, setIsActive] = useState<boolean>(false)
     return (
-        <div className={(activeControlled ? activeControlled.isActive[activeControlled.index] : isActive) ? "select active" : "select"}>
+        <div className={(activeControlled ? activeControlled.isActive : isActive) ? "select active" : "select"}>
             <div className="select__current" onClick={() => {
                 if (activeControlled) {
-                    activeControlled.clickFunction(activeControlled.index)
+                    activeControlled.clickFunction()
                 } else {
                     setIsActive(!isActive)
                 }
@@ -30,13 +28,8 @@ const StateSelect = ({text = "Выбрать", options, setValue, activeControll
             <div className="select__options">
                 {options.map((option, index) => (
                     <div className="select__option" key={index} onClick={() => {
-                        if (activeControlled) {
-                            activeControlled.selectFunction()
-                            setValue(option.value)
-                        } else {
-                            setIsActive(false)
-                            setValue(option.value)
-                        }
+                        setIsActive(false)
+                        setValue(option.value)
                     }}>
                         <span className="select__option-text">{__(option.text)}</span>
                     </div>
