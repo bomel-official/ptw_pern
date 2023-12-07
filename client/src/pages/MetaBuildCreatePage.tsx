@@ -69,8 +69,8 @@ const MetaBuildCreatePage = () => {
                     } :
                     {
                         ...att,
-                        isTypeActive: (type === 'type') ? val : att.isTypeActive,
-                        isAttachmentActive: (type === 'attachment') ? val : att.isAttachmentActive
+                        isTypeActive: (type === 'type') ? val : false,
+                        isAttachmentActive: (type === 'attachment') ? val : false
                     }
             ))))
         } else {
