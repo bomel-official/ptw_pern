@@ -766,7 +766,7 @@ export const Translations: ITranslations = {
     },
     "Соц. сеть": {
         "RU": "Соц. сеть",
-        "EU": "Social net"
+        "EU": "ProfileSocial net"
     },
     "Добавить социальную сеть": {
         "RU": "Добавить социальную сеть",
@@ -778,7 +778,7 @@ export const Translations: ITranslations = {
     },
     "Социальные сети": {
         "RU": "Социальные сети",
-        "EU": "Social media"
+        "EU": "ProfileSocial media"
     },
     "Сменить пароль": {
         "RU": "Сменить пароль",
@@ -886,7 +886,7 @@ export const Translations: ITranslations = {
     },
     "Соц.сети игрока": {
         "RU": "Соц.сети игрока",
-        "EU": "Social networks of the player"
+        "EU": "ProfileSocial networks of the player"
     },
     "Результаты турниров": {
         "RU": "Результаты турниров",

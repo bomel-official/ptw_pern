@@ -77,6 +77,7 @@ const ProfileOwn = ({user}: {user: IUser}) => {
                 setMessageOptions({
                     status: 'pos', text: message
                 })
+                setIsEditTeamFormActive(false)
                 return team
             }
         } catch (e: any) {

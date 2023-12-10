@@ -216,10 +216,10 @@ class UserController {
         user.activisionId = activisionId ? activisionId : user.activisionId
         user.discord = discord ? discord : user.discord
         user.vk = vk ? vk : user.vk
-        user.youtube = youtube ? youtube : user.youtube
+        user.youtube = youtube ? youtube.replace('https://www.youtube.com/', '') : user.youtube
         user.steam = steam ? steam : user.steam
-        user.twitch = twitch ? twitch : user.twitch
-        user.twitter = twitter ? twitter : user.twitter
+        user.twitch = twitch ? twitch.replace('https://www.twitch.tv/', '') : user.twitch
+        user.twitter = twitter ? twitter.replace('https://twitter.com/', '') : user.twitter
         user.platform = platform ? platform : user.platform
         user.device = device ? device : user.device
 

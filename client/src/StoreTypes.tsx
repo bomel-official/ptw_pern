@@ -28,8 +28,7 @@ export type IBuildAttachment = {
     buildAttachmentType: IBuildAttachmentType,
     build_attachment_type: number,
     title_RU: string,
-    title_EU: string,
-    isNumerable: boolean
+    title_EU: string
 }
 
 export type IBuildWeaponType = {

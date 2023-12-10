@@ -9,11 +9,9 @@ import {NavLink} from "react-router-dom";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {TournamentsList} from "../tournament/TournamentsList";
 import {useHttp} from "../../hooks/http.hook";
+import ProfileSocial from "./ProfileSocial";
 
-const ProfileViewGeneralTab = (
-    {user}: {
-        user: IUser | null
-    }) => {
+const ProfileViewGeneralTab = ({user}: {user: IUser}) => {
     const [friendsList, setFriendsList] = useState<IUser[]>([])
     const {request} = useHttp()
 
@@ -48,21 +46,7 @@ const ProfileViewGeneralTab = (
                         </div>
                     </div>
                 </>
-                <>
-                    <h2 className="profile__heading mb12">{__('Соц.сети')}</h2>
-                    <div className="side__left-social flex">
-                        { socialItems.map((value, index) => (
-                            <NavLink
-                                className="side__left-social-item"
-                                to={value.to}
-                                key={index}
-                                target="_blank"
-                            >
-                                <img src={value.icon} alt={`Our ${value.name} channel`} width="20" height="20"/>
-                            </NavLink>
-                        )) }
-                    </div>
-                </>
+                <ProfileSocial user={user}/>
             </div>
         </div>
     );

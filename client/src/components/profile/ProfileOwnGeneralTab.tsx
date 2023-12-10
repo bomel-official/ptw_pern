@@ -15,6 +15,7 @@ import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {TournamentsList} from "../tournament/TournamentsList";
 import {useHttp} from "../../hooks/http.hook";
 import {AuthContext} from "../../context/AuthContext";
+import ProfileSocial from "./ProfileSocial";
 
 const ProfileOwnGeneralTab = ({user, setCurrentTab, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
     setCurrentTab: Dispatch<ProfileTabsIds>,
@@ -104,27 +105,7 @@ const ProfileOwnGeneralTab = ({user, setCurrentTab, setTeamToEditAndActivatePopu
                         </button>
                     </div>
                 </>
-                <>
-                    <h2 className="profile__heading mb12">{__('Ваши соц.сети')}</h2>
-                    <p className="text">
-                        {__('Тут отображаются ваши соц сети, добавить их можно в')} <a href="#" onClick={(e) => {
-                            e.preventDefault()
-                            setCurrentTab('settings')
-                        }}>{__('настройках')}</a>
-                    </p>
-                    <div className="side__left-social flex">
-                        { socialItems.map((value, index) => (
-                            <NavLink
-                                className="side__left-social-item"
-                                to={value.to}
-                                key={index}
-                                target="_blank"
-                            >
-                                <img src={value.icon} alt={`Our ${value.name} channel`} width="20" height="20"/>
-                            </NavLink>
-                        )) }
-                    </div>
-                </>
+                <ProfileSocial user={user}/>
             </div>
             <TeamEditPopup
                 newTeamUsed={newTeamUsed}

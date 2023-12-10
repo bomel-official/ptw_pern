@@ -132,11 +132,6 @@ const AdminMetaBuildsPage = () => {
                                         title: 'Версия игры',
                                         name: 'gameVersion',
                                         type: 'selectGame'
-                                    },
-                                    {
-                                        title: 'Использовать диапазоны',
-                                        name: 'isNumerable',
-                                        type: 'checkbox'
                                     }
                                 ]}
                             />

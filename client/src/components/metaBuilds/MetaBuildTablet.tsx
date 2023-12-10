@@ -157,28 +157,6 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                                 <p className="meta-build__data-item-title">{_f(attachment, 'title')}</p>
                                 <p className="meta-build__data-item-type">{_f(attachment.build_attachment_type, 'title')}</p>
                             </div>
-                            {attachment.isNumerable && build.attachments[index] && <>
-                                <div className="meta-build__data-item-size">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
-                                         fill="none">
-                                        <path
-                                            d="M7.16797 15L10.5013 18.3334M10.5013 18.3334L13.8346 15M10.5013 18.3334V1.66669M7.16797 5.00002L10.5013 1.66669M10.5013 1.66669L13.8346 5.00002"
-                                            stroke="#EA5B3E" strokeWidth="1.5" strokeLinecap="round"
-                                            strokeLinejoin="round"/>
-                                    </svg>
-                                    <span>{build.attachments[index][2].toFixed(2)}</span>
-                                </div>
-                                <div className="meta-build__data-item-size">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
-                                         fill="none">
-                                        <path
-                                            d="M15.5013 6.66669L18.8346 10M18.8346 10L15.5013 13.3334M18.8346 10H2.16797M5.5013 6.66669L2.16797 10M2.16797 10L5.5013 13.3334"
-                                            stroke="#EA5B3E" strokeWidth="1.5" strokeLinecap="round"
-                                            strokeLinejoin="round"/>
-                                    </svg>
-                                    <span>{build.attachments[index][3].toFixed(2)}</span>
-                                </div>
-                            </>}
                         </div>
                     </li>))}
                 </ul>

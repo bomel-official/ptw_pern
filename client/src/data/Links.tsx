@@ -83,23 +83,54 @@ export const socialItems = [
         to: '/discord',
         icon: DiscordIcon,
         name: 'Discord',
+        serviceUrl: 'https://discordapp.com/users/'
     },
     {
         to: '/twitch',
         icon: TwitchIcon,
-        name: 'Twitch'
+        name: 'Twitch',
+        serviceUrl: 'https://www.twitch.tv/'
     },
     {
         to: '/twitter',
         icon: TwitterIcon,
-        name: 'Twitter'
+        name: 'Twitter',
+        serviceUrl: 'https://twitter.com/'
     },
     {
         to: '/youtube',
         icon: YoutubeIcon,
-        name: 'YouTube'
+        name: 'YouTube',
+        serviceUrl: 'https://www.youtube.com/'
     }
 ]
+
+export const socialObjects = {
+    'discord': {
+        to: '/discord',
+        icon: DiscordIcon,
+        name: 'Discord',
+        serviceUrl: 'https://discordapp.com/users/'
+    },
+    'twitch': {
+        to: '/twitch',
+        icon: TwitchIcon,
+        name: 'Twitch',
+        serviceUrl: 'https://www.twitch.tv/'
+    },
+    'twitter': {
+        to: '/twitter',
+        icon: TwitterIcon,
+        name: 'Twitter',
+        serviceUrl: 'https://twitter.com/'
+    },
+    'youtube': {
+        to: '/youtube',
+        icon: YoutubeIcon,
+        name: 'YouTube',
+        serviceUrl: 'https://www.youtube.com/'
+    }
+}
 
 export const sideMenuItems: Record<string, {to: string, icon: string, name: string, isMarginBottom: boolean}> = {
     '/tournaments' : {
