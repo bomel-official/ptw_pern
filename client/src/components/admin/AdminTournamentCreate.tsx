@@ -83,6 +83,17 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
         } catch (e) {}
     }
 
+    const dateBegin = newTournament.dateBegin ? new Date(newTournament.dateBegin) : null
+    const dateEnd = newTournament.dateEnd ? new Date(newTournament.dateEnd) : null
+    const offsetMinutes = (dateBegin && newTournament.dateBegin) ? dateBegin.getTimezoneOffset() : 0
+    if (dateBegin) {
+        dateBegin.setTime(dateBegin.getTime() - offsetMinutes * 60 * 1000 )
+    }
+    if (dateEnd) {
+        dateEnd.setTime(dateEnd.getTime() - offsetMinutes * 60 * 1000 )
+    }
+
+
     return (
         <form onSubmit={createHandler} action={"null"} method="POST">
             <h2 className="profile__heading mb12">{tournament.id ? __('Редактировать') + ': ' + _f(newTournament, 'title') : __('Создать турнир')}</h2>
@@ -197,7 +208,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             placeholder={__("Дата начала")}
                             required={true}
                             onChange={e => changeTournamentField('dateBegin', e.target.value)}
-                            value={newTournament.dateBegin ? new Date(newTournament.dateBegin).toISOString().slice(0, -1) : ''}
+                            value={dateBegin ? dateBegin.toISOString().slice(0, -1) : ''}
                         />
                     </label>
                     <label htmlFor="dateEnd" className="input-br">
@@ -207,7 +218,7 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             placeholder={__("Дата конца")}
                             required={true}
                             onChange={e => changeTournamentField('dateEnd', e.target.value)}
-                            value={newTournament.dateEnd ? new Date(newTournament.dateEnd).toISOString().slice(0, -1) : ''}
+                            value={dateEnd ? dateEnd.toISOString().slice(0, -1) : ''}
                         />
                     </label>
                 </div>

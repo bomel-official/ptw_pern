@@ -864,6 +864,11 @@ input[type=file] {
       width: 212px;
       margin: 0 14px;
     }
+    &-unregister {
+      @include rounded-button('black', $TL: true, $fontWeight: 400, $padding: 14px 8px, $color: $white);
+      width: 212px;
+      margin: 0 14px;
+    }
     &-share {
       @include rounded-button('black', $BR: true, $fontWeight: 400, $padding: 14px 6px, $color: $white);
       margin: 0 14px;

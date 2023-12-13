@@ -28,6 +28,7 @@ export const SingleTournamentPage = () => {
     const [isRegisterFormActive, setIsRegisterFormActive] = useState<boolean>(false)
     const [tournament, setTournament] = useState<ITournament|null>(null)
     const [isRegisterActive, setIsRegisterActive] = useState(false)
+    const [registerHTML, setRegisterHTML] = useState(<span className="side__top-reg-inactive">{__('Региистрация недоступна')}</span>)
     const {request, error, clearError} = useHttp()
     const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
         status: '', text: ''
@@ -44,18 +45,52 @@ export const SingleTournamentPage = () => {
         setTournament(tournament)
     }, [])
 
+    const unregisterParticipant = async () => {
+        if (tournament) {
+            const {isOk} = await request(`/api/tournament/unregister`, 'POST', {tournamentId: tournament.id}, {
+                Authorization: `Bearer ${token}`
+            }, true)
+            if (isOk) {
+                fetchTournament().catch(() => {})
+            }
+            return isOk
+        }
+    }
+
     useEffect(() => {
         const dateBegin = new Date(tournament?.dateBegin || 0)
         let registerFlag = false
-        if (
-            (tournament) &&
-            (user) &&
-            (dateBegin.getTime() > Date.now()) &&
-            (tournament.isRegisterOn) &&
-            (!tournament.participantsList.includes(user.id)) &&
-            (tournament.participantsList.length + playersInTeam <= tournament.maxUsers)
-        ) {
-            registerFlag = true
+        if (tournament && tournament.isRegisterOn) {
+            if ((user) &&
+                (dateBegin.getTime() > Date.now()) &&
+                (!tournament.participantsList.includes(user.id)) &&
+                (tournament.participantsList.length + playersInTeam <= tournament.maxUsers)
+            ) {
+                setRegisterHTML(<button
+                    className="side__top-register"
+                    onClick={() => setIsRegisterFormActive(true)}
+                >
+                    Принять участие
+                </button>)
+            } else if (tournament.participantsList.length + playersInTeam > tournament.maxUsers) {
+                setRegisterHTML(<span className="side__top-reg-inactive">Достигнуто максимальное количество участников</span>)
+            } else if (user && tournament.participantsList.includes(user.id)) {
+                setRegisterHTML(<button
+                    className="side__top-unregister"
+                    onClick={unregisterParticipant}
+                >
+                    Покинуть турнир
+                </button>)
+            } else if (!user) {
+                setRegisterHTML(<NavLink
+                    to={'/auth'}
+                    className="side__top-register"
+                >
+                    Принять участие
+                </NavLink>)
+            }
+        } else {
+            setRegisterHTML(<span className="side__top-reg-inactive">Региистрация недоступна</span>)
         }
         setIsRegisterActive(registerFlag)
     }, [tournament, user])
@@ -121,6 +156,7 @@ export const SingleTournamentPage = () => {
                 setMessageOptions({
                     status: 'pos', text: 'Вы зарегистрировалиь!!'
                 })
+                fetchTournament().catch(() => {})
                 return true
             }
         } catch (e) {}
@@ -177,13 +213,7 @@ export const SingleTournamentPage = () => {
                                 <div className="side__top-right">
                                     <div className="side__top-reg-time">{__('Регистрация до')} {getDateString(dateBegin, 'dd.mm.yyyy h:i')}</div>
                                     <div className="side__top-buttons flex">
-                                        {isRegisterActive && <button
-                                            className="side__top-register"
-                                            onClick={() => setIsRegisterFormActive(true)}
-                                        >
-                                            {__('Принять участие')}
-                                        </button>}
-                                        {!isRegisterActive && <span className="side__top-reg-inactive">{__('Региистрация недоступна')}</span>}
+                                        {registerHTML}
                                         <NavLink to={tournament.twitchChannel} target="_blank" className="side__top-share">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7.15833 11.2584L12.85 14.575M12.8417 5.42502L7.15833 8.74169M17.5 4.16669C17.5 5.5474 16.3807 6.66669 15 6.66669C13.6193 6.66669 12.5 5.5474 12.5 4.16669C12.5 2.78598 13.6193 1.66669 15 1.66669C16.3807 1.66669 17.5 2.78598 17.5 4.16669ZM7.5 10C7.5 11.3807 6.38071 12.5 5 12.5C3.61929 12.5 2.5 11.3807 2.5 10C2.5 8.61931 3.61929 7.50002 5 7.50002C6.38071 7.50002 7.5 8.61931 7.5 10ZM17.5 15.8334C17.5 17.2141 16.3807 18.3334 15 18.3334C13.6193 18.3334 12.5 17.2141 12.5 15.8334C12.5 14.4526 13.6193 13.3334 15 13.3334C16.3807 13.3334 17.5 14.4526 17.5 15.8334Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -396,7 +426,7 @@ export const SingleTournamentPage = () => {
                                              className="tournament__participants-link">{__('Смотреть участников')}</NavLink>
                                 </div>
                             </div>}
-                            { (currentTab === 'participants') && <div className="rating pb104">
+                            { (currentTab === 'participants') && <div className="pb104">
                                 <div className="tournament__content">
                                     <div className="tournament__fund">
                                         <div className="tournament__fund-top both-borders">
@@ -415,7 +445,7 @@ export const SingleTournamentPage = () => {
                                     <TournamentRating tournament={tournament}/>
                                 </div>
                             </div> }
-                            { (currentTab === 'rating') && <div className="rating pb104">
+                            { (currentTab === 'rating') && <div className="pb104">
                                 <div className="tournament__content">
                                     {dateEnd.getTime() < new Date().getTime() && <div className="tournament__fund">
                                         <div className="tournament__fund-top">

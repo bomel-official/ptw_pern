@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError");
-const {Tournament, Participant, PlayerResult, User, Team} = require('../models/models')
+const {Tournament, Participant, PlayerResult, User, Team, Build} = require('../models/models')
 const uuid = require("uuid");
 const sharp = require("sharp");
 const path = require("path");
@@ -217,8 +217,12 @@ class TournamentController {
         try {
             const tournament = await Tournament.findByPk(tournamentId)
             const team = await Team.findByPk(teamId)
+
             if (!tournament || !team || team.capitanId !== req.user.id) {
                 return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+            }
+            if (players.length !== tournament.playersInTeam) {
+                return next(ApiError.badRequest('Некорректное количество участников!'))
             }
 
             for (let playerId of players) {
@@ -306,6 +310,52 @@ class TournamentController {
             return res.json({isOk: true, message: 'Данные обновлены!'})
         } catch (e) {
             return res.json({isOk: false, message: e.message})
+        }
+    }
+
+    async unregister(req, res, next) {
+        const {participantId, tournamentId} = req.body
+
+        try {
+            let participant
+            if (participantId) {
+                participant = await Participant.findOne({
+                    where: {
+                        id: participantId
+                    },
+                    include: [{model: User}]
+                })
+            } else {
+                const allParticipants = await Participant.findAll({
+                    where: {
+                        [Op.and]: [
+                            {
+                                tournamentId
+                            }
+                        ]
+                    },
+                    include: [{model: User, as: 'users'}]
+                })
+                for (let ptsp of allParticipants) {
+                    if (ptsp.users.filter((user) => (user.id === req.user.id)).length) {
+                        participant = ptsp
+                    }
+                }
+            }
+            const participantPlayerIds = participant.users.map(user => (user.id))
+            const tournament = await Tournament.findByPk(participant.tournamentId)
+            if (participantPlayerIds.includes(req.user.id) && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN") {
+                return next(ApiError.forbidden('Нет доступа'))
+            }
+            await participant.destroy()
+            tournament.set({
+                participantsList: tournament.participantsList.filter((userId => (!participantPlayerIds.includes(userId))))
+            })
+            await tournament.save()
+            return res.json({isOk: true, message: 'Удалено!'})
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest('Ошибка...'))
         }
     }
 }

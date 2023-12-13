@@ -235,6 +235,7 @@ module.exports = {
     ProductCat,
     Product,
     Participant,
+    ParticipantUser,
     Team,
     Tournament,
     TeamRequest,

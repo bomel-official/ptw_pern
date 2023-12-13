@@ -405,7 +405,9 @@
 }
 
 .rating {
-  overflow-x: auto;
+  .dropdown__current {
+    width: auto;
+  }
 
   table {
     border-collapse: collapse;
