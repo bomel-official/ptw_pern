@@ -130,7 +130,7 @@ class TournamentController {
     }
 
     async search(req, res, next) {
-        const {type, userId} = req.params
+        const {type, userId} = req.query
         let where = {}
         try {
             if (type && userId && type === 'capitan') {
@@ -139,11 +139,12 @@ class TournamentController {
                 }
             }
             if (type && userId && type === 'part') {
-                const rows = await TeamRequest.findAll({where: {userId}})
+                const teamReqs = await TeamRequest.findAll({where: {userId}})
                 const teamIds = []
-                rows.reduce((acc, item) => {
-                    teamIds.push(item.id)
-                })
+                for (let item of teamReqs) {
+                    teamIds.push(item.teamId)
+                }
+                console.log(teamIds)
                 where = {
                     id: teamIds
                 }
