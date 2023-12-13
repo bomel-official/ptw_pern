@@ -111,6 +111,9 @@ const TournamentRating = ({tournament}: {
                     </thead>
                     <tbody>
                     {participants.map((participant, index) => {
+                        if (!participant || !participant.team) {
+                            return (<></>)
+                        }
                         const players = participant.users.length
                         const roundsInfo = []
                         const killAmounts = Array(players).fill(0)
