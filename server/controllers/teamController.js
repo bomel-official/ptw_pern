@@ -133,7 +133,7 @@ class TournamentController {
         const {type, userId} = req.query
         let where = {}
         try {
-            if (type && userId && type === 'capitan') {
+            if (type && userId && type === 'own') {
                 where = {
                     userId: userId
                 }
@@ -144,7 +144,6 @@ class TournamentController {
                 for (let item of teamReqs) {
                     teamIds.push(item.teamId)
                 }
-                console.log(teamIds)
                 where = {
                     id: teamIds
                 }
