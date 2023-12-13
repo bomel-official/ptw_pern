@@ -2,7 +2,7 @@ const uuid = require("uuid");
 const ApiError = require("../error/ApiError");
 const sharp = require("sharp");
 const path = require("path");
-const {User, Team} = require("../models/models");
+const {User, Team, TeamRequest} = require("../models/models");
 const {Op} = require("sequelize");
 
 const TEAMS_LIMIT = 5
@@ -139,8 +139,13 @@ class TournamentController {
                 }
             }
             if (type && userId && type === 'part') {
+                const rows = await TeamRequest.findAll({where: {userId}})
+                const teamIds = []
+                rows.reduce((acc, item) => {
+                    teamIds.push(item.id)
+                })
                 where = {
-                    [Op.contains]: userId
+                    id: teamIds
                 }
             }
             const rows = await Team.findAll({
