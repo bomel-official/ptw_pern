@@ -180,6 +180,13 @@ const TournamentRating = ({tournament}: {
                                     <div className="rating__team-nicks">
                                         <div className="bold flex">
                                             <span>{participant.team.name}</span>
+                                            <NavLink
+                                                target='_blank'
+                                                to={`https://www.multitwitch.tv/${participant.users.map((user) => user.twitch).join('/')}`}
+                                                className="multitwitch"
+                                            >
+                                                <img src={icons.video} alt="MultiTwitch"/>
+                                            </NavLink>
                                         </div>
                                         {participant.users && participant.users.map((reqUser) => (
                                             <NavLink to={`/profile/${reqUser.nickname}`} className="text flex" key={`user-${reqUser.id}`}>

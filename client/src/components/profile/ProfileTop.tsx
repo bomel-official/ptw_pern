@@ -1,12 +1,13 @@
 import React, {Dispatch, useContext} from 'react';
 import {icons} from "../../data/PlatformIcons";
 import {__} from "../../multilang/Multilang";
-import {ProfileTabsIds} from "../../data/Links";
+import {ProfileTabsIds, socialObjects} from "../../data/Links";
 import {IUser} from "../../StoreTypes";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {AuthContext} from "../../context/AuthContext";
 import {getFile} from "../../functions/getFile";
 import DiscordIcon from "./../../static/icons/discord-white.svg"
+import {NavLink} from "react-router-dom";
 
 const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
     isOwn: boolean,
@@ -16,6 +17,7 @@ const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
     tabs:  Record<ProfileTabsIds, {name: string, id: ProfileTabsIds} | null>
 }) => {
     const {logout} = useContext(AuthContext)
+    const {twitch} = socialObjects
 
     const dateCreated = new Date(Date.parse(user?.createdAt || ''))
 
@@ -38,6 +40,10 @@ const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
                                             <img src={DiscordIcon} alt="Discord"/>
                                             <span>{user?.discord_username}</span>
                                         </div>}
+                                        {user?.twitch && <NavLink to={`${twitch.serviceUrl}${user?.twitch}`} target="_blank" className="side__top-profile-tw">
+                                            <img src={twitch.icon} alt="Twitch"/>
+                                            <span>{user?.twitch}</span>
+                                        </NavLink>}
                                     </div>
                                     <div className="side__top-profile-info-bottom">
                                         <span>{__('Играет с')} {`${dateCreated.getDate() < 10 ? '0' + dateCreated.getDate() : dateCreated.getDate()}.${(dateCreated.getMonth() + 1) < 10 ? '0' + (dateCreated.getMonth() + 1) : dateCreated.getMonth() + 1}.${dateCreated.getFullYear()}`}</span>

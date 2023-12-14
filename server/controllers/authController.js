@@ -11,7 +11,7 @@ class AuthController {
     }
     async discordRedirect(req, res, next) {
         if (!req.query.code) {
-            return next(ApiError.badRequest('Некорректный запрос'))
+            return res.redirect(process.env.CLIENT_URL + `/auth/`);
         }
         const {code} = req.query
         const params = new URLSearchParams({

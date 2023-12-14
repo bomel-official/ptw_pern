@@ -769,7 +769,8 @@ input[type=file] {
         background: $gray;
         border-radius: 4px;
       }
-      &-ds {
+      &-ds,
+      &-tw{
         font-family: 'Inter', sans-serif;
         font-size: 14px;
         font-weight: 400;
@@ -788,6 +789,9 @@ input[type=file] {
           width: 24px;
           object-fit: contain;
         }
+      }
+      &-tw {
+        background-color: #9448FF;
       }
       &-logout {
         @include rounded-button('gray', $BR: true, $TL: true, $padding: 0);

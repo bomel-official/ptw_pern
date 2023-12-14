@@ -475,9 +475,11 @@
     }
     &-nicks {
       svg, img {
-        margin-left: 4px;
+        margin-right: 3px;
         width: 16px;
         height: 16px;
+        object-fit: contain;
+        object-position: center center;
       }
       .a-img {
         width: 16px;
@@ -486,6 +488,9 @@
       a {
         display: flex;
         align-items: center;
+      }
+      .multitwitch {
+        margin-left: 4px;
       }
     }
   }
