@@ -182,11 +182,11 @@ const TournamentRating = ({tournament}: {
                                             <span>{participant.team.name}</span>
                                         </div>
                                         {participant.users && participant.users.map((reqUser) => (
-                                            <div className="text flex" key={`user-${reqUser.id}`}>
-                                                <span>{reqUser.nickname}</span>
+                                            <NavLink to={`/profile/${reqUser.nickname}`} className="text flex" key={`user-${reqUser.id}`}>
                                                 <img src={icons[reqUser?.platform || 'pc']} alt="User platform"/>
                                                 <img src={icons[reqUser?.device || 'km']} alt="User device"/>
-                                            </div>))}
+                                                <span>{reqUser.nickname}</span>
+                                            </NavLink>))}
                                     </div>
                                 </div>}
                             </td>

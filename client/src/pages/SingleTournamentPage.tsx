@@ -112,6 +112,7 @@ export const SingleTournamentPage = () => {
 
     useEffect(() => {
         if (tournament && tournament.id) {
+            setPlayersInTeam(tournament.playersInTeam)
             tournamentRegistrationUsed.changeRegisterForm('tournamentId', tournament.id)
         }
     }, [tournament])
