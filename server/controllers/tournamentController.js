@@ -275,7 +275,7 @@ class TournamentController {
             },
             order: [
                 ['points', 'DESC'],
-                ['id', 'DESC'],
+                ['id', 'ASC'],
             ],
             include: [{model: User}, {model: Team}]
         })

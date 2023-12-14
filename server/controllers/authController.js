@@ -73,7 +73,7 @@ class AuthController {
             }
         } catch (e) {
             console.log(e)
-            return next(ApiError.badRequest('Некорректный запрос'))
+            return res.redirect(process.env.CLIENT_URL + `/auth/`);
         }
     }
     async getUserByCookie(req, res, next) {
