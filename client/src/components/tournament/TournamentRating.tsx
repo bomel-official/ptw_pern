@@ -122,9 +122,6 @@ const TournamentRating = ({tournament}: {
                     </thead>
                     <tbody>
                     {participants.map((participant, index) => {
-                        if (!participant || !participant.team) {
-                            return (<></>)
-                        }
                         const players = participant.users.length
                         const roundsInfo = []
                         const killAmounts = Array(players).fill(0)
@@ -176,7 +173,7 @@ const TournamentRating = ({tournament}: {
                         return (<tr key={participant.id}>
                             <td>{index + 1}</td>
                             <td className="rating__team">
-                                <div className="rating__team-flex">
+                                {participant.team && <div className="rating__team-flex">
                                     <div className="rating__team-images">
                                         <img src={getFile(participant.team.avatar) || DefaultUserPic} alt="nickname"/>
                                     </div>
@@ -191,7 +188,7 @@ const TournamentRating = ({tournament}: {
                                                 <img src={icons[reqUser?.device || 'km']} alt="User device"/>
                                             </div>))}
                                     </div>
-                                </div>
+                                </div>}
                             </td>
                             {roundsInfo}
                             <td>
