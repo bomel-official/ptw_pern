@@ -153,8 +153,8 @@ const Question = sequelize.define('question', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     question_RU: {type: DataTypes.STRING, allowNull: true},
     question_EU: {type: DataTypes.STRING, allowNull: true},
-    answer_RU: {type: DataTypes.STRING, allowNull: true},
-    answer_EU: {type: DataTypes.STRING, allowNull: true}
+    answer_RU: {type: DataTypes.TEXT, allowNull: true},
+    answer_EU: {type: DataTypes.TEXT, allowNull: true}
 })
 
 BuildWeapon.hasMany(Build)
