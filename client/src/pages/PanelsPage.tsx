@@ -19,15 +19,14 @@ const PanelsPage = () => {
                                     e.currentTarget.parentElement?.classList.toggle('active')
                                 }}
                             >
-                                <span>Вопрос и ответ</span>
+                                <span>{__('Как зарегистрироваться на турнир?')}</span>
                                 <div className="panel__icon">
                                     <span/>
                                     <span/>
                                 </div>
                             </button>
                             <div className="panel__content">
-                                <p>Lorem ipsum dolor sit amet consectetur. Leo viverra donec purus in neque facilisi dictum nisl eget. Varius nec sagittis quis pellentesque. Sagittis laoreet sed sed dictumst laoreet nullam ut sit.
-                                    In elementum pellentesque placerat vestibulum consectetur tortor sed. Ullamcorper cras tortor potenti proin orci egestas placerat.</p>
+                                <p>{__('')}</p>
                             </div>
                         </li>
                     </ul>

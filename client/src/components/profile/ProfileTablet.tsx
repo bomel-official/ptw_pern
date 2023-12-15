@@ -69,7 +69,7 @@ const ProfileTablet = ({user, actions, type}: {
                     </div>}
                 </div>
             </div>
-            { type === 'request' && <div className="team__tablet-bottom flex profile">
+            { currentUser?.id !== user.id && type === 'request' && <div className="team__tablet-bottom flex profile">
                 {!isRestricted && !isAdded && <button className="team__tablet-ignore" onClick={restrictFriedRequest}>
                     <span>{__('Игнорировать')}</span>
                 </button>}
@@ -80,7 +80,7 @@ const ProfileTablet = ({user, actions, type}: {
                 {isRestricted && <span>{__('Отклонено')}</span>}
                 {isAdded && <span>{__('Принято')}</span>}
             </div>}
-            { (type === 'friend' || type === 'mini' || type === 'search') && <>
+            { currentUser?.id !== user.id && (type === 'friend' || type === 'mini' || type === 'search') && <>
                 {(currentUser?.friends.includes(user.id)) && <>
                     <div className="dropdown dropdown-mini">
                         <button

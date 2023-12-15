@@ -73,7 +73,7 @@ export const menuItems = [
     },
     {
         to: '/feedback',
-        name: 'Обратная связь',
+        name: 'FAQ',
         icon: MailIcon
     },
 ]

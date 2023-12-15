@@ -10,8 +10,9 @@ import {AuthContext} from "../../context/AuthContext";
 
 export const AMOUNT_ROUNDS = 5
 
-const TournamentRating = ({tournament}: {
-    tournament: ITournament | null
+const TournamentRating = ({tournament, type}: {
+    tournament: ITournament | null,
+    type?: 'users' | 'rating'
 }) => {
     const [participants, setParticipants] = useState<Array<IParticipant>>([])
     const [isEditActive, setIsEditActive] = useState<boolean>(false)
@@ -23,10 +24,10 @@ const TournamentRating = ({tournament}: {
 
     const fetchParticipants = useCallback(async () => {
         if (tournament && tournament.id) {
-            const {participants: fetchedParticipants} = await request(`/api/tournament/get-participants?tournamentId=${tournament.id}`, 'GET')
+            const {participants: fetchedParticipants} = await request(`/api/tournament/get-participants?tournamentId=${tournament.id}&type=${type || ''}`, 'GET')
             setParticipants(fetchedParticipants)
         }
-    }, [tournament])
+    }, [tournament, type])
 
     useEffect(() => {
         fetchParticipants().catch()

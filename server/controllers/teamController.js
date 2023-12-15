@@ -99,7 +99,7 @@ class TournamentController {
                 }
                 const slug = name.toString().toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, "")
                 if (slug.length <= 3) {
-                    return next(ApiError.badRequest('Название команды должно быть написано латиницей, без особых символов'))
+                    return next(ApiError.badRequest('Название команды должно быть длиннее 3 символов, написано латиницей, без особых символов'))
                 }
                 const team = await Team.create({
                     name,

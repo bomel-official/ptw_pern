@@ -1247,6 +1247,10 @@ input[type=file] {
     display: none;
   }
 
+  &__delete {
+    @include rounded-button('gray', $TL: true, $BR: true, $fontWeight: 400, $padding: 4px, $color: $white);
+  }
+
   &__icon {
     width: 20px;
     height: 20px;

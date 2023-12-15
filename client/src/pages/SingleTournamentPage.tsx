@@ -60,8 +60,17 @@ export const SingleTournamentPage = () => {
     useEffect(() => {
         const dateBegin = new Date(tournament?.dateBegin || 0)
         let registerFlag = false
-        if (tournament && tournament.isRegisterOn) {
-            if ((user) &&
+        if (tournament) {
+            if (user && tournament.participantsList.includes(user.id)) {
+                setRegisterHTML(<button
+                    className="side__top-unregister"
+                    onClick={unregisterParticipant}
+                >
+                    Покинуть турнир
+                </button>)
+            } else if (!tournament.isRegisterOn) {
+                setRegisterHTML(<span className="side__top-reg-inactive">Регистрация закрыта</span>)
+            } else if ((user) &&
                 (dateBegin.getTime() > Date.now()) &&
                 (!tournament.participantsList.includes(user.id)) &&
                 (tournament.participantsList.length + playersInTeam <= tournament.maxUsers)
@@ -74,13 +83,6 @@ export const SingleTournamentPage = () => {
                 </button>)
             } else if (tournament.participantsList.length + playersInTeam > tournament.maxUsers) {
                 setRegisterHTML(<span className="side__top-reg-inactive">Достигнуто максимальное количество участников</span>)
-            } else if (user && tournament.participantsList.includes(user.id)) {
-                setRegisterHTML(<button
-                    className="side__top-unregister"
-                    onClick={unregisterParticipant}
-                >
-                    Покинуть турнир
-                </button>)
             } else if (!user) {
                 setRegisterHTML(<NavLink
                     to={'/auth'}
@@ -90,7 +92,7 @@ export const SingleTournamentPage = () => {
                 </NavLink>)
             }
         } else {
-            setRegisterHTML(<span className="side__top-reg-inactive">Региистрация недоступна</span>)
+            setRegisterHTML(<span className="side__top-reg-inactive">Регистрация недоступна</span>)
         }
         setIsRegisterActive(registerFlag)
     }, [tournament, user])
@@ -443,12 +445,12 @@ export const SingleTournamentPage = () => {
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Участники турнира')}</h2>
                                     </div>
-                                    <TournamentRating tournament={tournament}/>
+                                    <TournamentRating tournament={tournament} type={'users'}/>
                                 </div>
                             </div> }
                             { (currentTab === 'rating') && <div className="pb104">
                                 <div className="tournament__content">
-                                    {dateEnd.getTime() < new Date().getTime() && <div className="tournament__fund">
+                                    {false && dateEnd.getTime() < new Date().getTime() && <div className="tournament__fund">
                                         <div className="tournament__fund-top">
                                             <h2 className="tournament__fund-heading">{__('Победители')}</h2>
                                             <div className="tournament__fund-number">
@@ -480,7 +482,7 @@ export const SingleTournamentPage = () => {
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Результаты турнира')}</h2>
                                     </div>
-                                    <TournamentRating tournament={tournament}/>
+                                    <TournamentRating tournament={tournament} type={'rating'}/>
                                 </div>
                             </div> }
                             { (currentTab === 'rules') && <div className="tournament pb104">

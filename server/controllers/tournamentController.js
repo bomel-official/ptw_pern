@@ -265,7 +265,7 @@ class TournamentController {
     }
 
     async getParticipants(req, res, next) {
-        const {tournamentId} = req.query
+        const {tournamentId, type} = req.query
         if (!tournamentId) {
             return res.json({participants: []})
         }
@@ -273,7 +273,9 @@ class TournamentController {
             where: {
                 tournamentId: tournamentId
             },
-            order: [
+            order: (!type || type === 'users') ? [
+                ['id', 'ASC'],
+            ] : [
                 ['points', 'DESC'],
                 ['id', 'ASC'],
             ],
@@ -317,7 +319,7 @@ class TournamentController {
         const {participantId, tournamentId} = req.body
 
         try {
-            let participant
+            let participant = null
             if (participantId) {
                 participant = await Participant.findOne({
                     where: {
@@ -344,7 +346,7 @@ class TournamentController {
             }
             const participantPlayerIds = participant.users.map(user => (user.id))
             const tournament = await Tournament.findByPk(participant.tournamentId)
-            if (participantPlayerIds.includes(req.user.id) && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN") {
+            if (!participant || !participantPlayerIds.includes(req.user.id) && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN") {
                 return next(ApiError.forbidden('Нет доступа'))
             }
             await participant.destroy()

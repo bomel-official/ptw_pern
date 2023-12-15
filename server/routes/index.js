@@ -9,6 +9,7 @@ const productRouter = require('./productRouter')
 const teamRouter = require('./teamRouter')
 const tournamentRouter = require('./tournamentRouter')
 const friendsRouter = require('./friendsRouter')
+const questionRouter = require('./questionRouter')
 
 
 router.use('/user', userRouter)
@@ -20,6 +21,7 @@ router.use('/product', productRouter)
 router.use('/team', teamRouter)
 router.use('/tournament', tournamentRouter)
 router.use('/friend', friendsRouter)
+router.use('/question', questionRouter)
 
 
 module.exports = router
