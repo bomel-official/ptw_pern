@@ -274,12 +274,12 @@ class TournamentController {
                 tournamentId: tournamentId
             },
             order: (!type || type === 'users') ? [
-                [{ model: User, as: 'users' }, 'id', 'ASC'],
                 ['id', 'ASC'],
-            ] : [
                 [{ model: User, as: 'users' }, 'id', 'ASC'],
+            ] : [
                 ['points', 'DESC'],
                 ['id', 'ASC'],
+                [{ model: User, as: 'users' }, 'id', 'ASC'],
             ],
             include: [
                 {model: User, as: 'users' },
