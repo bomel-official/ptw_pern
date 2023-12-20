@@ -798,16 +798,17 @@ button {
       padding-right: 64px;
       position: relative;
       z-index: 3;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     &__image-wrapper {
-      margin-right: 48px;
-      margin-bottom: -75px;
+      padding-right: 48px;
       position: relative;
-      display: flex;
-      max-width: 120px;
+      width: 100%;
+      margin-left: 0;
       z-index: 1;
-      border-radius: 4px;
-      overflow: hidden;
 
       &::after {
         content: '';
@@ -820,6 +821,12 @@ button {
         z-index: 2;
         //box-shadow: inset 0 0 10px 5px rgba(0,0,0, 1);
       }
+    }
+    &__author, &__header {
+      margin-bottom: 0;
+    }
+    &__buttons {
+      z-index: 4;
     }
     &__weapon-image {
     }

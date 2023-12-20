@@ -135,9 +135,11 @@
     object-position: center;
     max-width: 176px;
     margin-left: auto;
+    display: flex;
   }
   &__weapon-image {
     width: 100%;
+    border-radius: 4px;
   }
   &__buttons {
     position: absolute;
