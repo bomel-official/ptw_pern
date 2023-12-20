@@ -130,11 +130,14 @@
   &__date {
     background: $gray;
   }
-  &__weapon-image {
+  &__image-wrapper {
     object-fit: contain;
     object-position: center;
     max-width: 176px;
     margin-left: auto;
+  }
+  &__weapon-image {
+    width: 100%;
   }
   &__buttons {
     position: absolute;

@@ -76,7 +76,10 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                                 <div className="meta-build__date">{getDateString(dateCreated)}</div>
                             </div>
                         </div>
-                        <img src={getFile(build.build_weapon.image)} alt={_f(build.build_weapon, 'title')} className="meta-build__weapon-image"/>
+                        {!!build.build_weapon.image && <div className="meta-build__image-wrapper">
+                            <img src={getFile(build.build_weapon.image)} alt={_f(build.build_weapon, 'title')}
+                                 className="meta-build__weapon-image"/>
+                        </div>}
                         <div className="meta-build__buttons">
                             {user && (build.user.id === user.id || (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN')) && <>
                                 <div className="dropdown dropdown-mini">

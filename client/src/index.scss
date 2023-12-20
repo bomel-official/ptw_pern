@@ -797,9 +797,26 @@ button {
     &__left {
       padding-right: 64px;
     }
-    &__weapon-image {
-      margin-right: auto;
+    &__image-wrapper {
+      margin-right: 48px;
       margin-bottom: -60px;
+      position: relative;
+      display: flex;
+      max-width: 120px;
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        z-index: 1;
+        box-shadow: inset 0 0 10px 10px rgba(0,0,0, 1);
+      }
+    }
+    &__weapon-image {
     }
     &__data-item-size {
       width: auto;
