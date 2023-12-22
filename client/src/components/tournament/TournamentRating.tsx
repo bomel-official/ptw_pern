@@ -151,10 +151,14 @@ const TournamentRating = ({tournament, type}: {
                                     />}
                                     {!isEditActive && <span>{participant.dataArray[j][i]}</span>}
                                 </div>)
-                                killAmounts[j] += participant.dataArray[j][i] || 0
+                                if (!(participant.isRoundsHidden.length && participant.isRoundsHidden[i])) {
+                                    killAmounts[j] += participant.dataArray[j][i] || 0
+                                }
                                 currentRoundPoints += participant.dataArray[j][i] || 0
                             }
-                            amountPoints += currentRoundPoints
+                            if (!(participant.isRoundsHidden.length && participant.isRoundsHidden[i])) {
+                                amountPoints += currentRoundPoints
+                            }
                             roundsInfo.push(<td key={`round-${i}`} className={(participant.isRoundsHidden.length && participant.isRoundsHidden[i]) ? 'transparent' : ''}>
                                 <div className="text">{currentRoundPoints} {__('очков')}</div>
                                 <div className="flex">

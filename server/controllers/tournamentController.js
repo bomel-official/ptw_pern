@@ -298,8 +298,10 @@ class TournamentController {
                     let points = 0
                     for (let i = 0; i < AMOUNT_ROUNDS; i++) {
                         points += participant.places[i][1]
-                        for (let j = 0; j < participant.players; j++) {
-                            points += participant.dataArray[j][i]
+                        if (!(participant.isRoundsHidden.length && participant.isRoundsHidden[i])) {
+                            for (let j = 0; j < participant.players; j++) {
+                                points += participant.dataArray[j][i]
+                            }
                         }
                     }
                     Participant.findByPk(participant.id).then(item => {
