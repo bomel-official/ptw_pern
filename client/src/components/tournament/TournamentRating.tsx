@@ -9,6 +9,7 @@ import {getFile} from "../../functions/getFile";
 import {AuthContext} from "../../context/AuthContext";
 
 export const AMOUNT_ROUNDS = 5
+export const DEFAULT_ROUNDS_HIDDEN = Array(AMOUNT_ROUNDS).fill(false)
 
 const TournamentRating = ({tournament, type}: {
     tournament: ITournament | null,
@@ -54,6 +55,15 @@ const TournamentRating = ({tournament, type}: {
         changeParticipant(index, newParticipant)
     }
 
+    const setRoundsHidden = (index: number, i: number) => {
+        const newParticipant = {...participants[index]}
+        if (newParticipant.isRoundsHidden.length !== AMOUNT_ROUNDS) {
+            newParticipant.isRoundsHidden = DEFAULT_ROUNDS_HIDDEN
+        }
+        newParticipant.isRoundsHidden[i] = !newParticipant.isRoundsHidden[i]
+        changeParticipant(index, newParticipant)
+    }
+
     const unregisterParticipant = async (participantId: number) => {
         const {isOk} = await request(`/api/tournament/unregister`, 'POST', {participantId}, {
             Authorization: `Bearer ${token}`
@@ -70,7 +80,7 @@ const TournamentRating = ({tournament, type}: {
             const {isOk, message}: {isOk: boolean, message: string} = await request(
                 '/api/tournament/edit-register',
                 'POST',
-                {participants: participants.map(p => ({dataArray: p.dataArray, places: p.places, id: p.id, players: p.users.length}))},
+                {participants: participants.map(p => ({dataArray: p.dataArray, places: p.places, id: p.id, players: p.users.length, isRoundsHidden: p.isRoundsHidden}))},
                 {
                 Authorization: `Bearer ${token}`
             }, true)
@@ -145,7 +155,7 @@ const TournamentRating = ({tournament, type}: {
                                 currentRoundPoints += participant.dataArray[j][i] || 0
                             }
                             amountPoints += currentRoundPoints
-                            roundsInfo.push(<td key={`round-${i}`}>
+                            roundsInfo.push(<td key={`round-${i}`} className={(participant.isRoundsHidden.length && participant.isRoundsHidden[i]) ? 'transparent' : ''}>
                                 <div className="text">{currentRoundPoints} {__('очков')}</div>
                                 <div className="flex">
                                     <div>
@@ -168,6 +178,13 @@ const TournamentRating = ({tournament, type}: {
                                         />
                                     </div>}
                                 </div>
+                                {isEditActive && <label
+                                    className={!(participant.isRoundsHidden.length && participant.isRoundsHidden[i]) ? "admin__checkbox active" : "admin__checkbox"}
+                                    onClick={e => setRoundsHidden(index, i)}
+                                >
+                                    <span className="admin__checkbox-rect"></span>
+                                    <span className="admin__checkbox-label">{__(!(participant.isRoundsHidden.length && participant.isRoundsHidden[i]) ? "Скрыть" : "Показать")}</span>
+                                </label>}
                             </td>)
                         }
 

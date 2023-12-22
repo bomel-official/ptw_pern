@@ -431,6 +431,10 @@
     }
     td {
       padding: 16px 6px;
+
+      &.transparent {
+        opacity: .3;
+      }
     }
     .text {
       font-family: 'Inter', sans-serif;

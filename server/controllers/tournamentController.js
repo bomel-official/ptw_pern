@@ -305,6 +305,7 @@ class TournamentController {
                     Participant.findByPk(participant.id).then(item => {
                         item.dataArray = participant.dataArray
                         item.places = participant.places
+                        item.isRoundsHidden = participant.isRoundsHidden
                         item.points = points
                         item.save().then(resolve)
                     })
