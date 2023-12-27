@@ -6,6 +6,7 @@ const AuthMiddleware = require('./../middleware/AuthMiddleware')
 
 router.post('/create', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.create)
 router.post('/edit', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.edit)
+router.post('/redeclare-room', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.redeclareRoom)
 router.get('/get-all', TournamentController.getAll)
 router.get('/get-participants', TournamentController.getParticipants)
 router.get('/:slug', TournamentController.getById)

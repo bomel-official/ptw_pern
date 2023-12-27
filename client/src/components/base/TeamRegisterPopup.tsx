@@ -8,6 +8,7 @@ import {getFile} from "../../functions/getFile";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
 import {initNewTeam} from "../../hooks/newTeam.hook";
+import {isUserAdmin} from "../../functions/isUserAdmin";
 
 const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive, submitHandler, messageOptions}: {
     newTeamUsed: any,
@@ -25,7 +26,10 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
     const {request} = useHttp()
 
     const fetchTeams = useCallback(async () => {
-        if (user && user.id) {
+        if (user && isUserAdmin(user)) {
+            const {rows} = await request(`/api/team/search?type=all`, 'GET')
+            setTeams(rows)
+        } else if (user && user.id) {
             const {rows} = await request(`/api/team/search?userId=${user.id}&type=own`, 'GET')
             setTeams(rows)
         }
@@ -54,10 +58,8 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
     } = tournamentRegistrationUsed
 
     useEffect(() => {
-        if (user && user.id) {
-            if (!newTeam.id && !newTeam.capitanId) {
-                setNewTeam({...newTeam, capitanId: user.id, players: [user]})
-            }
+        if (user && !isUserAdmin(user) && !newTeam.id && !newTeam.capitanId) {
+            setNewTeam({...newTeam, capitanId: user.id, players: [user]})
         }
     }, [newTeam, user])
 
@@ -287,7 +289,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                                             <img src={icons[user?.platform || 'pc']} alt="User platform"/>
                                         </div>
                                     </div>
-                                    {player.id !== user?.id && <button
+                                    {((player.id !== user?.id) || isUserAdmin(user)) && <button
                                         className={isUserIdIncludedInRequest(player.id) ? "checkbox active" : "checkbox"}
                                         onClick={() => {
                                             changeRequestPlayers(player, playersInTeam)

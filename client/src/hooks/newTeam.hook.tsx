@@ -60,7 +60,7 @@ export const useNewTeam = () => {
     const [playersSearch, setPlayersSearch] = useState<Array<IUser>>([])
 
     const fetchPlayersSearch = useCallback(async (debounced: string) => {
-        const {rows} = newTeam.capitanId ? await request(`/api/user/?s=${debounced}&friendOf=${newTeam.capitanId}`, 'GET') : {rows: []}
+        const {rows} = newTeam.capitanId ? await request(`/api/user/?s=${debounced}&friendOf=${newTeam.capitanId}`, 'GET') : await request(`/api/user/?s=${debounced}`, 'GET')
         setPlayersSearch(rows)
     }, [newTeam])
 

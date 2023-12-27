@@ -86,6 +86,7 @@ const Participant = sequelize.define('participant', {
     dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
     places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: []},
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
+    roomNumber: {type: DataTypes.INTEGER, defaultValue: 0}
     // tournament: Tournament   ------------------ done
     // team: Team   ------------------ done
 })

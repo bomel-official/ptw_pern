@@ -19,6 +19,7 @@ import {IMessageOptions, ITournament} from "../StoreTypes";
 import {useHttp} from "../hooks/http.hook";
 import {Games} from "../data/Games";
 import {getDateString} from "../functions/getDateString";
+import {isUserAdmin} from "../functions/isUserAdmin";
 
 export const SingleTournamentPage = () => {
     const {user, token} = useContext(AuthContext)
@@ -27,12 +28,12 @@ export const SingleTournamentPage = () => {
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
     const [isRegisterFormActive, setIsRegisterFormActive] = useState<boolean>(false)
     const [tournament, setTournament] = useState<ITournament|null>(null)
-    const [isRegisterActive, setIsRegisterActive] = useState(false)
     const [registerHTML, setRegisterHTML] = useState(<span className="side__top-reg-inactive">{__('Региистрация недоступна')}</span>)
     const {request, error, clearError} = useHttp()
     const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
         status: '', text: ''
     })
+    const slots = (tournament) ? Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam) : 0
 
     useEffect(() => {
         setMessageOptions({
@@ -59,9 +60,15 @@ export const SingleTournamentPage = () => {
 
     useEffect(() => {
         const dateBegin = new Date(tournament?.dateBegin || 0)
-        let registerFlag = false
         if (tournament) {
-            if (user && tournament.participantsList.includes(user.id)) {
+            if (user && isUserAdmin(user)) {
+                setRegisterHTML(<button
+                    className="side__top-register"
+                    onClick={() => setIsRegisterFormActive(true)}
+                >
+                    Добавить участника
+                </button>)
+            } else if (user && tournament.participantsList.includes(user.id)) {
                 setRegisterHTML(<button
                     className="side__top-unregister"
                     onClick={unregisterParticipant}
@@ -72,8 +79,7 @@ export const SingleTournamentPage = () => {
                 setRegisterHTML(<span className="side__top-reg-inactive">Регистрация закрыта</span>)
             } else if ((user) &&
                 (dateBegin.getTime() > Date.now()) &&
-                (!tournament.participantsList.includes(user.id)) &&
-                (tournament.participantsList.length + playersInTeam <= tournament.maxUsers)
+                (!tournament.participantsList.includes(user.id))
             ) {
                 setRegisterHTML(<button
                     className="side__top-register"
@@ -81,8 +87,6 @@ export const SingleTournamentPage = () => {
                 >
                     Принять участие
                 </button>)
-            } else if (tournament.participantsList.length + playersInTeam > tournament.maxUsers) {
-                setRegisterHTML(<span className="side__top-reg-inactive">Достигнуто максимальное количество участников</span>)
             } else if (!user) {
                 setRegisterHTML(<NavLink
                     to={'/auth'}
@@ -94,7 +98,6 @@ export const SingleTournamentPage = () => {
         } else {
             setRegisterHTML(<span className="side__top-reg-inactive">Регистрация недоступна</span>)
         }
-        setIsRegisterActive(registerFlag)
     }, [tournament, user])
 
     useEffect(() => {
@@ -106,7 +109,7 @@ export const SingleTournamentPage = () => {
     const tournamentRegistrationUsed = useTournamentRegistration()
 
     useEffect(() => {
-        if (user) {
+        if (user && !isUserAdmin(user)) {
             newTeamUsed.setNewTeam({...newTeamUsed.newTeam, players: [user], capitanId: user.id})
             tournamentRegistrationUsed.setRegisterRequest({...tournamentRegistrationUsed.registerRequest, players: [user], capitan: user.id})
         }
@@ -420,7 +423,7 @@ export const SingleTournamentPage = () => {
                                                             stroke="white" strokeOpacity="0.75" strokeWidth="1.5"
                                                             strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
-                                                    <span>{Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)} {__(getSlotWord(Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)))}</span>
+                                                    <span>{(slots >= 0 ? slots : 0)} {__(getSlotWord(slots >= 0 ? slots : 0))}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -438,7 +441,7 @@ export const SingleTournamentPage = () => {
                                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.3333 17.5V15.8333C13.3333 14.9493 12.9821 14.1014 12.357 13.4763C11.7319 12.8512 10.884 12.5 9.99999 12.5H4.99999C4.11593 12.5 3.26809 12.8512 2.64297 13.4763C2.01785 14.1014 1.66666 14.9493 1.66666 15.8333V17.5M18.3333 17.5V15.8333C18.3328 15.0948 18.087 14.3773 17.6345 13.7936C17.182 13.2099 16.5484 12.793 15.8333 12.6083M13.3333 2.60833C14.0503 2.79192 14.6859 3.20892 15.1397 3.79359C15.5935 4.37827 15.8399 5.09736 15.8399 5.8375C15.8399 6.57764 15.5935 7.29673 15.1397 7.88141C14.6859 8.46608 14.0503 8.88308 13.3333 9.06667M10.8333 5.83333C10.8333 7.67428 9.34094 9.16667 7.49999 9.16667C5.65904 9.16667 4.16666 7.67428 4.16666 5.83333C4.16666 3.99238 5.65904 2.5 7.49999 2.5C9.34094 2.5 10.8333 3.99238 10.8333 5.83333Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                 </svg>
-                                                <span>{Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)} {__(getSlotWord(Math.floor(tournament.maxUsers / tournament.playersInTeam) - Math.floor(tournament.participantsList.length / tournament.playersInTeam)))}</span>
+                                                <span>{(slots >= 0 ? slots : 0)} {__(getSlotWord(slots >= 0 ? slots : 0))}</span>
                                             </div>
                                         </div>
                                     </div>

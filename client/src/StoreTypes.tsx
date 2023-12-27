@@ -123,7 +123,8 @@ export type IParticipant = {
     dataArray: Array<Array<number>>,
     places: Array<[number, number]>,
     isRoundsHidden: Array<boolean>,
-    players: Array<number>
+    players: Array<number>,
+    roomNumber: number
 }
 
 export type IQuestion = {

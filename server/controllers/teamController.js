@@ -4,6 +4,7 @@ const sharp = require("sharp");
 const path = require("path");
 const {User, Team, TeamRequest} = require("../models/models");
 const {Op} = require("sequelize");
+const isUserAdmin = require("../funtions/isUserAdmin");
 
 const TEAMS_LIMIT = 5
 
@@ -49,7 +50,7 @@ class TournamentController {
                 return next(ApiError.badRequest('Название команды должно быть 3 и больше символов'))
             }
             for (let playerId of players) {
-                if (!creator.friends.includes(parseInt(playerId)) && creator.id !== parseInt(playerId)) {
+                if (!isUserAdmin(creator) && !creator.friends.includes(parseInt(playerId)) && creator.id !== parseInt(playerId)) {
                     return next(ApiError.badRequest('Для добавления в команду игрок должен быть у вас в друзьях'))
                 }
             }
@@ -91,10 +92,10 @@ class TournamentController {
                 }
                 return res.json({message: 'Команда обновлена', team: resTeam})
             } else { // Create
-                if (req.user.id !== capitanId) {
+                if (!isUserAdmin(creator) && req.user.id !== capitanId) {
                     return next(ApiError.badRequest('Ошибка, некорректный запрос'))
                 }
-                if (creator.own_teams.length >= TEAMS_LIMIT) {
+                if (!isUserAdmin(creator) && creator.own_teams.length >= TEAMS_LIMIT) {
                     return next(ApiError.badRequest('Вы не можете создать больше 5 команд'))
                 }
                 const slug = name.toString().toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, "")

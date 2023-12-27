@@ -22,6 +22,7 @@ const TournamentRating = ({tournament, type}: {
     const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
         status: '', text: ''
     })
+    const maxRoomNumber = (tournament) ? Math.floor(tournament.maxUsers / tournament.playersInTeam) : 0
 
     const fetchParticipants = useCallback(async () => {
         if (tournament && tournament.id) {
@@ -96,6 +97,23 @@ const TournamentRating = ({tournament, type}: {
         }
     }
 
+    const redeclareRoomNumber = async (participantId: number) => {
+        try {
+            const {isOk}: {isOk: boolean, message: string} = await request(
+                '/api/tournament/redeclare-room',
+                'POST',
+                {participantId},
+                {
+                    Authorization: `Bearer ${token}`
+                }, true)
+            if (isOk) {
+                await fetchParticipants()
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     if (!tournament) {
         return (<></>)
     }
@@ -137,6 +155,10 @@ const TournamentRating = ({tournament, type}: {
                         const roundsInfo = []
                         const killAmounts = Array(players).fill(0)
                         let amountPoints = 0
+
+                        if (participant.roomNumber > maxRoomNumber && type !== 'users') {
+                            return <></>
+                        }
 
                         for (let i = 0; i < AMOUNT_ROUNDS; i++) {
                             const currentRoundInfo: Array<JSX.Element> = []
@@ -192,9 +214,13 @@ const TournamentRating = ({tournament, type}: {
                             </td>)
                         }
 
-                        return (<tr key={participant.id}>
-                            <td>{index + 1}</td>
+                        return (<tr key={participant.id} className={(participant.roomNumber > maxRoomNumber) ? 'reserve' : ''}>
+                            <td>
+                                {type === 'users' && <span>{participant.roomNumber || (index + 1)}</span>}
+                                {type !== 'users' && <span>{index + 1}</span>}
+                            </td>
                             <td className="rating__team">
+                                {participant.roomNumber > maxRoomNumber && <p className="text" style={{marginBottom: '8px'}}>{__('Резерв')}</p>}
                                 {participant.team && <div className="rating__team-flex">
                                     <div className="rating__team-images">
                                         <img src={getFile(participant.team.avatar) || DefaultUserPic} alt="nickname"/>
@@ -215,16 +241,21 @@ const TournamentRating = ({tournament, type}: {
                                                 <img src={icons[reqUser?.platform || 'pc']} alt="User platform"/>
                                                 <img src={icons[reqUser?.device || 'km']} alt="User device"/>
                                                 <span>{reqUser.nickname}</span>
-                                            </NavLink>))}
+                                            </NavLink>
+                                        ))}
                                     </div>
                                 </div>}
                             </td>
-                            {roundsInfo}
-                            <td>
-                                <div className="bold">{isEditActive ? amountPoints : participant.points} {__('очков')}</div>
-                                {participant.users.map((reqUser, index) => (
-                                    <div className="bold" key={`killAmount-${reqUser.id}`}>{killAmounts[index]}</div>))}
-                            </td>
+                            {participant.roomNumber <= maxRoomNumber && <>
+                                {roundsInfo}
+                                <td>
+                                    <div
+                                        className="bold">{isEditActive ? amountPoints : participant.points} {__('очков')}</div>
+                                    {participant.users.map((reqUser, index) => (
+                                        <div className="bold"
+                                             key={`killAmount-${reqUser.id}`}>{killAmounts[index]}</div>))}
+                                </td>
+                            </>}
                             {user && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && <td>
                                 <div className={"dropdown dropdown-mini"}>
                                     <button
@@ -245,19 +276,26 @@ const TournamentRating = ({tournament, type}: {
                                             <button
                                                 onClick={async (e: MouseEvent<HTMLButtonElement>) => {
                                                     e.preventDefault()
-                                                    const isOk = await unregisterParticipant(participant.id)
-                                                    if (isOk) {
-                                                        console.log(e.currentTarget.parentElement)
-                                                        console.log(e.currentTarget.parentElement?.parentElement)
-                                                        console.log(e.currentTarget.parentElement?.parentElement?.parentElement)
-                                                        e.currentTarget.parentElement?.parentElement?.parentElement?.classList.toggle('active')
-                                                    }
+                                                    unregisterParticipant(participant.id).catch(() => {})
                                                 }}
                                             >
                                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M2.5 4.99996H17.5M15.8333 4.99996V16.6666C15.8333 17.5 15 18.3333 14.1667 18.3333H5.83333C5 18.3333 4.16667 17.5 4.16667 16.6666V4.99996M6.66667 4.99996V3.33329C6.66667 2.49996 7.5 1.66663 8.33333 1.66663H11.6667C12.5 1.66663 13.3333 2.49996 13.3333 3.33329V4.99996" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                 </svg>
                                                 <span>{__('Удалить участника')}</span>
+                                            </button>
+                                        </li>
+                                        <li className="dropdown__value">
+                                            <button
+                                                onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                                                    e.preventDefault()
+                                                    redeclareRoomNumber(participant.id).catch(() => {})
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                    <path d="M14.1667 1.66666L17.5 4.99999M17.5 4.99999L14.1667 8.33332M17.5 4.99999H5.83333C4.94928 4.99999 4.10143 5.35118 3.47631 5.9763C2.85119 6.60142 2.5 7.44927 2.5 8.33332V9.16666M5.83333 18.3333L2.5 15M2.5 15L5.83333 11.6667M2.5 15H14.1667C15.0507 15 15.8986 14.6488 16.5237 14.0237C17.1488 13.3986 17.5 12.5507 17.5 11.6667V10.8333" stroke="white" stroke-opacity="0.75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                                <span>{__('Переопределить номер')}</span>
                                             </button>
                                         </li>
                                     </ul>

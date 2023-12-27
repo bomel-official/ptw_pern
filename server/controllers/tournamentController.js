@@ -211,6 +211,35 @@ class TournamentController {
         })
     }
 
+    async redeclareRoom (req, res, next) {
+        const {participantId} = req.body
+        try {
+            const participant = await Participant.findByPk(participantId)
+            // Calculate roomNumber
+            const participants = await Participant.findAll({
+                where: {
+                    tournamentId: participant.tournamentId
+                },
+                order: [
+                    ['roomNumber', 'ASC'],
+                    ['id', 'ASC'],
+                ],
+            })
+            let roomNumber = 1
+            for (const currentParticipant of participants) {
+                if (currentParticipant.roomNumber === roomNumber && currentParticipant.id !== participant.id) {
+                    roomNumber += 1
+                }
+            }
+            participant.roomNumber = roomNumber
+            await participant.save()
+
+            return res.json({isOk: true})
+        } catch (e) {
+            return res.json({isOk: false})
+        }
+    }
+
     async register (req, res, next) {
         const {teamId, players, tournamentId} = req.body
 
@@ -232,6 +261,23 @@ class TournamentController {
                 }
             }
 
+            // Calculate roomNumber
+            const participants = await Participant.findAll({
+                where: {
+                    tournamentId: tournamentId
+                },
+                order: [
+                    ['roomNumber', 'ASC'],
+                    ['id', 'ASC'],
+                ],
+            })
+            let roomNumber = 1
+            for (const currentParticipant of participants) {
+                if (currentParticipant.roomNumber === roomNumber) {
+                    roomNumber += 1
+                }
+            }
+
             const newReq = await Participant.create({
                 tournamentId,
                 points: 0,
@@ -240,6 +286,7 @@ class TournamentController {
                 isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
                 dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
                 places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
+                roomNumber
             })
             try {
                 players.forEach(playerId => {
@@ -254,7 +301,7 @@ class TournamentController {
             } catch (e) {
                 return next(ApiError.badRequest('Ошибка, некорректный запрос'))
             }
-            tournament.set({participantsList: [...tournament.participantsList, ...players]})
+            await tournament.set({participantsList: [...tournament.participantsList, ...players]})
             await tournament.save()
 
             res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
@@ -274,12 +321,13 @@ class TournamentController {
                 tournamentId: tournamentId
             },
             order: (!type || type === 'users') ? [
+                ['roomNumber', 'ASC'],
                 ['id', 'ASC'],
                 [{ model: User, as: 'users' }, 'id', 'ASC'],
             ] : [
                 ['points', 'DESC'],
-                ['id', 'ASC'],
                 [{ model: User, as: 'users' }, 'id', 'ASC'],
+                ['id', 'ASC'],
             ],
             include: [
                 {model: User, as: 'users' },

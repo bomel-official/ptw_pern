@@ -413,6 +413,10 @@
     border-collapse: collapse;
     width: 100%;
 
+    .reserve {
+      opacity: .5;
+    }
+
     tr td,
     tr th{
       border-bottom: 1px solid $gray;
