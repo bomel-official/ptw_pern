@@ -221,13 +221,13 @@ const TournamentRating = ({tournament, type}: {
                             </td>
                             <td className="rating__team">
                                 {participant.roomNumber > maxRoomNumber && <p className="text" style={{marginBottom: '8px'}}>{__('Резерв')}</p>}
-                                {participant.team && <div className="rating__team-flex">
+                                <div className="rating__team-flex">
                                     <div className="rating__team-images">
-                                        <img src={getFile(participant.team.avatar) || DefaultUserPic} alt="nickname"/>
+                                        <img src={(participant.team && getFile(participant.team.avatar)) ? getFile(participant.team.avatar) : DefaultUserPic} alt="nickname"/>
                                     </div>
                                     <div className="rating__team-nicks">
                                         <div className="bold flex">
-                                            <span>{participant.team.name}</span>
+                                            <span>{participant.team ? participant.team.name : 'Команда распущена...'}</span>
                                             <NavLink
                                                 target='_blank'
                                                 to={`https://www.multitwitch.tv/${participant.users.map((user) => user.twitch).join('/')}`}
@@ -244,7 +244,7 @@ const TournamentRating = ({tournament, type}: {
                                             </NavLink>
                                         ))}
                                     </div>
-                                </div>}
+                                </div>
                             </td>
                             {participant.roomNumber <= maxRoomNumber && <>
                                 {roundsInfo}
