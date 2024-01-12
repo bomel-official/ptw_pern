@@ -64,13 +64,17 @@ export const useAuth = () => {
 
         if (token) {
             const decodedToken = parseJwt(token)
-            if ((decodedToken.exp * 1000 < (Date.now() + 6*24*60*60*1000)) && (decodedToken.exp * 1000 > Date.now())) {
-                renew(token).catch(e => {})
-            } else if ((decodedToken.exp * 1000 >= (Date.now() - 6*24*60*60*1000))) {
-                login(token)
+            if (decodedToken) {
+                if ((decodedToken.exp * 1000 < (Date.now() + 6*24*60*60*1000)) && (decodedToken.exp * 1000 > Date.now())) {
+                    renew(token).catch(e => {})
+                } else if ((decodedToken.exp * 1000 >= (Date.now() - 6*24*60*60*1000))) {
+                    login(token)
+                }
+            } else {
+                logout()
             }
         } else {
-            getUserByCookie().catch()
+            getUserByCookie().catch(e => {})
         }
         setReady(true)
     }, [login])
