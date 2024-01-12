@@ -69,6 +69,8 @@ export const useAuth = () => {
                     renew(token).catch(e => {})
                 } else if ((decodedToken.exp * 1000 >= (Date.now() - 6*24*60*60*1000))) {
                     login(token)
+                } else {
+                    logout()
                 }
             } else {
                 logout()
