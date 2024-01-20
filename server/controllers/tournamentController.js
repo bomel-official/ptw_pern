@@ -260,7 +260,7 @@ class TournamentController {
             const tournament = await Tournament.findByPk(tournamentId)
             const team = await Team.findByPk(teamId)
 
-            if (!tournament || !team || (team.capitanId !== req.user.id && isUserAdmin(user))) {
+            if (!tournament || !team || (team.capitanId !== req.user.id && !isUserAdmin(user))) {
                 return next(ApiError.badRequest('Ошибка, некорректный запрос'))
             }
             if (players.length !== tournament.playersInTeam) {
