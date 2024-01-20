@@ -57,10 +57,12 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
 
     return (
         <div className={isActive ? "meta-build__tablet active" : "meta-build__tablet"}>
+            <div onClick={() => setIsActive(!isActive)} className="meta-build__background"></div>
             <div className="meta-build__top">
                 <div className="meta-build__container">
                     <div className="meta-build__flex">
-                        <div className="meta-build__left">
+                        <div className="meta-build__left" onClick={() => setIsActive(!isActive)}>
+                            {!!build.title && <h3 className="meta-build__title">{build.title}</h3>}
                             <h3 className="meta-build__header">{_f(build.build_weapon, 'title')}</h3>
                             <div className="meta-build__author">
                                 <NavLink to={`/profile/${build.user.nickname}`} className="meta-build__author-name">{build.user.nickname}</NavLink>
@@ -76,7 +78,7 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                                 <div className="meta-build__date">{getDateString(dateCreated)}</div>
                             </div>
                         </div>
-                        {!!build.build_weapon.image && <div className="meta-build__image-wrapper">
+                        {!!build.build_weapon.image && <div className="meta-build__image-wrapper" onClick={() => setIsActive(!isActive)}>
                             <img src={getFile(build.build_weapon.image)} alt={_f(build.build_weapon, 'title')}
                                  className="meta-build__weapon-image"/>
                         </div>}
@@ -141,7 +143,10 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                             </button>
                             <button
                                 className={isLiked ? "meta-build__like-button active" : "meta-build__like-button"}
-                                onClick={() => likeHandler()}
+                                onClick={() => {
+                                    likeHandler()
+                                    setIsActive(isActive)
+                                }}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
                                     <path d="M20.4201 4.58045C19.9184 4.07702 19.3223 3.67758 18.6659 3.40503C18.0095 3.13248 17.3058 2.99219 16.5951 2.99219C15.8844 2.99219 15.1806 3.13248 14.5243 3.40503C13.8679 3.67758 13.2718 4.07702 12.7701 4.58045L12.0001 5.36045L11.2301 4.58045C10.7284 4.07702 10.1323 3.67758 9.47591 3.40503C8.81953 3.13248 8.1158 2.99219 7.40509 2.99219C6.69437 2.99219 5.99065 3.13248 5.33427 3.40503C4.67789 3.67758 4.08176 4.07702 3.58009 4.58045C1.46009 6.70045 1.33009 10.2804 4.00009 13.0004L12.0001 21.0004L20.0001 13.0004C22.6701 10.2804 22.5401 6.70045 20.4201 4.58045Z" stroke="white" strokeOpacity="0.75" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>

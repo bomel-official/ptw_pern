@@ -794,6 +794,9 @@ button {
       flex-direction: column-reverse;
       padding-right: 0;
     }
+    &__title {
+      width: 100%;
+    }
     &__left {
       padding-right: 64px;
       position: relative;

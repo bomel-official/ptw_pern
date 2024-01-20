@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {Header} from "../components/base/Header";
 import {GameTabs} from "../components/base/GameTabs";
 import {SideMenu} from "../components/base/SideMenu";
@@ -16,7 +16,6 @@ import {IMessageOptions} from "../StoreTypes";
 
 const MAX_ATTACHMENTS = 5
 
-type IMetaBuildData = Record<string, string|number|null>
 type Attachment = {attachmentType: any, availableAttachments: Array<any>, attachment: any, range: [number, number], isTypeActive: boolean, isAttachmentActive: boolean}
 const newAttachment: Attachment = {attachmentType: null, availableAttachments: [], attachment: null, range: [0, 0], isTypeActive: false, isAttachmentActive: false}
 
@@ -25,6 +24,7 @@ const MetaBuildCreatePage = () => {
     const [gameVersion, setGameVersion] = useState<IGameOnlyVersion>('wz')
     const [weaponType, setWeaponType] = useState<any>(null)
     const [weapon, setWeapon] = useState<any>(null)
+    const [title, setTitle] = useState<string>("")
 
     const [isGameVersionSelectActive, setIsGameVersionSelectActive] = useState<boolean>(false)
     const [isWeaponTypeSelectActive, setIsWeaponTypeSelectActive] = useState<boolean>(false)
@@ -111,6 +111,7 @@ const MetaBuildCreatePage = () => {
                 'POST',
                 {
                     gameVersion,
+                    title,
                     weaponTypeId: weaponType.id,
                     weaponId: weapon.id,
                     attachments: JSON.stringify(attachments.map((att) => ({
@@ -131,9 +132,9 @@ const MetaBuildCreatePage = () => {
             setMessageOptions({
                 status: 'pos', text: message
             })
-        } catch (e) {
+        } catch (e: any) {
             setMessageOptions({
-                status: 'neg', text: "Поля заполнены некорректно..."
+                status: 'neg', text: e.message || "Поля заполнены некорректно..."
             })
         }
     }
@@ -179,6 +180,19 @@ const MetaBuildCreatePage = () => {
                                 {__("Назад")}
                             </NavLink>
                             <h1 className="side__title">{__(`Конструктор сборок`)}</h1>
+                            <div className="build__data-block">
+                                <p className="build__label">{__("Название")}</p>
+                                <label htmlFor="title" className="input-both">
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        id="title"
+                                        placeholder={__('Название')}
+                                        value={title}
+                                        onChange={(e: React.FormEvent<HTMLInputElement>) => {setTitle(e.currentTarget.value)}}
+                                    />
+                                </label>
+                            </div>
                             <div className="build__data-block">
                                 <p className="build__label">{__("Общая информация")}</p>
                                 <div className="build__grid-row">

@@ -41,6 +41,11 @@ const TeamRequest = sequelize.define('team_request', {
     // userTo: User   ------------------ done
 })
 
+const TournamentUser = sequelize.define('tournament_user', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+})
+
+
 const Tournament = sequelize.define('tournament', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title_RU: {type: DataTypes.STRING, allowNull: false},
@@ -112,6 +117,7 @@ const ProductCat = sequelize.define('product_cat', {
 
 const Build = sequelize.define('build', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    title: {type: DataTypes.STRING, allowNull: true},
     gameVersion: {type: DataTypes.STRING, allowNull: true},
     attachments: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: []},
     likes: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
@@ -200,6 +206,10 @@ Product.belongsToMany(Cart, {through: 'product_cart'})
 
 FriendRequest.belongsTo(User, {as: 'user_from'})
 FriendRequest.belongsTo(User, {as: 'user_to'})
+
+
+Tournament.belongsToMany(User, {as: 'players', through: 'tournament_user'})
+User.belongsToMany(Tournament, {as: 'tournaments', through: 'tournament_user'})
 
 Tournament.hasMany(Participant, {as: 'participants'})
 Participant.belongsTo(Tournament)

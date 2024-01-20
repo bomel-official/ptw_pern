@@ -4,6 +4,7 @@ const uuid = require("uuid");
 const sharp = require("sharp");
 const path = require("path");
 const {Op, Sequelize} = require("sequelize");
+const isUserAdmin = require("../funtions/isUserAdmin");
 
 const AMOUNT_ROUNDS = 5
 
@@ -196,6 +197,11 @@ class TournamentController {
                     } : {}
                 ]
             } ,
+            include: [{
+                model: User,
+                as: 'players',
+                attributes: ['id']
+            }],
             limit: numberPosts === '-1' ? null : numberPosts
         })
         return res.json({
@@ -205,7 +211,14 @@ class TournamentController {
 
     async getById (req, res, next) {
         const {slug} = req.params
-        const tournament = await Tournament.findOne({ where: {slug}})
+        const tournament = await Tournament.findOne({
+            where: {slug},
+            include: [{
+                model: User,
+                as: 'players',
+                attributes: ['id']
+            }]
+        })
         return res.json({
             tournament
         })
@@ -247,7 +260,7 @@ class TournamentController {
             const tournament = await Tournament.findByPk(tournamentId)
             const team = await Team.findByPk(teamId)
 
-            if (!tournament || !team || team.capitanId !== req.user.id) {
+            if (!tournament || !team || (team.capitanId !== req.user.id && isUserAdmin(user))) {
                 return next(ApiError.badRequest('Ошибка, некорректный запрос'))
             }
             if (players.length !== tournament.playersInTeam) {
@@ -293,6 +306,7 @@ class TournamentController {
                     User.findByPk(playerId).then((player => {
                         if (player) {
                             newReq.addUser(player)
+                            tournament.addPlayers(player)
                         } else {
                             return next(ApiError.badRequest('Ошибка, некорректный запрос'))
                         }
@@ -323,16 +337,19 @@ class TournamentController {
             order: (!type || type === 'users') ? [
                 ['roomNumber', 'ASC'],
                 ['id', 'ASC'],
-                [{ model: User, as: 'users' }, 'id', 'ASC'],
             ] : [
                 ['points', 'DESC'],
-                [{ model: User, as: 'users' }, 'id', 'ASC'],
                 ['id', 'ASC'],
             ],
             include: [
                 {model: User, as: 'users' },
                 {model: Team}]
         })
+
+        participants.map((participant => {
+            participant.users.sort((a, b) => (a.id - b.id))
+            return participant
+        }))
 
         return res.json({participants})
     }
@@ -401,8 +418,11 @@ class TournamentController {
             }
             const participantPlayerIds = participant.users.map(user => (user.id))
             const tournament = await Tournament.findByPk(participant.tournamentId)
-            if (!participant || !participantPlayerIds.includes(req.user.id) && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN") {
+            if (!participant || (!participantPlayerIds.includes(req.user.id) && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN")) {
                 return next(ApiError.forbidden('Нет доступа'))
+            }
+            for (const user of participant.users) {
+                tournament.removePlayers(user)
             }
             await participant.destroy()
             tournament.set({

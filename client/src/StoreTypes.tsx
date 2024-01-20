@@ -49,6 +49,7 @@ export type IBuild = {
     createdAt: string,
     likes: Array<number>,
     likesCount: number
+    title: string,
 }
 
 export type IFriendRequest = {
@@ -91,6 +92,7 @@ export type ITournament = {
     dateEnd: Date,
     previewImg: string,
     maxUsers: number,
+    players: IUser[],
     playersInTeam: number,
     participationPrice: number,
     prizes: number,

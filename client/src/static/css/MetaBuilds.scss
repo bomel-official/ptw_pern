@@ -53,10 +53,23 @@
 }
 
 .meta-build {
+  &__background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+  }
   &__tablet {
     border: 1px solid $gray;
     border-radius: 4px;
     overflow: hidden;
+    position: relative;
+
+    &:hover {
+      border-color: $accentGradActive;
+    }
 
     &.active {
       border-color: $accentGradHover;
@@ -73,12 +86,22 @@
     padding-right: 64px;
     position: relative;
   }
+  &__left {
+    cursor: pointer;
+  }
   &__header {
     font-family: "Mustica Pro", sans-serif;
     font-size: 24px;
     font-weight: 600;
     line-height: 32px;
     margin-bottom: 4px;
+  }
+  &__title {
+    font-family: "Mustica Pro", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    margin-bottom: 8px;
   }
   &__author {
     display: flex;
@@ -136,6 +159,7 @@
     max-width: 176px;
     margin-left: auto;
     display: flex;
+    cursor: pointer;
   }
   &__weapon-image {
     width: 100%;
@@ -252,7 +276,8 @@
     }
   }
   &__data-item-left {
-    margin-right: auto;
+    margin: auto;
+    text-align: center;
   }
   &__data-item-title {
     font-family: "Mustica Pro", sans-serif;

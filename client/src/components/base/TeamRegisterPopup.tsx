@@ -116,7 +116,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                             ))}
                         </ul>
                     </div>}
-                    {teams.length < 5 && <button
+                    {(teams.length < 5 || (user && isUserAdmin(user))) && <button
                         className="button-both-accent popup__accentButton"
                         onClick={() => {
                             setNewTeam(initNewTeam)

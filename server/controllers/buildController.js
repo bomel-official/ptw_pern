@@ -14,7 +14,10 @@ const getWhere = (WhereClass, req) => {
                         : {}
                 )
             )
-        }
+        },
+        order: [
+            ['title_RU', 'ASC']
+        ]
     }
 }
 
@@ -247,10 +250,16 @@ class BuildController {
     }
 
     async buildCreate(req, res, next) {
-        const {gameVersion, weaponTypeId, weaponId, attachments} = req.body
+        const {gameVersion, weaponTypeId, weaponId, attachments, title} = req.body
         const parsedAttachments = JSON.parse(attachments)
+
+        if (title.length < 3) {
+            return next(ApiError.badRequest('Название должно быть длиннее 3 символов'))
+        }
+
         try {
             const newItem = await Build.create({
+                title,
                 userId: req.user.id,
                 gameVersion,
                 buildWeaponId: weaponId,
@@ -328,7 +337,8 @@ class BuildController {
                 ],
                 limit: 15,
                 order: [
-                    ['likesCount', 'DESC']
+                    ['likesCount', 'DESC'],
+                    ['title', 'ASC']
                 ]
             })
             return res.json({items})
