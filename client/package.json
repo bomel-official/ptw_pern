@@ -17,14 +17,15 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.0",
     "react-scripts": "^5.0.1",
+    "sass": "^1.70.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "serve": "pm2 serve build --name \"react-build\" --spa --watch",
-    "restart": "pm2 restart --spa --watch",
+    "serve": "pm2 serve build --name \"playtowin.pro react\" --spa --watch",
+    "restart": "pm2 restart \"playtowin.pro react\" --spa --watch",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

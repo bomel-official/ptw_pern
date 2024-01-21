@@ -337,9 +337,11 @@ class TournamentController {
             order: (!type || type === 'users') ? [
                 ['roomNumber', 'ASC'],
                 ['id', 'ASC'],
+                [{ model: User, as: 'users' }, 'id', 'ASC'],
             ] : [
                 ['points', 'DESC'],
                 ['id', 'ASC'],
+                [{ model: User, as: 'users' }, 'id', 'ASC'],
             ],
             include: [
                 {model: User, as: 'users' },
@@ -347,7 +349,16 @@ class TournamentController {
         })
 
         participants.map((participant => {
-            participant.users.sort((a, b) => (a.id - b.id))
+            let isSorted = true
+            for (let i = 1; i < participant.users.length; i++) {
+                if (participant.users[i].id < participant.users[i - 1].id) {
+                    isSorted = false
+                }
+            }
+            if (!isSorted) {
+                console.log(`unsorted: ${participant.id}`)
+                participant.users.sort((a, b) => (a.id - b.id))
+            }
             return participant
         }))
 
