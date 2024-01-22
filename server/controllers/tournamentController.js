@@ -1,11 +1,12 @@
 const ApiError = require("../error/ApiError");
-const {Tournament, Participant, PlayerResult, User, Team, Build, ParticipantUser, TournamentUser} = require('../models/models')
+const {Tournament, Participant, PlayerResult, User, Team, Build, ParticipantUser, TournamentUser, Invoice} = require('../models/models')
 const uuid = require("uuid");
 const sharp = require("sharp");
 const path = require("path");
 const {Op, Sequelize} = require("sequelize");
 const isUserAdmin = require("../funtions/isUserAdmin");
 const {logger} = require("sequelize/lib/utils/logger");
+const axios = require("axios");
 
 const AMOUNT_ROUNDS = 5
 
@@ -389,7 +390,88 @@ class TournamentController {
                 }
             }
 
+
             res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+        }
+    }
+
+    async getPayUrl(req, res, next) {
+        const {participantId} = req.query
+
+        try {
+            const participant = await Participant.findByPk(participantId)
+            const tournament = await Tournament.findByPk(participant.tournamentId)
+
+            let newInvoice = null
+
+            if (participant.invoiceId) {
+                newInvoice = await Invoice.findByPk(participant.invoiceId)
+            } else {
+                newInvoice = await Invoice.create({
+                    amount: tournament.participationPrice
+                })
+            }
+
+            const {data: enotInvoice} = await axios.post('https://api.enot.io/invoice/create', {
+                amount: newInvoice.amount,
+                order_id: JSON.stringify(newInvoice.id),
+                currency: newInvoice.currency,
+                shop_id: process.env.ENOT_SHOP_ID,
+                hook_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+                comment: `Participation on ${tournament.title_EU}`,
+                success_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+                fail_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept-Encoding': 'application/json',
+                    'Accept': 'application/json',
+                    'x-api-key': process.env.ENOT_SECRET_KEY
+                }
+            })
+
+            newInvoice.enotId = enotInvoice.data.id
+            newInvoice.url = enotInvoice.data.url
+            newInvoice.participantId = participant.id
+            participant.invoiceUrl = enotInvoice.data.url
+            participant.invoiceId = newInvoice.id
+
+            await participant.save()
+            await newInvoice.save()
+
+            res.json({url: participant.invoiceUrl})
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+        }
+    }
+
+    async getParticipantInvoiceInfo(req, res, next) {
+        const {participantId} = req.query
+
+        try {
+            const participant = await Participant.findByPk(participantId)
+            const invoice = await Invoice.findByPk(participant.invoiceId)
+
+            const {data: enotInvoiceInfo} = await axios.get(`https://api.enot.io/invoice/info?order_id=${JSON.stringify(invoice.id)}&shop_id=${process.env.ENOT_SHOP_ID}&invoice_id=${invoice.enotId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept-Encoding': 'application/json',
+                    'Accept': 'application/json',
+                    'x-api-key': process.env.ENOT_SECRET_KEY
+                }
+            })
+            console.log(enotInvoiceInfo.data)
+            if (enotInvoiceInfo.data.status === 'success') {
+                participant.isPaid = true
+                await participant.save()
+
+                res.json({isPaid: true})
+            }
+            res.json({isPaid: false})
         } catch (e) {
             console.log(e)
             return next(ApiError.badRequest('Ошибка, некорректный запрос'))

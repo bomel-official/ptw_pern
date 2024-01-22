@@ -127,7 +127,9 @@ export type IParticipant = {
     places: Array<[number, number]>,
     isRoundsHidden: Array<boolean>,
     players: Array<number>,
-    roomNumber: number
+    roomNumber: number,
+    isPaid: boolean,
+    invoiceUrl: string
 }
 
 export type IQuestion = {

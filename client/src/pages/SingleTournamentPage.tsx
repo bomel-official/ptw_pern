@@ -8,7 +8,7 @@ import {Footer} from "../components/base/Footer";
 import SingleTournamentImage from "../static/images/TournamentTopImage.jpg"
 import {__, _f} from "../multilang/Multilang";
 import {TournamentTabs} from "../data/SingleTournamentTabs";
-import {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {getSlotWord} from "../data/Translations";
 import TeamRegisterPopup from "../components/base/TeamRegisterPopup";
 import TournamentRating from "../components/tournament/TournamentRating";
@@ -19,6 +19,9 @@ import SingleTournamentTop from "../components/tournament/SingleTournamentTop";
 import SingleTournamentAbout from "../components/tournament/SingleTournamentAbout";
 import {getTournamentAdditionalFields} from "../functions/getTournamentAdditionalFields";
 import {getRegisterHTML} from "../functions/getRegisterHTML";
+import {IParticipant} from "../StoreTypes";
+import {useHttp} from "../hooks/http.hook";
+import {TournamentRegisterSubmit} from "../components/handlers/TournamentRegisterSubmit";
 
 export const SingleTournamentPage = () => {
     const {user} = useContext(AuthContext)
@@ -33,6 +36,36 @@ export const SingleTournamentPage = () => {
 
     const {slots} = getTournamentAdditionalFields(tournament, user)
     const registerHTML = getRegisterHTML(tournament, user, () => setIsRegisterFormActive(true))
+    const [participant, setParticipant] = useState<IParticipant | null>(null)
+
+    const {request} = useHttp()
+
+    const fetchCurrentParticipant = async () => {
+        const {participant: newParticipant} = await request(`/api/tournament/get-own-participant?tournamentId=${tournament?.id}&userId=${user?.id}`, 'GET')
+        if (newParticipant) {
+            setParticipant(newParticipant)
+        }
+    }
+
+    const fetchForParticipantUrl = async () => {
+        if (participant) {
+            const {url} = await request(`/api/tournament/get-pay-url?participantId=${participant.id}`, 'GET')
+            setParticipant({...participant, invoiceUrl: url})
+        }
+    }
+
+    const fetchForInvoiceInfo = async () => {
+        if (participant) {
+            const {url} = await request(`/api/tournament/get-pay-info?participantId=${participant.id}`, 'GET')
+            setParticipant({...participant, isPaid: url})
+        }
+    }
+
+    useEffect(() => {
+        if (tournament && user) {
+            fetchCurrentParticipant().catch(e => {})
+        }
+    }, [tournament, user])
 
     return (
         <div className="TournamentsPage full-height header-padding">
@@ -85,6 +118,46 @@ export const SingleTournamentPage = () => {
                                     ))}
                                 </ul>
                             </div>
+                            {!!tournament.participationPrice && !!participant && !participant.isPaid && <div className="pb32">
+                                <div className="tournament__content">
+                                    <p className="text">{__('Вам необходимо оплатить участие на турнир.')}</p>
+                                    <div className="flex">
+                                        {!participant.invoiceUrl && <button
+                                            className="button-both-gray corner-margin"
+                                            onClick={() => fetchForParticipantUrl()}
+                                        >
+                                            <span>{__('Получить ссылку на оплату')}</span>
+                                        </button>}
+                                        {!!participant.invoiceUrl && <>
+                                            <NavLink
+                                                className="button-tl-accent corner-margin"
+                                                to={`${participant.invoiceUrl}`}
+                                                target="_blank"
+                                                style={{
+                                                    marginRight: "16px"
+                                                }}
+                                            >
+                                                <span>{__('Оплатить')}</span>
+                                            </NavLink>
+                                            <button
+                                                className="button-gray corner-margin"
+                                                onClick={() => fetchForInvoiceInfo()}
+                                                style={{
+                                                    marginRight: "16px"
+                                                }}
+                                            >
+                                                <span>{__('Проверить оплату')}</span>
+                                            </button>
+                                            <button
+                                                className="button-br-gray corner-margin"
+                                                onClick={() => fetchForParticipantUrl()}
+                                            >
+                                                <span>{__('Обновить ссылку на оплату')}</span>
+                                            </button>
+                                        </>}
+                                    </div>
+                                </div>
+                            </div>}
                             { (currentTab === 'about') && <SingleTournamentAbout tournament={tournament}/>}
                             { (currentTab === 'participants') && <div className="pb104">
                                 <div className="tournament__content">
