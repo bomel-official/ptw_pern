@@ -1,4 +1,4 @@
-import {IGame} from "./context/GameContext";
+import {IGame, IGameOnly} from "./context/GameContext";
 import {DeviceIds, PlatformIds} from "./data/Platforms";
 import {IGameOnlyVersion} from "./data/Games";
 
@@ -84,7 +84,8 @@ export type ITournament = {
     id: number,
     title_RU: string,
     title_EU: string,
-    game: IGame,
+    game: IGameOnly,
+    slug: string,
     type: 'tournament'|'hub'|null,
     isRegisterOn: boolean,
     twitchChannel: string,
@@ -92,7 +93,7 @@ export type ITournament = {
     dateEnd: Date,
     previewImg: string,
     maxUsers: number,
-    players: IUser[],
+    players: Array<IUser>,
     playersInTeam: number,
     participationPrice: number,
     prizes: number,

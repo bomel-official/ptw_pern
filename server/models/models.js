@@ -91,7 +91,9 @@ const Participant = sequelize.define('participant', {
     dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
     places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: []},
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
-    roomNumber: {type: DataTypes.INTEGER, defaultValue: 0}
+    roomNumber: {type: DataTypes.INTEGER, defaultValue: 0},
+    invoiceUrl: {type: DataTypes.STRING, allowNull: true },
+    isPaid: {type: DataTypes.BOOLEAN, defaultValue: false}
     // tournament: Tournament   ------------------ done
     // team: Team   ------------------ done
 })
@@ -176,37 +178,24 @@ BuildAttachmentType.hasMany(BuildAttachment)
 BuildAttachment.belongsTo(BuildAttachmentType)
 
 
-const Order = sequelize.define('order', {
+const Invoice = sequelize.define('invoice', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    isPaid: {type: DataTypes.BOOLEAN, defaultValue: false}
+    enotId: {type: DataTypes.INTEGER, allowNull: false},
+    isPaid: {type: DataTypes.BOOLEAN, defaultValue: false},
+    url: {type: DataTypes.STRING, allowNull: false},
+    amount: {type: DataTypes.INTEGER, allowNull: false},
+    currency: {type: DataTypes.STRING, defaultValue: 'EUR'}
     // cart: Cart
     // products: Product(Many)
     // user: User
 })
 
-const Cart = sequelize.define('cart', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    // products: Product(Many)   ------------------ done
-    // user: User   ------------------ done
-})
 
-const ProductCart = sequelize.define('product_cart', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
-const ProductOrder = sequelize.define('product_order', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
-Cart.hasOne(User)
-Cart.belongsTo(User)
-
-Cart.belongsToMany(Product, {through: 'product_cart'})
-Product.belongsToMany(Cart, {through: 'product_cart'})
+Participant.belongsTo(Invoice)
+Invoice.belongsTo(Participant)
 
 FriendRequest.belongsTo(User, {as: 'user_from'})
 FriendRequest.belongsTo(User, {as: 'user_to'})
-
 
 Tournament.belongsToMany(User, {as: 'players', through: 'tournament_user'})
 User.belongsToMany(Tournament, {as: 'tournaments', through: 'tournament_user'})
@@ -230,18 +219,9 @@ Product.belongsTo(ProductCat)
 User.hasMany(Build)
 Build.belongsTo(User)
 
-Cart.hasOne(Order)
-Order.belongsToMany(Product, {through: 'product_order'})
-Product.belongsToMany(Order, {through: 'product_order'})
-
-User.hasMany(Order)
-Order.belongsTo(User)
-
 module.exports = {
     User,
-    ProductCart,
-    Cart,
-    Order,
+    Invoice,
     Build,
     ProductCat,
     Product,
@@ -251,11 +231,11 @@ module.exports = {
     Tournament,
     TeamRequest,
     FriendRequest,
-    ProductOrder,
     BuildWeapon,
     BuildWeaponType,
     BuildMode,
     BuildAttachment,
     BuildAttachmentType,
-    Question
+    Question,
+    TournamentUser
 }

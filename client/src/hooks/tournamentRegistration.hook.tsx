@@ -2,6 +2,7 @@ import {Dispatch, useCallback, useState} from "react";
 import {IUser} from "../StoreTypes";
 
 export interface IRegisterForm {
+    id?: number,
     tournamentId: null | number,
     capitan: null | number,
     teamId: null | number,

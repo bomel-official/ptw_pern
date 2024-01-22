@@ -13,12 +13,11 @@ class TournamentController {
         try {
             const {
                 players: playersJSON,
-                name: nameJSON,
+                name,
                 id: idJSON,
                 capitanId: capitanIdJSON
             } = req.body
             const players = JSON.parse(playersJSON || "null")
-            const name = JSON.parse(nameJSON || "null")
             const id = JSON.parse(idJSON || "null")
             const capitanId = JSON.parse(capitanIdJSON || "null")
             const {avatar} = req.files || {avatar: null}

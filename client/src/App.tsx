@@ -10,6 +10,8 @@ import {GameContext} from "./context/GameContext";
 import {useGame} from "./hooks/game.hook";
 import {IUser} from "./StoreTypes";
 import {useHttp} from "./hooks/http.hook";
+import {Provider} from "react-redux";
+import {store} from "./store";
 
 function App() {
     const {token, login, logout, userId} = useAuth()
@@ -43,14 +45,16 @@ function App() {
                 <GameContext.Provider value={{
                     game, setGame
                 }}>
-                    <div className="App">
-                        <PreLoader/>
-                        <Router>
-                            <div className="App-content">
-                                {routes}
-                            </div>
-                        </Router>
-                    </div>
+                    <Provider store={store}>
+                        <div className="App">
+                            <PreLoader/>
+                            <Router>
+                                <div className="App-content">
+                                    {routes}
+                                </div>
+                            </Router>
+                        </div>
+                    </Provider>
                 </GameContext.Provider>
             </LanguageContext.Provider>
         </AuthContext.Provider>

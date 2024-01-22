@@ -9,6 +9,7 @@ router.post('/edit', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentCon
 router.post('/redeclare-room', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.redeclareRoom)
 router.get('/get-all', TournamentController.getAll)
 router.get('/get-participants', TournamentController.getParticipants)
+router.get('/get-own-participant', TournamentController.getOwnParticipant)
 router.get('/:slug', TournamentController.getById)
 router.post('/register', AuthMiddleware, TournamentController.register)
 router.post('/unregister', AuthMiddleware, TournamentController.unregister)

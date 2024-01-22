@@ -11,13 +11,14 @@ import {AuthContext} from "../../context/AuthContext";
 export const AMOUNT_ROUNDS = 5
 export const DEFAULT_ROUNDS_HIDDEN = Array(AMOUNT_ROUNDS).fill(false)
 
-const TournamentRating = ({tournament, type}: {
+const TournamentRating = ({tournament, type, refetch}: {
     tournament: ITournament | null,
-    type?: 'users' | 'rating'
+    type?: 'users' | 'rating',
+    refetch?: boolean
 }) => {
     const [participants, setParticipants] = useState<Array<IParticipant>>([])
     const [isEditActive, setIsEditActive] = useState<boolean>(false)
-    const {request, error, clearError} = useHttp()
+    const {request} = useHttp()
     const {user, token} = useContext(AuthContext)
     const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
         status: '', text: ''
@@ -33,7 +34,7 @@ const TournamentRating = ({tournament, type}: {
 
     useEffect(() => {
         fetchParticipants().catch()
-    }, [tournament])
+    }, [tournament, refetch])
 
     const changeParticipant = (index: number, newParticipant: IParticipant) => {
         setParticipants(participants.map((ptsp, i) => {

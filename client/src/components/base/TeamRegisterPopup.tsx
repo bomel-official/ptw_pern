@@ -3,41 +3,32 @@ import {__} from "../../multilang/Multilang";
 import {icons} from "../../data/PlatformIcons";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {Popup} from "./Popup";
-import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
+import {IMessageOptions, ITeam, ITournament, IUser} from "../../StoreTypes";
 import {getFile} from "../../functions/getFile";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
-import {initNewTeam} from "../../hooks/newTeam.hook";
+import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 import {isUserAdmin} from "../../functions/isUserAdmin";
+import {TournamentRegisterSubmit} from "../handlers/TournamentRegisterSubmit";
+import {useTournamentRegistration} from "../../hooks/tournamentRegistration.hook";
 
-const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTeam, isRegisterFormActive, setIsRegisterFormActive, submitHandler, messageOptions}: {
-    newTeamUsed: any,
-    tournamentRegistrationUsed: any,
-    playersInTeam: number,
+const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormActive, refetchHandler}: {
+    tournament: ITournament | null | undefined,
     isRegisterFormActive: boolean,
     setIsRegisterFormActive: Dispatch<boolean>,
-    submitHandler: () => Promise<boolean>,
-    messageOptions: IMessageOptions
+    refetchHandler: Dispatch<boolean>
 }) => {
     const [currentStep, setCurrentStep] = useState<number>(0)
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
+    const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
+        status: '', text: ''
+    })
     const [teams, setTeams] = useState<Array<ITeam>>([])
-    const {user} = useContext(AuthContext)
-    const {request} = useHttp()
+    const {user, token} = useContext(AuthContext)
+    const {request, error, clearError} = useHttp()
 
-    const fetchTeams = useCallback(async () => {
-        if (user && isUserAdmin(user)) {
-            const {rows} = await request(`/api/team/search?type=all`, 'GET')
-            setTeams(rows)
-        } else if (user && user.id) {
-            const {rows} = await request(`/api/team/search?userId=${user.id}&type=own`, 'GET')
-            setTeams(rows)
-        }
-    }, [user])
-
-    useEffect(() => {
-        fetchTeams().catch()
-    }, [fetchTeams, user])
+    const newTeamUsed = useNewTeam()
+    const tournamentRegistrationUsed = useTournamentRegistration()
 
     const {
         newTeam,
@@ -54,14 +45,100 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
     const {
         isUserIdIncludedInRequest,
         changeRequestPlayers,
-        registerRequest
+        registerRequest,
+        setRegisterRequest,
+        changeRegisterForm
     } = tournamentRegistrationUsed
 
+    const fetchCurrentParticipant = async () => {
+        const {participant, participantUsers} = await request(`/api/tournament/get-own-participant?tournamentId=${tournament?.id}&userId=${user?.id}`, 'GET')
+        if (participant && participantUsers) {
+            setNewTeam({
+                avatar: participant.team.avatar,
+                capitanId: participant.team.capitanId,
+                players: participant.team.players,
+                name: participant.team.name,
+                id: participant.team.id,
+                avatar_path: null
+            })
+            setRegisterRequest({
+                teamId: participant.teamId,
+                tournamentId: participant.tournamentId,
+                players: participantUsers,
+                id: participant.id,
+                capitan: participant.capitan
+            })
+        }
+    }
+
+    const fetchTeams = useCallback(async () => {
+        if (user && isUserAdmin(user)) {
+            const {rows} = await request(`/api/team/search?type=all`, 'GET')
+            setTeams(rows)
+        } else if (user && user.id) {
+            const {rows} = await request(`/api/team/search?userId=${user.id}&type=own`, 'GET')
+            setTeams(rows)
+        }
+    }, [user])
+
+    const unregisterParticipant = async () => {
+        if (tournament && registerRequest.id) {
+            const {isOk} = await request(`/api/tournament/unregister`, 'POST', {
+                tournamentId: tournament.id,
+                participantId: registerRequest.id
+            }, {
+                Authorization: `Bearer ${token}`
+            }, true)
+            if (isOk) {
+                setNewTeam(initNewTeam)
+                setRegisterRequest({
+                    teamId: null,
+                    tournamentId: null,
+                    players: [],
+                    capitan: null
+                })
+                refetchHandler(true)
+                setIsRegisterFormActive(false)
+            }
+            return isOk
+        }
+        return false
+    }
+
     useEffect(() => {
-        if (user && !isUserAdmin(user) && !newTeam.id && !newTeam.capitanId) {
-            setNewTeam({...newTeam, capitanId: user.id, players: [user]})
+        fetchTeams().catch()
+    }, [fetchTeams, user])
+
+    useEffect(() => {
+        if (tournament && user && !isUserAdmin(user)) {
+            fetchCurrentParticipant().catch(e => {})
+        }
+    }, [tournament, user])
+
+    useEffect(() => {
+        if (user && !isUserAdmin(user)) {
+            if (!newTeam.capitanId) {
+                setNewTeam({...newTeam, players: [user], capitanId: user.id})
+            }
+            if (!registerRequest.capitan) {
+                setRegisterRequest({...registerRequest, players: [user], capitan: user.id})
+            }
+
         }
     }, [newTeam, user])
+
+    useEffect(() => {
+        if (tournament && tournament.id) {
+            changeRegisterForm('tournamentId', tournament.id)
+        }
+    }, [tournament])
+
+    useEffect(() => {
+        setMessageOptions({
+            status: 'neg', text: error
+        })
+    }, [error])
+
 
     return (
         <Popup
@@ -129,6 +206,12 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                                   strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>}
+                    {(registerRequest.id !== undefined) && <button
+                        className="popup__accentButton side__top-unregister mt12"
+                        onClick={() => unregisterParticipant()}
+                    >
+                        <span>{__('Покинуть турнир')}</span>
+                    </button>}
                 </>
             }
             { currentStep === 1 &&
@@ -144,7 +227,11 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                         />
                     </label>
                     <label htmlFor="teamAvatarImage" className="fileInput input mb32">
-                        <span className="fileInput__text">{newTeam.avatar ? newTeam.avatar.name : __('Загрузить аватар')}</span>
+                        <span className="fileInput__text">{
+                            (newTeam.avatar && typeof newTeam.avatar !== 'string') ?
+                                newTeam.avatar.name :
+                            newTeam.avatar || __('Загрузить аватар')
+                        }</span>
                         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 12.5L15.4283 9.92833C15.1158 9.61588 14.6919 9.44036 14.25 9.44036C13.8081 9.44036 13.3842 9.61588 13.0717 9.92833L5.5 17.5M4.66667 2.5H16.3333C17.2538 2.5 18 3.24619 18 4.16667V15.8333C18 16.7538 17.2538 17.5 16.3333 17.5H4.66667C3.74619 17.5 3 16.7538 3 15.8333V4.16667C3 3.24619 3.74619 2.5 4.66667 2.5ZM9.66667 7.5C9.66667 8.42047 8.92047 9.16667 8 9.16667C7.07953 9.16667 6.33333 8.42047 6.33333 7.5C6.33333 6.57953 7.07953 5.83333 8 5.83333C8.92047 5.83333 9.66667 6.57953 9.66667 7.5Z" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -277,7 +364,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                         <h4 className="popup__subtitle flex mb12">
                             <span className="mr-auto">{__('Выберите участников турнира')}</span>
                             <span className="white-text">{registerRequest.players.length}</span>
-                            <span className="white-hoverText">/{playersInTeam}</span>
+                            <span className="white-hoverText">/{tournament?.playersInTeam || 3}</span>
                         </h4>
                         <ul className="popup__players mb32">
                             {newTeam.players.map((player: IUser, index: number) => (
@@ -292,7 +379,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                                     {((player.id !== user?.id) || isUserAdmin(user)) && <button
                                         className={isUserIdIncludedInRequest(player.id) ? "checkbox active" : "checkbox"}
                                         onClick={() => {
-                                            changeRequestPlayers(player, playersInTeam)
+                                            changeRequestPlayers(player, tournament?.playersInTeam || 3)
                                         }}
                                     >
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -306,7 +393,7 @@ const TeamRegisterPopup = ({newTeamUsed, tournamentRegistrationUsed, playersInTe
                         <button
                             className="button-both-accent popup__accentButton"
                             onClick={async () => {
-                                const response = await submitHandler()
+                                const response = await TournamentRegisterSubmit(newTeamUsed, tournamentRegistrationUsed, clearError, token, request, setMessageOptions, refetchHandler)
                                 if (response) {
                                     setCurrentStep(currentStep + 1)
                                 }

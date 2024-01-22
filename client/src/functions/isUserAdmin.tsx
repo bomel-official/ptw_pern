@@ -1,6 +1,7 @@
 import {IUser} from "../StoreTypes";
 
-export function isUserAdmin(user: IUser, roles?: string[]) {
+export function isUserAdmin(user: IUser | null | undefined, roles?: string[]) {
+    if (!user) return false
     if (roles) {
         return roles.includes(user.role)
     }

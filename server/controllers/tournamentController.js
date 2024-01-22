@@ -1,10 +1,11 @@
 const ApiError = require("../error/ApiError");
-const {Tournament, Participant, PlayerResult, User, Team, Build} = require('../models/models')
+const {Tournament, Participant, PlayerResult, User, Team, Build, ParticipantUser, TournamentUser} = require('../models/models')
 const uuid = require("uuid");
 const sharp = require("sharp");
 const path = require("path");
 const {Op, Sequelize} = require("sequelize");
 const isUserAdmin = require("../funtions/isUserAdmin");
+const {logger} = require("sequelize/lib/utils/logger");
 
 const AMOUNT_ROUNDS = 5
 
@@ -196,7 +197,11 @@ class TournamentController {
                         type: type
                     } : {}
                 ]
-            } ,
+            },
+            order: [
+                ['dateBegin', 'DESC'],
+                ['id', 'DESC'],
+            ],
             include: [{
                 model: User,
                 as: 'players',
@@ -254,7 +259,7 @@ class TournamentController {
     }
 
     async register (req, res, next) {
-        const {teamId, players, tournamentId} = req.body
+        const {teamId, players, tournamentId, id} = req.body
 
         try {
             const tournament = await Tournament.findByPk(tournamentId)
@@ -267,56 +272,122 @@ class TournamentController {
                 return next(ApiError.badRequest('Некорректное количество участников!'))
             }
 
-            for (let playerId of players) {
-                if (tournament.participantsList.includes(parseInt(playerId))) {
-                    const usedUser = await User.findByPk(playerId)
-                    return next(ApiError.badRequest(`${usedUser.nickname} - уже учавствует`))
+            if (!id || isUserAdmin(req.user)) { // Create participant
+                const alreadyRegisteredUser = await TournamentUser.findOne({
+                    where: {
+                        tournamentId: tournamentId,
+                        userId: {
+                            [Op.in]: players.map(player => (parseInt(player)))
+                        }
+                    }
+                })
+                if (alreadyRegisteredUser) {
+                    const foundUser = await User.findByPk(alreadyRegisteredUser.userId)
+                    return next(ApiError.badRequest(`${foundUser.nickname} - уже учавствует`))
                 }
-            }
 
-            // Calculate roomNumber
-            const participants = await Participant.findAll({
-                where: {
-                    tournamentId: tournamentId
-                },
-                order: [
-                    ['roomNumber', 'ASC'],
-                    ['id', 'ASC'],
-                ],
-            })
-            let roomNumber = 1
-            for (const currentParticipant of participants) {
-                if (currentParticipant.roomNumber === roomNumber) {
-                    roomNumber += 1
+                // Calculate roomNumber
+                const participants = await Participant.findAll({
+                    where: {
+                        tournamentId: tournamentId
+                    },
+                    order: [
+                        ['roomNumber', 'ASC'],
+                        ['id', 'ASC'],
+                    ],
+                })
+                let roomNumber = 1
+                for (const currentParticipant of participants) {
+                    if (currentParticipant.roomNumber === roomNumber) {
+                        roomNumber += 1
+                    }
                 }
-            }
 
-            const newReq = await Participant.create({
-                tournamentId,
-                points: 0,
-                players,
-                teamId,
-                isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
-                dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
-                places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
-                roomNumber
-            })
-            try {
-                players.forEach(playerId => {
-                    User.findByPk(playerId).then((player => {
+                const newReq = await Participant.create({
+                    tournamentId,
+                    points: 0,
+                    players,
+                    teamId,
+                    isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
+                    dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
+                    places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
+                    roomNumber
+                })
+
+                try {
+                    for (const playerId of players) {
+                        const player = await User.findByPk(playerId)
                         if (player) {
-                            newReq.addUser(player)
-                            tournament.addPlayers(player)
+                            await newReq.addUser(player)
+                            await tournament.addPlayers(player)
                         } else {
                             return next(ApiError.badRequest('Ошибка, некорректный запрос'))
                         }
-                    }))
+                    }
+                } catch (e) {
+                    return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+                }
+            } else { // Edit participant
+                const alreadyRegisteredParticipant = await Participant.findOne({
+                    where: {
+                        id: {
+                            [Op.ne]: id
+                        }
+                    },
+                    include: [
+                        {
+                            model: User,
+                            as: 'users',
+                            where: {
+                                id: {
+                                    [Op.in]: players
+                                }
+                            }
+                        }
+                    ]
                 })
-            } catch (e) {
-                return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+                if (alreadyRegisteredParticipant && alreadyRegisteredParticipant.users[0]) {
+                    return next(ApiError.badRequest(`${alreadyRegisteredParticipant.users[0].nickname} - уже учавствует в другой команде`))
+                }
+                const participant = await Participant.findOne({
+                    where: {
+                        id
+                    },
+                    include: {
+                        model: User,
+                        as: 'users'
+                    }
+                })
+                participant.teamId = teamId
+                await participant.save()
+                const participantUsers = participant.users.map((user) => (user.id))
+
+                const toAddUsers = []
+                const toRemoveUsers = []
+
+                try {
+                    players.forEach(playerId => {User.findByPk(playerId).then((player => {
+                        if (player && !participantUsers.includes(player.id)) {
+                            toAddUsers.push(player)
+                        }
+                    }))})
+                    participant.users.forEach(user => {
+                        if (user && !players.includes(user.id)) {
+                            toRemoveUsers.push(user)
+                        }
+                    })
+                    for (const user of toRemoveUsers) {
+                        await participant.removeUser(user)
+                        await tournament.removePlayers(user)
+                    }
+                    for (const user of toAddUsers) {
+                        await participant.addUser(user)
+                        await tournament.addPlayers(user)
+                    }
+                } catch (e) {
+                    return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+                }
             }
-            await tournament.set({participantsList: [...tournament.participantsList, ...players]})
-            await tournament.save()
 
             res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
         } catch (e) {
@@ -411,39 +482,85 @@ class TournamentController {
                     include: [{model: User}]
                 })
             } else {
-                const allParticipants = await Participant.findAll({
+                participant = await Participant.findOne({
                     where: {
-                        [Op.and]: [
-                            {
-                                tournamentId
-                            }
-                        ]
+                        tournamentId
                     },
-                    include: [{model: User, as: 'users'}]
+                    include: [
+                        {
+                            model: User,
+                            as: 'users',
+                            where: {
+                                id: req.user.id,
+                            }
+                        }
+                    ]
                 })
-                for (let ptsp of allParticipants) {
-                    if (ptsp.users.filter((user) => (user.id === req.user.id)).length) {
-                        participant = ptsp
-                    }
-                }
             }
-            const participantPlayerIds = participant.users.map(user => (user.id))
+            if (!participant) {
+                return next(ApiError.forbidden('Ошибка сервера...'))
+            }
+            const participantUsers = await ParticipantUser.findAll({
+                where: {
+                    participantId: participant.id
+                }
+            })
+            const participantPlayerIds = participantUsers.map(participantUser => (participantUser.userId))
             const tournament = await Tournament.findByPk(participant.tournamentId)
-            if (!participant || (!participantPlayerIds.includes(req.user.id) && req.user.role !== "ADMIN" && req.user.role !== "SUPERADMIN")) {
+            console.log(isUserAdmin(req.user))
+            if (!participantPlayerIds.includes(req.user.id) && !isUserAdmin(req.user)) {
                 return next(ApiError.forbidden('Нет доступа'))
             }
             for (const user of participant.users) {
                 tournament.removePlayers(user)
             }
             await participant.destroy()
-            tournament.set({
-                participantsList: tournament.participantsList.filter((userId => (!participantPlayerIds.includes(userId))))
-            })
-            await tournament.save()
             return res.json({isOk: true, message: 'Удалено!'})
         } catch (e) {
             console.log(e)
             return next(ApiError.badRequest('Ошибка...'))
+        }
+    }
+
+    async getOwnParticipant(req, res, next) {
+        const {tournamentId, userId} = req.query
+        if (!tournamentId || !userId) {
+            return res.json({participant: null, participantUsers: []})
+        }
+        try {
+            const participant = await Participant.findOne({
+                where: {
+                    tournamentId
+                },
+                include: [
+                    {
+                        model: User,
+                        as: 'users',
+                        where: {
+                            id: userId,
+                        }
+                    },
+                    {
+                        model: Team,
+                        as: 'team',
+                        include: [
+                            {
+                                model: User,
+                                as: 'players'
+                            }
+                        ]
+                    }
+                ]
+            })
+            const participantUsers = await ParticipantUser.findAll({
+                where: {
+                    participantId: participant.id
+                }
+            })
+            return res.json({participant, participantUsers})
+        } catch (e) {
+            console.log(e)
+            return res.json({participant: null, participantUsers: []})
         }
     }
 }
