@@ -17,6 +17,7 @@ export const __ = (str: string | null): string => {
     if (Translations[str] && Translations[str][currentLang]) {
         return Translations[str][currentLang]
     }
+    console.log(str)
     return str
 }
 
