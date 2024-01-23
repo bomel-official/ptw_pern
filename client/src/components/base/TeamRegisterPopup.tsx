@@ -207,8 +207,11 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
                         </svg>
                     </button>}
                     {(registerRequest.id !== undefined) && <button
-                        className="popup__accentButton side__top-unregister mt12"
+                        className="popup__accentButton side__top-unregister"
                         onClick={() => unregisterParticipant()}
+                        style={{
+                            marginTop: '8px'
+                        }}
                     >
                         <span>{__('Покинуть турнир')}</span>
                     </button>}
