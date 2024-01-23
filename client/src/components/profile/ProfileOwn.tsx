@@ -69,6 +69,11 @@ const ProfileOwn = ({user}: {user: IUser}) => {
                     }
                 }
             })
+            formData.set('avatar', newTeamUsed.newTeam.avatar ?? '')
+            formData.set('capitanId', JSON.stringify(newTeamUsed.newTeam.capitanId) ?? '')
+            formData.set('name', newTeamUsed.newTeam.name ?? '')
+            formData.set('players', JSON.stringify(newTeamUsed.newTeam.players.map((player: IUser) => (player.id))))
+
             const {message, team} = await request(`/api/team/save-create`, 'POST', formData, {
                 Authorization: `Bearer ${token}`
             }, false)
