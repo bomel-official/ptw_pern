@@ -1,5 +1,5 @@
 import React from 'react';
-import {__, _f} from "../../multilang/Multilang";
+import {__, _c, _f, _n} from "../../multilang/Multilang";
 import {Games} from "../../data/Games";
 import {getSlotWord} from "../../data/Translations";
 import {NavLink} from "react-router-dom";
@@ -15,20 +15,20 @@ const SingleTournamentAbout = ({tournament}: {tournament: ITournament}) => {
                 <div className="tournament__fund">
                     <div className="tournament__fund-top">
                         <h2 className="tournament__fund-heading">{__('Призовой фонд')}</h2>
-                        <div className="tournament__fund-number">{tournament.prizes} ₽</div>
+                        <div className="tournament__fund-number">{_n(tournament.prizes)} {_c()}</div>
                     </div>
                     <div className="tournament__fund-bottom grid c3">
                         <div className="tournament__fund-item">
                             <h3 className="tournament__fund-item-place">1 {__('место')}</h3>
-                            <div className="tournament__fund-item-prize">{tournament.prize_1} ₽</div>
+                            <div className="tournament__fund-item-prize">{_n(tournament.prize_1)} {_c()}</div>
                         </div>
                         <div className="tournament__fund-item">
                             <h3 className="tournament__fund-item-place">2 {__('место')}</h3>
-                            <div className="tournament__fund-item-prize">{tournament.prize_2} ₽</div>
+                            <div className="tournament__fund-item-prize">{_n(tournament.prize_2)} {_c()}</div>
                         </div>
                         <div className="tournament__fund-item">
                             <h3 className="tournament__fund-item-place">3 {__('место')}</h3>
-                            <div className="tournament__fund-item-prize">{tournament.prize_3} ₽</div>
+                            <div className="tournament__fund-item-prize">{_n(tournament.prize_3)} {_c()}</div>
                         </div>
                     </div>
                 </div>

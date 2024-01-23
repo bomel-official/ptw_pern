@@ -7,6 +7,7 @@ import {IMessageOptions, IParticipant, ITournament} from "../../StoreTypes";
 import {useHttp} from "../../hooks/http.hook";
 import {getFile} from "../../functions/getFile";
 import {AuthContext} from "../../context/AuthContext";
+import {isUserAdmin} from "../../functions/isUserAdmin";
 
 export const AMOUNT_ROUNDS = 5
 export const DEFAULT_ROUNDS_HIDDEN = Array(AMOUNT_ROUNDS).fill(false)
@@ -135,7 +136,7 @@ const TournamentRating = ({tournament, type, refetch}: {
                         <span>{__('Отмена')}</span>
                     </button>
                 </div>}
-                {user && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
+                {user && (isUserAdmin(user)) && messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
                 <table>
                     <thead>
                     <tr>
@@ -244,6 +245,8 @@ const TournamentRating = ({tournament, type, refetch}: {
                                                 <span>{reqUser.nickname}</span>
                                             </NavLink>
                                         ))}
+                                        {isUserAdmin(user) && <div
+                                            className={`${participant.isPaid ? 'pos' : 'neg'}-message mt12`}>{__(participant.isPaid ? 'Оплачено' : 'Не оплачено')}</div>}
                                     </div>
                                 </div>
                             </td>

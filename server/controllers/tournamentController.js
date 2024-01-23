@@ -405,18 +405,12 @@ class TournamentController {
             const participant = await Participant.findByPk(participantId)
             const tournament = await Tournament.findByPk(participant.tournamentId)
 
-            let newInvoice = null
-
-            if (participant.invoiceId) {
-                newInvoice = await Invoice.findByPk(participant.invoiceId)
-            } else {
-                newInvoice = await Invoice.create({
-                    amount: tournament.participationPrice
-                })
-            }
+            const newInvoice = await Invoice.create({
+                amount: tournament.participationPrice
+            })
 
             const {data: enotInvoice} = await axios.post('https://api.enot.io/invoice/create', {
-                amount: newInvoice.amount,
+                amount: tournament.participationPrice,
                 order_id: JSON.stringify(newInvoice.id),
                 currency: newInvoice.currency,
                 shop_id: process.env.ENOT_SHOP_ID,
@@ -454,22 +448,26 @@ class TournamentController {
 
         try {
             const participant = await Participant.findByPk(participantId)
-            const invoice = await Invoice.findByPk(participant.invoiceId)
-
-            const {data: enotInvoiceInfo} = await axios.get(`https://api.enot.io/invoice/info?order_id=${JSON.stringify(invoice.id)}&shop_id=${process.env.ENOT_SHOP_ID}&invoice_id=${invoice.enotId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept-Encoding': 'application/json',
-                    'Accept': 'application/json',
-                    'x-api-key': process.env.ENOT_SECRET_KEY
+            const invoices = await Invoice.findAll({
+                where: {
+                    participantId: participant.id
                 }
             })
-            console.log(enotInvoiceInfo.data)
-            if (enotInvoiceInfo.data.status === 'success') {
-                participant.isPaid = true
-                await participant.save()
+            for (const invoice of invoices) {
+                const {data: enotInvoiceInfo} = await axios.get(`https://api.enot.io/invoice/info?order_id=${JSON.stringify(invoice.id)}&shop_id=${process.env.ENOT_SHOP_ID}&invoice_id=${invoice.enotId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept-Encoding': 'application/json',
+                        'Accept': 'application/json',
+                        'x-api-key': process.env.ENOT_SECRET_KEY
+                    }
+                })
+                if (enotInvoiceInfo.data.status === 'success') {
+                    participant.isPaid = true
+                    await participant.save()
 
-                res.json({isPaid: true})
+                    res.json({isPaid: true})
+                }
             }
             res.json({isPaid: false})
         } catch (e) {

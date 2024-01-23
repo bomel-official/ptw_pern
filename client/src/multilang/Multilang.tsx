@@ -32,3 +32,32 @@ export const _f = (data: any, field: string): string => {
     }
     return data[`${field}_${currentLang}`]
 }
+
+export const _n = (num: number): number => {
+    const {language} = useContext(LanguageContext)
+
+    let currentLang: ILang = 'RU'
+    if (language !== null) {
+        currentLang = language
+    }
+
+    if (currentLang === 'RU') {
+        return num
+    } else {
+        return Math.ceil(num/100)
+    }
+}
+export const _c = (): string => {
+    const {language} = useContext(LanguageContext)
+
+    let currentLang: ILang = 'RU'
+    if (language !== null) {
+        currentLang = language
+    }
+
+    if (currentLang === 'RU') {
+        return '₽'
+    } else {
+        return '€'
+    }
+}
