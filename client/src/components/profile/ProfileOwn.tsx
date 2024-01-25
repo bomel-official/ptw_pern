@@ -17,6 +17,7 @@ import {AuthContext} from "../../context/AuthContext";
 import ProfileOwnTeamsTab from './ProfileOwnTeamsTab';
 import {useHttp} from "../../hooks/http.hook";
 import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
+import {SaveTeam} from "../handlers/SaveTeam";
 
 
 const ProfileOwn = ({user}: {user: IUser}) => {
@@ -29,7 +30,6 @@ const ProfileOwn = ({user}: {user: IUser}) => {
     })
 
     const {token} = useContext(AuthContext)
-
     const newTeamUsed = useNewTeam()
     const {request, error, clearError} = useHttp()
 
@@ -39,8 +39,6 @@ const ProfileOwn = ({user}: {user: IUser}) => {
         setIsEditTeamFormActive(true)
         setCurrentStep(0)
     }
-
-    const formData = new FormData()
 
     useEffect(() => {
         if (error) {
@@ -57,33 +55,13 @@ const ProfileOwn = ({user}: {user: IUser}) => {
             status: '', text: ''
         })
         try {
-            const teamKeys = Object.keys(newTeamUsed.newTeam) as Array<keyof typeof newTeamUsed.newTeam>
-            teamKeys.forEach((key) => {
-                if (newTeamUsed.newTeam.hasOwnProperty(key) && key !== 'avatar_path') {
-                    if (key === 'avatar') {
-                        formData.set(key, newTeamUsed.newTeam.avatar || '')
-                    } else if (key === 'players') {
-                        formData.set(key, JSON.stringify(newTeamUsed.newTeam.players.map((pl => (pl.id)))))
-                    } else {
-                        formData.set(key, (newTeamUsed.newTeam[key]) ? JSON.stringify(newTeamUsed.newTeam[key]) : '')
-                    }
-                }
-            })
-            formData.set('avatar', newTeamUsed.newTeam.avatar ?? '')
-            formData.set('capitanId', JSON.stringify(newTeamUsed.newTeam.capitanId) ?? '')
-            formData.set('name', newTeamUsed.newTeam.name ?? '')
-            formData.set('players', JSON.stringify(newTeamUsed.newTeam.players.map((player: IUser) => (player.id))))
-
-            const {message, team} = await request(`/api/team/save-create`, 'POST', formData, {
-                Authorization: `Bearer ${token}`
-            }, false)
+            let {team, message} = await SaveTeam(newTeamUsed.newTeam, request, token)
             if (team && team.id) {
                 newTeamUsed.setNewTeam(team)
                 setMessageOptions({
                     status: 'pos', text: message
                 })
                 setIsEditTeamFormActive(false)
-                return team
             }
         } catch (e: any) {
             setMessageOptions({

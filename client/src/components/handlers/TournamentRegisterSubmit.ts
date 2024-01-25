@@ -1,5 +1,6 @@
 import {IMessageOptions, IParticipant, ITeam, IUser} from "../../StoreTypes";
 import {Dispatch} from "react";
+import {SaveTeam} from "./SaveTeam";
 
 export const TournamentRegisterSubmit = async (
     newTeamUsed: any,
@@ -11,26 +12,17 @@ export const TournamentRegisterSubmit = async (
     refetchHandler: Dispatch<boolean>
 ) => {
     clearError()
-    const formData = new FormData()
     try {
-        let teamId = newTeamUsed.newTeam.id
-        if (teamId === null) {
-            formData.set('avatar', newTeamUsed.newTeam.avatar)
-            formData.set('capitanId', newTeamUsed.newTeam.capitanId)
-            formData.set('name', newTeamUsed.newTeam.name)
-            formData.set('players', JSON.stringify(newTeamUsed.newTeam.players.map((player: IUser) => (player.id))))
+        let {team} = await SaveTeam(newTeamUsed.newTeam, request, token)
 
-            const {team} = await request(`/api/team/save-create`, 'POST', formData, {
-                Authorization: `Bearer ${token}`
-            }, false)
-            if (!team) {
-                return false
-            }
-            teamId = team.id
-            newTeamUsed.changeNewTeam('id', team.id)
+        if (!team) {
+            return false
         }
+
+        newTeamUsed.changeNewTeam('id', team.id)
+
         const {isOk} = await request(`/api/tournament/register`, 'POST', {
-            teamId: teamId,
+            teamId: team.id,
             tournamentId: tournamentRegistrationUsed.registerRequest.tournamentId,
             players: tournamentRegistrationUsed.registerRequest.players.map((pl: IUser) => pl.id),
             id: tournamentRegistrationUsed.registerRequest.id ?? ''

@@ -3,6 +3,7 @@ const axios = require('axios')
 const {User} = require("../models/models");
 const genJwt = require("../funtions/genJwt");
 const parseCookie = require("../funtions/parseCookie");
+const {Op} = require("sequelize");
 
 class AuthController {
     async discord(req, res, next) {
@@ -40,7 +41,18 @@ class AuthController {
                 }
             })
             const { id, username, avatar, email } = userResponse.data;
-            const UserAlreadyExist = await User.findOne({where: {email}})
+            const UserAlreadyExist = await User.findOne({
+                where: {
+                    [Op.or]: [
+                        {
+                            email
+                        },
+                        {
+                            discord_id: id
+                        }
+                    ]
+                }
+            })
             if (UserAlreadyExist) {
                 UserAlreadyExist.discord_id = id
                 UserAlreadyExist.discord_username = username
@@ -59,7 +71,7 @@ class AuthController {
                     UsernameTaken = await User.findOne({where: {nickname: `${username}${counter}`}})
                 }
                 const newUser = await User.create({
-                    email: email.trim(),
+                    email: email ? email.trim() : id,
                     discord_id: id,
                     discord_avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
                     discord_username: username,
