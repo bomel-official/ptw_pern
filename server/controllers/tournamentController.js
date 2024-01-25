@@ -1,12 +1,12 @@
 const ApiError = require("../error/ApiError");
 const {Tournament, Participant, PlayerResult, User, Team, Build, ParticipantUser, TournamentUser, Invoice} = require('../models/models')
 const uuid = require("uuid");
-const sharp = require("sharp");
 const path = require("path");
 const {Op, Sequelize} = require("sequelize");
 const isUserAdmin = require("../funtions/isUserAdmin");
 const {logger} = require("sequelize/lib/utils/logger");
 const axios = require("axios");
+const uploadImage = require("../funtions/uploadImage");
 
 const AMOUNT_ROUNDS = 5
 
@@ -38,23 +38,11 @@ class TournamentController {
         } = req.body
 
         let filename = null
-        if (previewImg) {
-            try {
-                filename = uuid.v4() + '.jpg'
-                const allowedFiletypes = ['image/jpeg', 'image/png']
-                if (!allowedFiletypes.find(type => type === previewImg.mimetype)) {
-                    return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                }
-                await sharp(previewImg.data).resize({
-                    width: 436,
-                    height: 294,
-                    fit: 'cover',
-                    background: {r: 255, g: 255, b: 255, alpha: 1}
-                }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
-            } catch (e) {
-                console.log(e)
-                return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
-            }
+        try {
+            filename = await uploadImage(previewImg)
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
         }
 
         const newTournament = await Tournament.create({
@@ -113,23 +101,11 @@ class TournamentController {
         } = req.body
 
         let filename = null
-        if (previewImg) {
-            try {
-                filename = uuid.v4() + '.jpg'
-                const allowedFiletypes = ['image/jpeg', 'image/png']
-                if (!allowedFiletypes.find(type => type === previewImg.mimetype)) {
-                    return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                }
-                await sharp(previewImg.data).resize({
-                    width: 436,
-                    height: 294,
-                    fit: 'cover',
-                    background: {r: 255, g: 255, b: 255, alpha: 1}
-                }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
-            } catch (e) {
-                console.log(e)
-                return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
-            }
+        try {
+            filename = await uploadImage(previewImg)
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
         }
 
         const tournament = await Tournament.findOne({

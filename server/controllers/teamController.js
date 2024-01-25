@@ -1,10 +1,10 @@
 const uuid = require("uuid");
 const ApiError = require("../error/ApiError");
-const sharp = require("sharp");
 const path = require("path");
 const {User, Team, TeamRequest} = require("../models/models");
 const {Op} = require("sequelize");
 const isUserAdmin = require("../funtions/isUserAdmin");
+const uploadImage = require("../funtions/uploadImage");
 
 const TEAMS_LIMIT = 5
 
@@ -23,19 +23,13 @@ class TournamentController {
             const {avatar} = req.files || {avatar: null}
 
             let filename = null
-            if (avatar) {
-                filename = uuid.v4() + '.jpg'
-                const allowedFiletypes = ['image/jpeg', 'image/png']
-                if (!allowedFiletypes.find(type => type === avatar.mimetype)) {
-                    return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                }
-                await sharp(avatar.data).resize({
-                    width: 120,
-                    height: 120,
-                    fit: 'cover',
-                    background: {r: 255, g: 255, b: 255, alpha: 1}
-                }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
+            try {
+                filename = await uploadImage(avatar, 120, 120)
+            } catch (e) {
+                console.log(e)
+                return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
             }
+
             const creator = await User.findOne({
                 where: {
                     id: req.user.id

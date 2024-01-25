@@ -1,9 +1,9 @@
 const {BuildWeaponType, BuildWeapon, BuildAttachment, BuildAttachmentType, Build, User} = require("../models/models");
 const uuid = require("uuid");
 const ApiError = require("../error/ApiError");
-const sharp = require("sharp");
 const path = require("path");
 const {Op} = require("sequelize");
+const uploadImage = require("../funtions/uploadImage");
 
 const getWhere = (WhereClass, req) => {
     return {
@@ -35,27 +35,16 @@ class BuildController {
                 return res.json({message: 'Добавлено!', item: newItem})
             } else if (object === 'weapon') {
                 const {title_RU, title_EU, buildWeaponTypeId, gameVersion, allowedAttachments} = req.body
-                const {image} = req.files || {avatar: null}
+                const {image} = req.files || {image: null}
                 let filename = ''
 
-                if (image) {
-                    try {
-                        filename = uuid.v4() + '.jpg'
-                        const allowedFiletypes = ['image/jpeg', 'image/png']
-                        if (!allowedFiletypes.find(type => type === image.mimetype)) {
-                            return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                        }
-                        await sharp(image.data).resize({
-                            width: 176,
-                            height: 90,
-                            fit: 'cover',
-                            background: {r: 255, g: 255, b: 255, alpha: 1}
-                        }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
-                    } catch (e) {
-                        console.log(e)
-                        return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
-                    }
+                try {
+                    filename = await uploadImage(image, 240, 240)
+                } catch (e) {
+                    console.log(e)
+                    return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
                 }
+
                 const newItem = await BuildWeapon.create({
                     title_EU,
                     title_RU,
@@ -106,29 +95,17 @@ class BuildController {
                 return res.json({message: 'Обновлено!', item})
             } else if (object === 'weapon') {
                 const {id, title_RU, title_EU, buildWeaponTypeId, gameVersion, allowedAttachments} = req.body
-                const {image} = req.files || {avatar: null}
+                const {image} = req.files || {image: null}
                 let filename = ''
-
                 const item = await BuildWeapon.findByPk(id)
 
-                if (image) {
-                    try {
-                        filename = uuid.v4() + '.jpg'
-                        const allowedFiletypes = ['image/jpeg', 'image/png']
-                        if (!allowedFiletypes.find(type => type === image.mimetype)) {
-                            return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                        }
-                        await sharp(image.data).resize({
-                            width: 176,
-                            height: 90,
-                            fit: 'cover',
-                            background: {r: 255, g: 255, b: 255, alpha: 1}
-                        }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
-                    } catch (e) {
-                        console.log(e)
-                        return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
-                    }
+                try {
+                    filename = await uploadImage(image, 240, 240)
+                } catch (e) {
+                    console.log(e)
+                    return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
                 }
+
                 item.set({
                     title_EU,
                     title_RU,

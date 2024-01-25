@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken')
 const {User, Cart, FriendRequest} = require('../models/models')
 const {Op} = require("sequelize");
 const uuid = require('uuid')
-const sharp = require('sharp')
 const path = require('path')
 const genJwt = require("../funtions/genJwt");
+const uploadImage = require("../funtions/uploadImage");
 
 class UserController {
     async register (req, res, next) {
@@ -193,24 +193,11 @@ class UserController {
             return next(ApiError.badRequest('Пользователь с таким никнеймом уже существует'))
         }
 
-        if (avatar) {
-            try {
-                const filename = uuid.v4() + '.jpg'
-                const allowedFiletypes = ['image/jpeg', 'image/png']
-                if (!allowedFiletypes.find(type => type === avatar.mimetype)) {
-                    return next(ApiError.badRequest('Недопустимый формат изображения, загружайте PNG и JPG файлы'))
-                }
-                await sharp(avatar.data).resize({
-                    width: 120,
-                    height: 120,
-                    fit: 'cover',
-                    background: {r: 255, g: 255, b: 255, alpha: 1}
-                }).toFormat('jpeg').toFile(path.resolve(__dirname, '..', 'static', filename))
-                user.avatar = filename
-            } catch (e) {
-                console.log(e)
-                return next(ApiError.internal('Произошла ошибка, попробуйте позже'))
-            }
+        try {
+            user.avatar = await uploadImage(avatar, 240, 240)
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
         }
         user.nickname = nickname ? nickname.trim() : user.nickname
         user.activisionId = activisionId ? activisionId : user.activisionId
