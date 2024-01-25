@@ -39,7 +39,7 @@ class BuildController {
                 let filename = ''
 
                 try {
-                    filename = await uploadImage(image, 240, 240)
+                    filename = await uploadImage(image, 352, 180)
                 } catch (e) {
                     console.log(e)
                     return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
@@ -100,7 +100,7 @@ class BuildController {
                 const item = await BuildWeapon.findByPk(id)
 
                 try {
-                    filename = await uploadImage(image, 240, 240)
+                    filename = await uploadImage(image, 352, 180)
                 } catch (e) {
                     console.log(e)
                     return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
