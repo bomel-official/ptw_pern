@@ -80,25 +80,25 @@ export const menuItems = [
 
 export const socialItems = [
     {
-        to: '/discord',
+        to: process.env.REACT_APP_DISCORD_LINK_URL || '/',
         icon: DiscordIcon,
         name: 'Discord',
         serviceUrl: 'https://discordapp.com/users/'
     },
     {
-        to: '/twitch',
+        to: process.env.REACT_APP_TWITCH_LINK_URL || '/',
         icon: TwitchIcon,
         name: 'Twitch',
         serviceUrl: 'https://www.twitch.tv/'
     },
     {
-        to: '/twitter',
+        to: process.env.REACT_APP_TWITTER_LINK_URL || '/',
         icon: TwitterIcon,
         name: 'Twitter',
         serviceUrl: 'https://twitter.com/'
     },
     {
-        to: '/youtube',
+        to: process.env.REACT_APP_YOUTUBE_LINK_URL || '/',
         icon: YoutubeIcon,
         name: 'YouTube',
         serviceUrl: 'https://www.youtube.com/'
@@ -107,25 +107,25 @@ export const socialItems = [
 
 export const socialObjects = {
     'discord': {
-        to: '/discord',
+        to: process.env.REACT_APP_DISCORD_LINK_URL || '/',
         icon: DiscordIcon,
         name: 'Discord',
         serviceUrl: 'https://discordapp.com/users/'
     },
     'twitch': {
-        to: '/twitch',
+        to: process.env.REACT_APP_TWITCH_LINK_URL || '/',
         icon: TwitchIcon,
         name: 'Twitch',
         serviceUrl: 'https://www.twitch.tv/'
     },
     'twitter': {
-        to: '/twitter',
+        to: process.env.REACT_APP_TWITTER_LINK_URL || '/',
         icon: TwitterIcon,
         name: 'Twitter',
         serviceUrl: 'https://twitter.com/'
     },
     'youtube': {
-        to: '/youtube',
+        to: process.env.REACT_APP_YOUTUBE_LINK_URL || '/',
         icon: YoutubeIcon,
         name: 'YouTube',
         serviceUrl: 'https://www.youtube.com/'
