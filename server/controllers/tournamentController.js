@@ -150,12 +150,20 @@ class TournamentController {
     async getAll (req, res, next) {
         const {status, numberPosts, game, type} = req.query
         let whereDateEndObject = {}
+        let orderType = [
+            ['dateBegin', 'DESC'],
+            ['id', 'DESC'],
+        ]
         if (status === 'active') {
             whereDateEndObject = {
                 dateEnd: {
                     [Op.gte]: Sequelize.literal('NOW()'),
                 },
             }
+            orderType = [
+                ['dateBegin', 'ASC'],
+                ['id', 'DESC'],
+            ]
         } else if (status === 'finished') {
             whereDateEndObject = {
                 dateEnd: {
@@ -175,10 +183,7 @@ class TournamentController {
                     } : {}
                 ]
             },
-            order: [
-                ['dateBegin', 'DESC'],
-                ['id', 'DESC'],
-            ],
+            order: orderType,
             include: [{
                 model: User,
                 as: 'players',
@@ -343,20 +348,23 @@ class TournamentController {
                 const toRemoveUsers = []
 
                 try {
-                    players.forEach(playerId => {User.findByPk(playerId).then((player => {
+                    for (const playerId of players) {
+                        const player = await User.findByPk(playerId)
                         if (player && !participantUsers.includes(player.id)) {
                             toAddUsers.push(player)
                         }
-                    }))})
+                    }
                     participant.users.forEach(user => {
                         if (user && !players.includes(user.id)) {
                             toRemoveUsers.push(user)
                         }
                     })
+                    console.log(toRemoveUsers)
                     for (const user of toRemoveUsers) {
                         await participant.removeUser(user)
                         await tournament.removePlayers(user)
                     }
+                    console.log(toAddUsers)
                     for (const user of toAddUsers) {
                         await participant.addUser(user)
                         await tournament.addPlayers(user)
