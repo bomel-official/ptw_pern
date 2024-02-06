@@ -1,9 +1,10 @@
 import React, {Dispatch, useEffect, useState} from 'react';
 import {__} from "../../multilang/Multilang";
 import {ProfileTabsIds, ProfileTabs, ProfileViewTabs} from "../../data/Links";
+import {NavLink} from "react-router-dom";
 
 
-const ProfileTabsMenu = ({currentTab, setCurrentTab}: {currentTab: ProfileTabsIds, setCurrentTab: Dispatch<ProfileTabsIds>}) => {
+const ProfileTabsMenu = ({currentTab, url}: {currentTab: ProfileTabsIds, url: string}) => {
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
     const [defaultTab, setDefaultTab] = useState<{name: string, id: ProfileTabsIds}>({
         name: 'Просмотр',
@@ -33,14 +34,14 @@ const ProfileTabsMenu = ({currentTab, setCurrentTab}: {currentTab: ProfileTabsId
             <ul className={isDropdownActive ? "dropdown__values active" : "dropdown__values"}>
                 {Object.values(ProfileTabs).map((tab, index) => (
                     (tab && currentTab !== tab.id) && <li className="dropdown__value" key={index}>
-                        <button
+                        <NavLink
+                            to={`${url}/${tab.id}`}
                             onClick={() => {
-                                setCurrentTab(tab.id)
                                 setIsDropdownActive(false)
                             }}
                         >
                             {__(tab.name)}
-                        </button>
+                        </NavLink>
                     </li>
                 ))}
             </ul>

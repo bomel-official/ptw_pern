@@ -9,12 +9,12 @@ import {getFile} from "../../functions/getFile";
 import DiscordIcon from "./../../static/icons/discord-white.svg"
 import {NavLink} from "react-router-dom";
 
-const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
+const ProfileTop = ({isOwn, user, currentTab, tabs, url}: {
     isOwn: boolean,
     user: IUser | null,
-    setCurrentTab?: Dispatch<ProfileTabsIds>,
     currentTab?: ProfileTabsIds,
-    tabs:  Record<ProfileTabsIds, {name: string, id: ProfileTabsIds} | null>
+    tabs:  Record<ProfileTabsIds, {name: string, id: ProfileTabsIds} | null>,
+    url: string
 }) => {
     const {logout} = useContext(AuthContext)
     const {twitch} = socialObjects
@@ -65,15 +65,15 @@ const ProfileTop = ({isOwn, user, setCurrentTab, currentTab, tabs}: {
                         </div>
                     </div>
                 </div>
-                {setCurrentTab && currentTab && <div className="side__tab-headings ds">
+                {currentTab && <div className="side__tab-headings ds">
                     { Object.values(tabs).map((tab, index) => (
-                        (tab) && <button
-                            onClick={() => setCurrentTab(tab.id)}
+                        (tab) && <NavLink
+                            to={`${url}/${tab.id}`}
                             key={index}
                             className={currentTab === tab.id ? "side__tab-heading active": "side__tab-heading"}
                         >
                             {__(`${tab.name}`)}
-                        </button>
+                        </NavLink>
                     ))}
                 </div>}
             </div>

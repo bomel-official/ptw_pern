@@ -6,9 +6,10 @@ import ProfileView from "../components/profile/ProfileView";
 
 import {useHttp} from "../hooks/http.hook";
 import {AuthContext} from "../context/AuthContext";
+import {ProfileTabsIds} from "../data/Links";
 
 const ProfilePage = () => {
-    const {nickname} = useParams()
+    const {nickname, currentTab} = useParams()
     const {user} = useContext(AuthContext)
 
     const [profileUser, setProfileUser] = useState<IUser | null>(null)
@@ -31,11 +32,11 @@ const ProfilePage = () => {
 
     if (isOwn && profileUser) {
         return (
-            <ProfileOwn user={profileUser}/>
+            <ProfileOwn user={profileUser} tab={currentTab as ProfileTabsIds || 'general'}/>
         )
     } else {
         return (
-            <ProfileView user={profileUser}/>
+            <ProfileView user={profileUser} tab={currentTab as ProfileTabsIds || 'general'}/>
         )
     }
 };

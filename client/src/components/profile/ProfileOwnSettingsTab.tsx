@@ -199,7 +199,7 @@ const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {
                                     />
                                 </label>
                             </div>
-                        ) : <></>)}
+                        ) : <div key={index}></div>)}
                     </div>
                     <button className="button-both-accent corner-margin mt" onClick={saveSocial}>
                         <span>{__('Сохранить')}</span>

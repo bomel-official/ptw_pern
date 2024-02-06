@@ -18,8 +18,8 @@ export const SideMenu = (props: {menu: Array<{to: string, name: string, icon: st
                     }) }
                 </ul>
                 <div className="side__left-bottom">
-                    <h3 className="side__left-title">Play 2 win</h3>
-                    <h4 className="side__left-subtitle">{__('Lorem ipsum dolor sit amet consectetur.')}</h4>
+                    <h3 className="side__left-title">Play to win</h3>
+                    <h4 className="side__left-subtitle">The best Warzone tournament organizer since 2021.</h4>
                     <div className="side__left-social flex">
                         { socialItems.map((value, index) => (
                             <NavLink

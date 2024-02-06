@@ -18,10 +18,10 @@ import ProfileOwnTeamsTab from './ProfileOwnTeamsTab';
 import {useHttp} from "../../hooks/http.hook";
 import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 import {SaveTeam} from "../handlers/SaveTeam";
+import {getProfileUrl} from "../../functions/urls";
 
 
-const ProfileOwn = ({user}: {user: IUser}) => {
-    const [currentTab, setCurrentTab] = useState<ProfileTabsIds>('general')
+const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
     const [teamToEdit, setTeamToEdit] = useState<ITeam>(initNewTeam)
     const [isEditTeamFormActive, setIsEditTeamFormActive] = useState<boolean>(false)
     const [currentStep, setCurrentStep] = useState<number>(0)
@@ -77,14 +77,13 @@ const ProfileOwn = ({user}: {user: IUser}) => {
             <div className="side">
                 <SideMenu menu={Object.values(sideMenuItems)}/>
                 <div className="side__content">
-                    <ProfileTop user={user} isOwn={true} currentTab={currentTab} setCurrentTab={setCurrentTab} tabs={ProfileTabs}/>
+                    <ProfileTop user={user} isOwn={true} currentTab={tab} url={getProfileUrl(user, false)} tabs={ProfileTabs}/>
                     <div className="side__content-bottom">
                         <div className="side__container pt24">
-                            <ProfileTabsMenu currentTab={currentTab} setCurrentTab={setCurrentTab} />
-                            {currentTab === "general" &&
+                            <ProfileTabsMenu currentTab={tab} url={getProfileUrl(user, false)}/>
+                            {tab === "general" &&
                                 <ProfileOwnGeneralTab
                                     user={user}
-                                    setCurrentTab={setCurrentTab}
                                     saveTeamToEdit={saveTeamToEdit}
                                     setIsEditTeamFormActive={setIsEditTeamFormActive}
                                     setCurrentStep={setCurrentStep}
@@ -96,10 +95,10 @@ const ProfileOwn = ({user}: {user: IUser}) => {
                                     teamToEdit={teamToEdit}
                                 />
                             }
-                            {currentTab === "friends" &&
+                            {tab === "friends" &&
                                 <ProfileOwnFriendsTab user={user}/>
                             }
-                            {currentTab === "teams" &&
+                            {tab === "teams" &&
                                 <ProfileOwnTeamsTab
                                     user={user}
                                     saveTeamToEdit={saveTeamToEdit}
@@ -113,10 +112,10 @@ const ProfileOwn = ({user}: {user: IUser}) => {
                                     teamToEdit={teamToEdit}
                                 />
                             }
-                            {currentTab === "settings" &&
+                            {tab === "settings" &&
                                 <ProfileOwnSettingsTab user={user}/>
                             }
-                            {currentTab === "builds" &&
+                            {tab === "builds" &&
                                 <>
                                     <h1 className="side__title">{__(`Мета-сборки`)}</h1>
                                     <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">

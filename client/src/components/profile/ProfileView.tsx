@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Header} from "../base/Header";
 import {GameTabs} from "../base/GameTabs";
 import {SideMenu} from "../base/SideMenu";
@@ -11,11 +11,9 @@ import ProfileViewGeneralTab from "./ProfileViewGeneralTab";
 import ProfileViewTabsMenu from "./ProfileViewTabs";
 import MetaBuildList from "../metaBuilds/MetaBuildList";
 import {__} from "../../multilang/Multilang";
-import {NavLink} from "react-router-dom";
+import {getProfileUrl} from "../../functions/urls";
 
-const ProfileView = ({user}: {user: IUser | null}) => {
-    const [currentTab, setCurrentTab] = useState<ProfileTabsIds>('general')
-
+const ProfileView = ({user, tab}: {user: IUser | null, tab: ProfileTabsIds}) => {
     return (
         <div className="ProfilePage full-height header-padding">
             <Header/>
@@ -23,14 +21,14 @@ const ProfileView = ({user}: {user: IUser | null}) => {
             <div className="side">
                 <SideMenu menu={Object.values(sideMenuItems)}/>
                 {!!user && <div className="side__content">
-                    <ProfileTop user={user} isOwn={false} setCurrentTab={setCurrentTab} currentTab={currentTab} tabs={ProfileViewTabs}/>
+                    <ProfileTop user={user} isOwn={false} currentTab={tab} url={getProfileUrl(user, false)} tabs={ProfileViewTabs}/>
                     <div className="side__content-bottom">
                         <div className="side__container pt24">
-                            <ProfileViewTabsMenu currentTab={currentTab} setCurrentTab={setCurrentTab}/>
-                            {currentTab === "general" &&
+                            <ProfileViewTabsMenu currentTab={tab} url={getProfileUrl(user, false)}/>
+                            {tab === "general" &&
                                 <ProfileViewGeneralTab user={user}/>
                             }
-                            {currentTab === "builds" &&
+                            {tab === "builds" &&
                                 <>
                                     <h1 className="side__title">{__(`Мета-сборки`)}</h1>
                                     <MetaBuildList userId={user.id}/>

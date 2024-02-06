@@ -30,6 +30,7 @@ export const useRoutes = () => {
             <Route path="/lost-password" element={<LostPasswordPage/>} />
             <Route path="/tournaments" element={<TournamentsPage type="tournament"/>} />
             <Route path="/hubs" element={<TournamentsPage type="hub"/>} />
+            <Route path="/profile/:nickname/:currentTab" element={<ProfilePage/>} />
             <Route path="/profile/:nickname" element={<ProfilePage/>} />
             <Route path="/tournament/:slug/:currentTab" element={<SingleTournamentPage/>} />
             <Route path="/rating" element={<OverallRatingPage/>} />

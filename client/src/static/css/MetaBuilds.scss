@@ -265,7 +265,7 @@
   }
   &__data-item-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
   }
   &__data-item {
@@ -276,8 +276,6 @@
     }
   }
   &__data-item-left {
-    margin: auto;
-    text-align: center;
   }
   &__data-item-title {
     font-family: "Mustica Pro", sans-serif;

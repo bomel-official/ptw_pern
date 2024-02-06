@@ -16,9 +16,9 @@ import {TournamentsList} from "../tournament/TournamentsList";
 import {useHttp} from "../../hooks/http.hook";
 import {AuthContext} from "../../context/AuthContext";
 import ProfileSocial from "./ProfileSocial";
+import {getProfileUrl} from "../../functions/urls";
 
-const ProfileOwnGeneralTab = ({user, setCurrentTab, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
-    setCurrentTab: Dispatch<ProfileTabsIds>,
+const ProfileOwnGeneralTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
     user: IUser,
     setTeamToEditAndActivatePopup: (team: ITeam) => void,
     saveTeamToEdit: () => Promise<ITeam|void>,
@@ -74,12 +74,12 @@ const ProfileOwnGeneralTab = ({user, setCurrentTab, setTeamToEditAndActivatePopu
                             />
                         ))}
                         <div className="profile__teams-tablet-bottom">
-                            <button
+                            <NavLink
                                 className="profile__teams-tablet-more"
-                                onClick={() => setCurrentTab('teams')}
+                                to={getProfileUrl(user, true, 'teams')}
                             >
                                 <span>{__('Перейти к командам')}</span>
-                            </button>
+                            </NavLink>
                         </div>
                     </div>
                 </>}
@@ -97,12 +97,12 @@ const ProfileOwnGeneralTab = ({user, setCurrentTab, setTeamToEditAndActivatePopu
                                 <ProfileTablet key={index} user={friend} actions={{}} type="mini"/>
                             ))}
                         </div>
-                        <button
+                        <NavLink
                             className="profile__teams-tablet-more"
-                            onClick={() => setCurrentTab('friends')}
+                            to={getProfileUrl(user, true, 'friends')}
                         >
                             <span>{__('Перейти к друзьям')}</span>
-                        </button>
+                        </NavLink>
                     </div>
                 </>
                 <ProfileSocial user={user}/>
