@@ -31,6 +31,7 @@ const newTournamentTemplate = {
     descRules_EU: null,
     descAdditional_RU: null,
     descAdditional_EU: null,
+    slug: null,
 }
 
 const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament?: any}) => {
@@ -118,6 +119,16 @@ const AdminTournamentCreate = ({tournament = newTournamentTemplate}: {tournament
                             required={true}
                             onChange={e => changeTournamentField('title_EU', e.target.value)}
                             value={newTournament.title_EU ? newTournament.title_EU : ''}
+                        />
+                    </label>
+                    <label htmlFor="title_EU" className="input">
+                        <input
+                            type="text"
+                            name="slug"
+                            placeholder={__("Ссылка на турнир")}
+                            required={false}
+                            onChange={e => changeTournamentField('slug', e.target.value)}
+                            value={newTournament.slug ? newTournament.slug : ''}
                         />
                     </label>
                 </div>

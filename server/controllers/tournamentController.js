@@ -34,7 +34,8 @@ class TournamentController {
             descRules_RU,
             descRules_EU,
             descAdditional_RU,
-            descAdditional_EU
+            descAdditional_EU,
+            slug
         } = req.body
 
         let filename = null
@@ -45,10 +46,17 @@ class TournamentController {
             return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
         }
 
+        const slugTournament = await Tournament.findOne({
+            where: { slug }
+        })
+        if (slugTournament) {
+            return next(ApiError.badRequest('Турнир с такой ссылкой уже существует'))
+        }
+
         const newTournament = await Tournament.create({
             title_RU,
             title_EU,
-            slug: title_EU.toString().toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
+            slug: slug || title_EU.toString().toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
             game,
             type,
             previewImg: filename,
@@ -97,7 +105,8 @@ class TournamentController {
             descRules_RU,
             descRules_EU,
             descAdditional_RU,
-            descAdditional_EU
+            descAdditional_EU,
+            slug
         } = req.body
 
         let filename = null
@@ -108,6 +117,13 @@ class TournamentController {
             return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
         }
 
+        const slugTournament = await Tournament.findOne({
+            where: { slug }
+        })
+        if (slugTournament) {
+            return next(ApiError.badRequest('Турнир с такой ссылкой уже существует'))
+        }
+
         const tournament = await Tournament.findOne({
             where: { id: req.body.id }
         })
@@ -115,7 +131,7 @@ class TournamentController {
         tournament.set({
             title_RU,
             title_EU,
-            slug: title_EU.toString().toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
+            slug: slug || title_EU.toString().toLowerCase().trim().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
             game,
             type,
             isRegisterOn,
@@ -359,12 +375,10 @@ class TournamentController {
                             toRemoveUsers.push(user)
                         }
                     })
-                    console.log(toRemoveUsers)
                     for (const user of toRemoveUsers) {
                         await participant.removeUser(user)
                         await tournament.removePlayers(user)
                     }
-                    console.log(toAddUsers)
                     for (const user of toAddUsers) {
                         await participant.addUser(user)
                         await tournament.addPlayers(user)

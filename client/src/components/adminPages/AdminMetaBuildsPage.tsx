@@ -7,6 +7,8 @@ import SideMobileMenu from "../base/SideMobileMenu";
 import {__} from "../../multilang/Multilang";
 import {Footer} from "../base/Footer";
 import AdminBuildFieldManage from "../admin/AdminBuildFieldManage";
+import {AdminTabs} from "../../data/AdminTabs";
+import NavDropdown from "../base/NavDropdown";
 
 const AdminMetaBuildsPage = () => {
     return (
@@ -25,6 +27,7 @@ const AdminMetaBuildsPage = () => {
                     </div>
                     <div className="side__content-bottom">
                         <div className="side__container pb104">
+                            <NavDropdown currentTab={'builds'} tabs={AdminTabs} defaultTab={'tournaments'} url={`/admin`}/>
                             <AdminBuildFieldManage
                                 slug={"weapon-type"}
                                 columns={2}

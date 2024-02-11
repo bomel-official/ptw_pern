@@ -17,18 +17,32 @@ function App() {
     const {token, login, logout, userId} = useAuth()
 
     const [user, setUser] = useState<null|IUser>(null)
+    const [notifications, setNotifications] = useState<number>(0)
     const isAuthenticated = !!user
 
     const {request} = useHttp()
 
     const getUser = useCallback(async () => {
-        const data = userId ? await request(`/api/user/${userId}`, 'GET') : {data: null}
-        setUser(data.data)
+        if (userId !== null) {
+            const data = userId ? await request(`/api/user/${userId}`, 'GET') : {data: null}
+            setUser(data.data)
+        }
     }, [setUser, userId])
 
     useEffect(() => {
         getUser().catch(() => null)
     }, [userId])
+
+    const fetchFriends = useCallback(async () => {
+        if (user && user.id) {
+            const data = await request(`/api/friend/friend-requests/${user.id}`, 'GET')
+            setNotifications(data.requests.length)
+        }
+    }, [user])
+
+    useEffect(() => {
+        fetchFriends().catch()
+    }, [user])
 
     const {language, setLanguage} = useLanguage()
     const {game, setGame} = useGame()
@@ -37,7 +51,7 @@ function App() {
 
     return (
         <AuthContext.Provider value={{
-            token, login, logout, isAuthenticated, user
+            token, login, logout, isAuthenticated, user: user ? {...user, notifications} : null
         }}>
             <LanguageContext.Provider value={{
                 language, setLanguage

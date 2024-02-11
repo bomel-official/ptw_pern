@@ -7,6 +7,8 @@ import SideMobileMenu from "../base/SideMobileMenu";
 import {__} from "../../multilang/Multilang";
 import {Footer} from "../base/Footer";
 import AdminFaqManage from "../admin/AdminFAQManage";
+import NavDropdown from "../base/NavDropdown";
+import {AdminTabs} from "../../data/AdminTabs";
 
 const AdminFaqPage = () => {
     return (
@@ -25,6 +27,7 @@ const AdminFaqPage = () => {
                     </div>
                     <div className="side__content-bottom">
                         <div className="side__container pb104">
+                            <NavDropdown currentTab={'faq'} tabs={AdminTabs} defaultTab={'tournaments'} url={`/admin`}/>
                             <AdminFaqManage/>
                         </div>
                     </div>

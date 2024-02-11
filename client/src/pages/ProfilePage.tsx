@@ -23,16 +23,18 @@ const ProfilePage = () => {
     }, [nickname])
 
     useEffect(() => {
-        getUser().catch(() => null)
-    }, [getUser, nickname])
+        if (user && nickname === user.nickname) {
+            setProfileUser(user)
+            setIsOwn(true)
+        } else {
+            getUser().catch(() => null)
+            setIsOwn(false)
+        }
+    }, [getUser, nickname, user])
 
-    useEffect(() => {
-        setIsOwn((user?.id === profileUser?.id))
-    }, [user, profileUser, nickname])
-
-    if (isOwn && profileUser) {
+    if (isOwn && user) {
         return (
-            <ProfileOwn user={profileUser} tab={currentTab as ProfileTabsIds || 'general'}/>
+            <ProfileOwn user={user} tab={currentTab as ProfileTabsIds || 'general'}/>
         )
     } else {
         return (

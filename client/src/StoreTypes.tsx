@@ -78,7 +78,8 @@ export type IUser = {
     discord_avatar?: string,
     youtube?: string,
     twitter?: string;
-    twitch?: string
+    twitch?: string,
+    notifications?: number
 }
 export type ITournament = {
     id: number,

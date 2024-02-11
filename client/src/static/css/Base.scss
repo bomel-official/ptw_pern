@@ -724,10 +724,26 @@ input[type=file] {
       letter-spacing: 0;
       text-align: center;
       border-bottom: 2px solid transparent;
+      position: relative;
 
       &.active {
         border-bottom-color: $accent;
       }
+    }
+
+    &-notifications {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      background-color: $accent;
+      font-size: 10px;
+      text-align: center;
     }
   }
   &__top {

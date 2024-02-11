@@ -72,7 +72,8 @@ const ProfileTop = ({isOwn, user, currentTab, tabs, url}: {
                             key={index}
                             className={currentTab === tab.id ? "side__tab-heading active": "side__tab-heading"}
                         >
-                            {__(`${tab.name}`)}
+                            <span>{__(`${tab.name}`)}</span>
+                            {tab.id === 'friends' && !!user && !!user.notifications && <span className="side__tab-notifications">{user.notifications}</span>}
                         </NavLink>
                     ))}
                 </div>}

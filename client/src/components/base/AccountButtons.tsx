@@ -28,6 +28,7 @@ export const AccountButtons = (props: {
                             <span>{user?.activisionId}</span>
                         </div>}
                     </div>
+                    {!!user && !!user.notifications && <span className="rating__team-notifications">{user.notifications}</span>}
                 </div>
             </NavLink>
         )

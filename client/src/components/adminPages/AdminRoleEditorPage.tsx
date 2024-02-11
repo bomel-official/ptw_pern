@@ -11,6 +11,8 @@ import {useDebounce} from "../../hooks/debounce.hook";
 import {useHttp} from "../../hooks/http.hook";
 import AdminUserRoleTablet from "../admin/AdminUserRoleTablet";
 import {AuthContext} from "../../context/AuthContext";
+import NavDropdown from "../base/NavDropdown";
+import {AdminTabs} from "../../data/AdminTabs";
 
 const AdminRoleEditorPage = () => {
     const [admins, setAdmins] = useState<Array<IUser>>([])
@@ -74,6 +76,7 @@ const AdminRoleEditorPage = () => {
                     </div>
                     <div className="side__content-bottom">
                         <div className="side__container pb104">
+                            <NavDropdown currentTab={'roles'} tabs={AdminTabs} defaultTab={'tournaments'} url={`/admin`}/>
                             {auth.user && auth.user.role === 'SUPERADMIN' ? <>
                                 <h2 className="profile__heading mb12">{__('Админы')}</h2>
                                 <div className="profile__teams-tablet mb24">

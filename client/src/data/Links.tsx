@@ -41,12 +41,12 @@ export const sideAdminMenuItems: Record<string, {to: string, icon: string, name:
         name: 'Настройки доступа',
         isMarginBottom: true
     },
-    '/admin/products': {
-        to: '/admin/products',
-        icon: PackageOpenIcon,
-        name: 'Товары',
-        isMarginBottom: false
-    },
+    // '/admin/products': {
+    //     to: '/admin/products',
+    //     icon: PackageOpenIcon,
+    //     name: 'Товары',
+    //     isMarginBottom: false
+    // },
     '/admin/faq': {
         to: '/admin/faq',
         icon: ArrowLeftRightIcon,

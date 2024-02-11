@@ -22,6 +22,7 @@ import {getRegisterHTML} from "../functions/getRegisterHTML";
 import {IParticipant} from "../StoreTypes";
 import {useHttp} from "../hooks/http.hook";
 import {TournamentRegisterSubmit} from "../components/handlers/TournamentRegisterSubmit";
+import NavDropdown from "../components/base/NavDropdown";
 
 export const SingleTournamentPage = () => {
     const {user} = useContext(AuthContext)
@@ -31,7 +32,6 @@ export const SingleTournamentPage = () => {
         skip: !slug,
         refetchOnFocus: true
     })
-    const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false)
     const [isRegisterFormActive, setIsRegisterFormActive] = useState<boolean>(false)
 
     const {slots} = getTournamentAdditionalFields(tournament, user)
@@ -93,31 +93,7 @@ export const SingleTournamentPage = () => {
                     </div>
                     <div className="side__content-bottom">
                         <div className="side__container">
-                            <div className="dropdown mb mb24">
-                                <button
-                                    className="dropdown__current"
-                                    onClick={() => setIsDropdownActive(!isDropdownActive)}
-                                >
-                                    <span>{(currentTab && (currentTab in TournamentTabs)) ? __(TournamentTabs[currentTab].text) : __(TournamentTabs['about'].text)}</span>
-                                    <span className="ml-auto">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 7.5L10 12.5L15 7.5" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    </span>
-                                </button>
-                                <ul className={isDropdownActive ? "dropdown__values active" : "dropdown__values"}>
-                                    {Object.values(TournamentTabs).map((tab, index) => (
-                                        (currentTab !== tab.slug) && <li className="dropdown__value" key={index}>
-                                            <NavLink
-                                                to={`/tournament/${slug}/${tab.slug}`}
-                                                onClick={() => setIsDropdownActive(false)}
-                                            >
-                                                {__(tab.text)}
-                                            </NavLink>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <NavDropdown currentTab={currentTab} tabs={TournamentTabs} defaultTab={'about'} url={`/tournament/${slug}`}/>
                             {!!tournament.participationPrice && !!participant && !participant.isPaid && <div className="pb32">
                                 <div className="tournament__content">
                                     <p className="text">{__('Вам необходимо оплатить участие на турнир.')}</p>

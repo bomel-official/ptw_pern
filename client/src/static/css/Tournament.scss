@@ -466,6 +466,8 @@
     &-flex {
       display: flex;
       align-items: flex-start;
+      position: relative;
+      z-index: 2;
     }
     &-images {
       margin-right: 12px;
@@ -500,6 +502,20 @@
       .multitwitch {
         margin-left: 4px;
       }
+    }
+    &-notifications {
+      position: absolute;
+      bottom: 100%;
+      left: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      background-color: $accent;
+      font-size: 10px;
+      text-align: center;
     }
   }
   &__place {

@@ -57,7 +57,7 @@ class TournamentController {
                         as: 'players'
                     },
                 })
-                if (req.user.id !== team.capitanId) {
+                if (req.user.id !== team.capitanId && !isUserAdmin(req.user)) {
                     return next(ApiError.badRequest('Вы не можете редактировать эту команду'))
                 }
                 for (let player of team.players) {

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Header} from "../components/base/Header";
 import {Footer} from "../components/base/Footer";
 import {__} from "../multilang/Multilang";
-import ProductImage from "../static/images/product.jpg"
 
 const cats = [
     'COD CP',
@@ -17,7 +16,7 @@ const ShopPage = () => {
             <div className="shop pt64 pb104">
                 <div className="container">
                     <h1 className="shop__header mb12">{__("Магазин")}</h1>
-                    <h2 className="shop__subheading mb24">{__("Lorem ipsum dolor sit amet consectetur. Leo viverra donec purus in neque facilisi dictum nisl eget.")}</h2>
+                    <h2 className="shop__subheading mb24">{__("")}</h2>
                     <div className="side__tab-headings">
                         { cats.map((cat, index) => (
                             <button
@@ -29,48 +28,16 @@ const ShopPage = () => {
                             </button>
                         )) }
                     </div>
-                    <ul className="shop__products pt24">
-                        <li className="shop__product">
-                            <img src={ProductImage} alt="" className="shop__product-img"/>
-                            <div className="shop__product-right">
-                                <h3 className="shop__product-title mb12">{__("1100 COD points")}</h3>
-                                <h4 className="shop__product-description mb24">{__("Описание товара")}</h4>
-                                <button className="button-both-accent corner-margin"><span>{__("купить за")} 1099₽</span></button>
-                            </div>
-                        </li>
-                        <li className="shop__product">
-                            <img src={ProductImage} alt="" className="shop__product-img"/>
-                            <div className="shop__product-right">
-                                <h3 className="shop__product-title mb12">{__("1100 COD points")}</h3>
-                                <h4 className="shop__product-description mb24">{__("Описание товара")}</h4>
-                                <button className="button-both-accent corner-margin"><span>{__("купить за")} 1099₽</span></button>
-                            </div>
-                        </li>
-                        <li className="shop__product">
-                            <img src={ProductImage} alt="" className="shop__product-img"/>
-                            <div className="shop__product-right">
-                                <h3 className="shop__product-title mb12">{__("1100 COD points")}</h3>
-                                <h4 className="shop__product-description mb24">{__("Описание товара")}</h4>
-                                <button className="button-both-accent corner-margin"><span>{__("купить за")} 1099₽</span></button>
-                            </div>
-                        </li>
-                        <li className="shop__product">
-                            <img src={ProductImage} alt="" className="shop__product-img"/>
-                            <div className="shop__product-right">
-                                <h3 className="shop__product-title mb12">{__("1100 COD points")}</h3>
-                                <h4 className="shop__product-description mb24">{__("Описание товара")}</h4>
-                                <button className="button-both-accent corner-margin"><span>{__("купить за")} 1099₽</span></button>
-                            </div>
-                        </li>
-                        <li className="shop__product">
-                            <img src={ProductImage} alt="" className="shop__product-img"/>
-                            <div className="shop__product-right">
-                                <h3 className="shop__product-title mb12">{__("1100 COD points")}</h3>
-                                <h4 className="shop__product-description mb24">{__("Описание товара")}</h4>
-                                <button className="button-both-accent corner-margin"><span>{__("купить за")} 1099₽</span></button>
-                            </div>
-                        </li>
-                    </ul>
+                    {/*<ul className="shop__products pt24">*/}
+                    {/*    <li className="shop__product">*/}
+                    {/*        <img src={ProductImage} alt="" className="shop__product-img"/>*/}
+                    {/*        <div className="shop__product-right">*/}
+                    {/*            <h3 className="shop__product-title mb12">{__("1100 COD points")}</h3>*/}
+                    {/*            <h4 className="shop__product-description mb24">{__("Описание товара")}</h4>*/}
+                    {/*            <button className="button-both-accent corner-margin"><span>{__("купить за")} 1099₽</span></button>*/}
+                    {/*        </div>*/}
+                    {/*    </li>*/}
+                    {/*</ul>*/}
                 </div>
             </div>
             <Footer/>
