@@ -21,7 +21,6 @@ import {getTournamentAdditionalFields} from "../functions/getTournamentAdditiona
 import {getRegisterHTML} from "../functions/getRegisterHTML";
 import {IParticipant} from "../StoreTypes";
 import {useHttp} from "../hooks/http.hook";
-import {TournamentRegisterSubmit} from "../components/handlers/TournamentRegisterSubmit";
 import NavDropdown from "../components/base/NavDropdown";
 
 export const SingleTournamentPage = () => {
@@ -44,20 +43,6 @@ export const SingleTournamentPage = () => {
         const {participant: newParticipant} = await request(`/api/tournament/get-own-participant?tournamentId=${tournament?.id}&userId=${user?.id}`, 'GET')
         if (newParticipant) {
             setParticipant(newParticipant)
-        }
-    }
-
-    const fetchForParticipantUrl = async () => {
-        if (participant) {
-            const {url} = await request(`/api/tournament/get-pay-url?participantId=${participant.id}`, 'GET')
-            setParticipant({...participant, invoiceUrl: url})
-        }
-    }
-
-    const fetchForInvoiceInfo = async () => {
-        if (participant) {
-            const {url} = await request(`/api/tournament/get-pay-info?participantId=${participant.id}`, 'GET')
-            setParticipant({...participant, isPaid: url})
         }
     }
 
@@ -98,15 +83,9 @@ export const SingleTournamentPage = () => {
                                 <div className="tournament__content">
                                     <p className="text">{__('Вам необходимо оплатить участие на турнир.')}</p>
                                     <div className="flex">
-                                        {!participant.invoiceUrl && <button
-                                            className="button-both-gray corner-margin"
-                                            onClick={() => fetchForParticipantUrl()}
-                                        >
-                                            <span>{__('Получить ссылку на оплату')}</span>
-                                        </button>}
                                         {!!participant.invoiceUrl && <>
                                             <NavLink
-                                                className="button-tl-accent corner-margin"
+                                                className="button-both-accent corner-margin"
                                                 to={`${participant.invoiceUrl}`}
                                                 target="_blank"
                                                 style={{
@@ -115,21 +94,6 @@ export const SingleTournamentPage = () => {
                                             >
                                                 <span>{__('Оплатить')}</span>
                                             </NavLink>
-                                            <button
-                                                className="button-gray corner-margin"
-                                                onClick={() => fetchForInvoiceInfo()}
-                                                style={{
-                                                    marginRight: "16px"
-                                                }}
-                                            >
-                                                <span>{__('Проверить оплату')}</span>
-                                            </button>
-                                            <button
-                                                className="button-br-gray corner-margin"
-                                                onClick={() => fetchForParticipantUrl()}
-                                            >
-                                                <span>{__('Обновить ссылку на оплату')}</span>
-                                            </button>
                                         </>}
                                     </div>
                                 </div>

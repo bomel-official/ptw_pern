@@ -10,6 +10,73 @@ const uploadImage = require("../funtions/uploadImage");
 
 const AMOUNT_ROUNDS = 5
 
+async function checkIsPaid(participantId) {
+    const participant = await Participant.findByPk(participantId)
+    const invoices = await Invoice.findAll({
+        where: {
+            participantId: participant.id
+        }
+    })
+
+    for (const invoice of invoices) {
+        const {data: enotInvoiceInfo} = await axios.get(`https://api.enot.io/invoice/info?order_id=${JSON.stringify(invoice.id)}&shop_id=${process.env.ENOT_SHOP_ID}&invoice_id=${invoice.enotId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept-Encoding': 'application/json',
+                'Accept': 'application/json',
+                'x-api-key': process.env.ENOT_SECRET_KEY
+            }
+        })
+        if (enotInvoiceInfo.data.status === 'success') {
+            participant.isPaid = true
+            await participant.save()
+
+            return true
+        }
+    }
+    return false
+}
+
+async function createInvoice(participantId) {
+    const participant = await Participant.findByPk(participantId)
+    const tournament = await Tournament.findByPk(participant.tournamentId)
+
+    const newInvoice = await Invoice.create({
+        amount: tournament.participationPrice
+    })
+
+    const {data: enotInvoice} = await axios.post('https://api.enot.io/invoice/create', {
+        amount: tournament.participationPrice,
+        order_id: 'test-' + JSON.stringify(newInvoice.id),
+        currency: newInvoice.currency,
+        shop_id: process.env.ENOT_SHOP_ID,
+        hook_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+        comment: `Participation on ${tournament.title_EU}`,
+        success_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+        fail_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'application/json',
+            'Accept': 'application/json',
+            'x-api-key': process.env.ENOT_SECRET_KEY
+        }
+    })
+
+
+    newInvoice.enotId = enotInvoice.data.id
+    newInvoice.url = enotInvoice.data.url
+    newInvoice.participantId = participant.id
+    newInvoice.expired = enotInvoice.data.expired.replace(' ', 'T')
+    participant.invoiceUrl = enotInvoice.data.url
+    participant.invoiceId = newInvoice.id
+
+    await participant.save()
+    await newInvoice.save()
+
+    return {invoice: newInvoice, participant}
+}
+
 class TournamentController {
     async create (req, res, next) {
         const {previewImg} = req.files
@@ -118,7 +185,18 @@ class TournamentController {
         }
 
         const slugTournament = await Tournament.findOne({
-            where: { slug }
+            where: {
+                [Op.and]: [
+                    {
+                        slug
+                    },
+                    {
+                        id: {
+                            [Op.not]: req.body.id
+                        }
+                    }
+                ]
+            }
         })
         if (slugTournament) {
             return next(ApiError.badRequest('Турнир с такой ссылкой уже существует'))
@@ -289,6 +367,7 @@ class TournamentController {
                     where: {
                         tournamentId: tournamentId
                     },
+                    fields: ['roomNumber', 'id'],
                     order: [
                         ['roomNumber', 'ASC'],
                         ['id', 'ASC'],
@@ -301,7 +380,7 @@ class TournamentController {
                     }
                 }
 
-                const newReq = await Participant.create({
+                let newReq = await Participant.create({
                     tournamentId,
                     points: 0,
                     players,
@@ -311,20 +390,20 @@ class TournamentController {
                     places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
                     roomNumber
                 })
-
-                try {
-                    for (const playerId of players) {
-                        const player = await User.findByPk(playerId)
-                        if (player) {
-                            await newReq.addUser(player)
-                            await tournament.addPlayers(player)
-                        } else {
-                            return next(ApiError.badRequest('Ошибка, некорректный запрос'))
-                        }
+                for (const playerId of players) {
+                    const player = await User.findByPk(playerId)
+                    if (player) {
+                        await newReq.addUser(player)
+                        await tournament.addPlayers(player)
+                    } else {
+                        return next(ApiError.badRequest('Ошибка, некорректный запрос'))
                     }
-                } catch (e) {
-                    return next(ApiError.badRequest('Ошибка, некорректный запрос'))
                 }
+
+                if (tournament.participationPrice) {
+                    newReq = (await createInvoice(newReq.id)).participant
+                }
+                res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!', url: newReq.invoiceUrl})
             } else { // Edit participant
                 const alreadyRegisteredParticipant = await Participant.findOne({
                     where: {
@@ -363,31 +442,26 @@ class TournamentController {
                 const toAddUsers = []
                 const toRemoveUsers = []
 
-                try {
-                    for (const playerId of players) {
-                        const player = await User.findByPk(playerId)
-                        if (player && !participantUsers.includes(player.id)) {
-                            toAddUsers.push(player)
-                        }
+                for (const playerId of players) {
+                    const player = await User.findByPk(playerId)
+                    if (player && !participantUsers.includes(player.id)) {
+                        toAddUsers.push(player)
                     }
-                    participant.users.forEach(user => {
-                        if (user && !players.includes(user.id)) {
-                            toRemoveUsers.push(user)
-                        }
-                    })
-                    for (const user of toRemoveUsers) {
-                        await participant.removeUser(user)
-                        await tournament.removePlayers(user)
+                }
+                participant.users.forEach(user => {
+                    if (user && !players.includes(user.id)) {
+                        toRemoveUsers.push(user)
                     }
-                    for (const user of toAddUsers) {
-                        await participant.addUser(user)
-                        await tournament.addPlayers(user)
-                    }
-                } catch (e) {
-                    return next(ApiError.badRequest('Ошибка, некорректный запрос'))
+                })
+                for (const user of toRemoveUsers) {
+                    await participant.removeUser(user)
+                    await tournament.removePlayers(user)
+                }
+                for (const user of toAddUsers) {
+                    await participant.addUser(user)
+                    await tournament.addPlayers(user)
                 }
             }
-
 
             res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
         } catch (e) {
@@ -400,41 +474,8 @@ class TournamentController {
         const {participantId} = req.query
 
         try {
-            const participant = await Participant.findByPk(participantId)
-            const tournament = await Tournament.findByPk(participant.tournamentId)
-
-            const newInvoice = await Invoice.create({
-                amount: tournament.participationPrice
-            })
-
-            const {data: enotInvoice} = await axios.post('https://api.enot.io/invoice/create', {
-                amount: tournament.participationPrice,
-                order_id: JSON.stringify(newInvoice.id),
-                currency: newInvoice.currency,
-                shop_id: process.env.ENOT_SHOP_ID,
-                hook_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
-                comment: `Participation on ${tournament.title_EU}`,
-                success_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
-                fail_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept-Encoding': 'application/json',
-                    'Accept': 'application/json',
-                    'x-api-key': process.env.ENOT_SECRET_KEY
-                }
-            })
-
-            newInvoice.enotId = enotInvoice.data.id
-            newInvoice.url = enotInvoice.data.url
-            newInvoice.participantId = participant.id
-            participant.invoiceUrl = enotInvoice.data.url
-            participant.invoiceId = newInvoice.id
-
-            await participant.save()
-            await newInvoice.save()
-
-            res.json({url: participant.invoiceUrl})
+            const {invoice} = await createInvoice(participantId)
+            return res.json({url: invoice.url})
         } catch (e) {
             console.log(e)
             return next(ApiError.badRequest('Ошибка, некорректный запрос'))
@@ -443,31 +484,9 @@ class TournamentController {
 
     async getParticipantInvoiceInfo(req, res, next) {
         const {participantId} = req.query
-
         try {
-            const participant = await Participant.findByPk(participantId)
-            const invoices = await Invoice.findAll({
-                where: {
-                    participantId: participant.id
-                }
-            })
-            for (const invoice of invoices) {
-                const {data: enotInvoiceInfo} = await axios.get(`https://api.enot.io/invoice/info?order_id=${JSON.stringify(invoice.id)}&shop_id=${process.env.ENOT_SHOP_ID}&invoice_id=${invoice.enotId}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept-Encoding': 'application/json',
-                        'Accept': 'application/json',
-                        'x-api-key': process.env.ENOT_SECRET_KEY
-                    }
-                })
-                if (enotInvoiceInfo.data.status === 'success') {
-                    participant.isPaid = true
-                    await participant.save()
-
-                    res.json({isPaid: true})
-                }
-            }
-            res.json({isPaid: false})
+            const isPaid = await checkIsPaid(participantId)
+            res.json({isPaid})
         } catch (e) {
             console.log(e)
             return next(ApiError.badRequest('Ошибка, некорректный запрос'))
@@ -606,7 +625,7 @@ class TournamentController {
             return res.json({participant: null, participantUsers: []})
         }
         try {
-            const participant = await Participant.findOne({
+            let participant = await Participant.findOne({
                 where: {
                     tournamentId
                 },
@@ -627,9 +646,36 @@ class TournamentController {
                                 as: 'players'
                             }
                         ]
+                    },
+                    {
+                        model: Invoice
                     }
                 ]
             })
+            if (!participant) {
+                return res.json({participant: null, participantUsers: []})
+            }
+            const tournament = await Tournament.findByPk(participant.tournamentId)
+
+            if (tournament.participationPrice && !participant.isPaid) {
+                const isPaid = await checkIsPaid(participant.id)
+                if (isPaid) {
+                    participant.isPaid = isPaid
+                    await participant.save()
+                }
+
+                if (participant.invoice && participant.invoice.expired) {
+                    const invoiceExpired = new Date(participant.invoice.expired).getTime()
+                    const now = new Date().getTime()
+
+                    if (invoiceExpired < now) {
+                        participant = (await createInvoice(participant.id)).participant
+                    }
+                } else if (!participant.invoice) {
+                    participant = (await createInvoice(participant.id)).participant
+                }
+            }
+
             const participantUsers = await ParticipantUser.findAll({
                 where: {
                     participantId: participant.id

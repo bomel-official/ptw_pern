@@ -11,6 +11,7 @@ import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 import {isUserAdmin} from "../../functions/isUserAdmin";
 import {TournamentRegisterSubmit} from "../handlers/TournamentRegisterSubmit";
 import {useTournamentRegistration} from "../../hooks/tournamentRegistration.hook";
+import {useNavigate} from "react-router-dom";
 
 const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormActive, refetchHandler}: {
     tournament: ITournament | null | undefined,
@@ -26,6 +27,7 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
     const [teams, setTeams] = useState<Array<ITeam>>([])
     const {user, token} = useContext(AuthContext)
     const {request, error, clearError} = useHttp()
+    const [isLoading, setIsLoading] = useState(false)
 
     const newTeamUsed = useNewTeam()
     const tournamentRegistrationUsed = useTournamentRegistration()
@@ -393,17 +395,30 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
                             ))}
                         </ul>
                         { messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>{__(messageOptions.text)}</div>}
-                        <button
+                        { !isLoading && <button
                             className="button-both-accent popup__accentButton"
                             onClick={async () => {
+                                setIsLoading(true)
                                 const response = await TournamentRegisterSubmit(newTeamUsed, tournamentRegistrationUsed, clearError, token, request, setMessageOptions, refetchHandler)
-                                if (response) {
+                                setIsLoading(false)
+                                if (response.isOk) {
+                                    window.location.replace(response.url)
                                     setCurrentStep(currentStep + 1)
                                 }
                             }}
                         >
                             <span>{__('Принять участие')}</span>
-                        </button>
+                        </button>}
+                        {isLoading && <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" style={{
+                            margin: "auto",
+                            background: "rgb(0,0,0)",
+                            display: "block",
+                            shapeRendering: "auto"
+                        }} width="48px" height="48px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                            <circle cx="50" cy="50" r="41" strokeWidth="13" stroke="#f2360f" strokeDasharray="64.40264939859075 64.40264939859075" fill="none" strokeLinecap="round">
+                                <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" keyTimes="0;1" values="0 50 50;360 50 50"/>
+                            </circle>
+                        </svg>}
                     </>}
                 </>
             }

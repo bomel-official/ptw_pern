@@ -10,18 +10,18 @@ export const TournamentRegisterSubmit = async (
     request: (url: string, method?: string, body?: any, headers?: Record<string, string>, isJson?: boolean) => Promise<any>,
     setMessageOptions: Dispatch<IMessageOptions>,
     refetchHandler: Dispatch<boolean>
-) => {
+): Promise<{isOk: boolean, url: string}> => {
     clearError()
     try {
         let {team} = await SaveTeam(newTeamUsed.newTeam, request, token)
 
         if (!team) {
-            return false
+            return {isOk: false, url: ''}
         }
 
         newTeamUsed.changeNewTeam('id', team.id)
 
-        const {isOk} = await request(`/api/tournament/register`, 'POST', {
+        const {isOk, url} = await request(`/api/tournament/register`, 'POST', {
             teamId: team.id,
             tournamentId: tournamentRegistrationUsed.registerRequest.tournamentId,
             players: tournamentRegistrationUsed.registerRequest.players.map((pl: IUser) => pl.id),
@@ -34,8 +34,8 @@ export const TournamentRegisterSubmit = async (
                 status: 'pos', text: 'Вы зарегистрировалиь!!'
             })
             refetchHandler(true)
-            return true
+            return {isOk: true, url}
         }
     } catch (e) {}
-    return false
+    return {isOk: false, url: ''}
 }

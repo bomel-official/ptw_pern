@@ -181,11 +181,11 @@ BuildAttachment.belongsTo(BuildAttachmentType)
 const Invoice = sequelize.define('invoice', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     enotId: {type: DataTypes.STRING, allowNull: true},
-    isPaid: {type: DataTypes.BOOLEAN, defaultValue: false},
     url: {type: DataTypes.STRING, allowNull: true},
     amount: {type: DataTypes.FLOAT, allowNull: false},
     currency: {type: DataTypes.STRING, defaultValue: 'EUR'},
-    status: {type: DataTypes.STRING, defaultValue: 'created'}
+    status: {type: DataTypes.STRING, defaultValue: 'created'},
+    expired: {type: DataTypes.DATE, allowNull: true}
     // cart: Cart
     // products: Product(Many)
     // user: User
