@@ -54,6 +54,7 @@ async function createInvoice(participantId) {
         comment: `Participation on ${tournament.title_EU}`,
         success_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
         fail_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,
+        expire: 5760,
     }, {
         headers: {
             'Content-Type': 'application/json',
@@ -668,7 +669,7 @@ class TournamentController {
                     const invoiceExpired = new Date(participant.invoice.expired).getTime()
                     const now = new Date().getTime()
 
-                    if (invoiceExpired < now) {
+                    if ((invoiceExpired - 86400000) < now) {
                         participant = (await createInvoice(participant.id)).participant
                     }
                 } else if (!participant.invoice) {

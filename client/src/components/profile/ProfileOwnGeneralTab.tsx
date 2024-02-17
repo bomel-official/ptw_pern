@@ -18,7 +18,7 @@ import {AuthContext} from "../../context/AuthContext";
 import ProfileSocial from "./ProfileSocial";
 import {getProfileUrl} from "../../functions/urls";
 
-const ProfileOwnGeneralTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
+const ProfileOwnGeneralTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, newTeamUsed, messageOptions}: {
     user: IUser,
     setTeamToEditAndActivatePopup: (team: ITeam) => void,
     saveTeamToEdit: () => Promise<ITeam|void>,
@@ -27,7 +27,6 @@ const ProfileOwnGeneralTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEd
     isEditTeamFormActive: boolean,
     setIsEditTeamFormActive: Dispatch<boolean>,
     newTeamUsed: any,
-    teamToEdit: ITeam,
     messageOptions: IMessageOptions
 }) => {
     const [friendsList, setFriendsList] = useState<IUser[]>([])
@@ -117,7 +116,6 @@ const ProfileOwnGeneralTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEd
                         setTeams(teams.map(mTeam => (mTeam.id === team.id ? team : mTeam)))
                     }
                 }}
-                teamToEdit={teamToEdit}
                 currentStep={currentStep}
                 setCurrentStep={setCurrentStep}
                 messageOptions={messageOptions}

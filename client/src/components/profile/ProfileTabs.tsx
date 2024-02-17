@@ -13,7 +13,6 @@ const ProfileTabsMenu = ({currentTab, url, tabs, user}: {currentTab: ProfileTabs
     })
 
     useEffect(() => {
-        console.log(currentTab)
         setDefaultTab(tabs[currentTab] || tabs['general'] || {
             name: 'Просмотр',
             id: 'general'

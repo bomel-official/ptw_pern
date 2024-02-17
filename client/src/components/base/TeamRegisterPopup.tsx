@@ -402,7 +402,9 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
                                 const response = await TournamentRegisterSubmit(newTeamUsed, tournamentRegistrationUsed, clearError, token, request, setMessageOptions, refetchHandler)
                                 setIsLoading(false)
                                 if (response.isOk) {
-                                    window.location.replace(response.url)
+                                    if (tournament && tournament.participationPrice && response.url) {
+                                        window.location.replace(response.url)
+                                    }
                                     setCurrentStep(currentStep + 1)
                                 }
                             }}

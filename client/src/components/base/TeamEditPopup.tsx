@@ -15,7 +15,6 @@ const TeamEditPopup = (
     isEditTeamFormActive,
     setIsEditTeamFormActive,
     saveTeamToEdit,
-    teamToEdit,
     currentStep,
     setCurrentStep,
     messageOptions
@@ -24,7 +23,6 @@ const TeamEditPopup = (
     isEditTeamFormActive: boolean,
     setIsEditTeamFormActive: Dispatch<boolean>,
     saveTeamToEdit: (team: ITeam) => void,
-    teamToEdit: ITeam,
     currentStep: number,
     setCurrentStep: Dispatch<number>,
     messageOptions: IMessageOptions
@@ -41,18 +39,17 @@ const TeamEditPopup = (
         changeNewTeamPlayers,
         clearNewPlayersSearch,
         isUserIdIncluded,
-        setNewTeam
+        reduceNewTeam
     } = newTeamUsed
 
     useEffect(() => {
         if (user && user.id) {
-            if (teamToEdit.id && teamToEdit.capitanId) {
-                setNewTeam({...teamToEdit, players: teamToEdit.players})
-            } else {
-                setNewTeam({...teamToEdit, capitanId: user.id, players: [user]})
+            if (!newTeam.capitanId || newTeam.players.length === 0) {
+                reduceNewTeam({type: 'changeField', data: {name: 'capitanId', value: user.id}})
+                reduceNewTeam({type: 'changeField', data: {name: 'players', value: [user]}})
             }
         }
-    }, [teamToEdit, user])
+    }, [newTeam, user])
 
     return (
         <Popup
@@ -138,7 +135,7 @@ const TeamEditPopup = (
                                             <img src={getFile(player.avatar) || DefaultUserPic} alt={player.nickname} className="profileCard__avatar"/>
                                             <div className="profileCard__top">
                                                 <span className="profileCard__nickname">{player.nickname}</span>
-                                                <img src={icons[player?.platform || 'pc']} alt="User platform"/>
+                                                <img src={icons[player.platform || 'pc']} alt="User platform"/>
                                             </div>
                                         </div>
                                     </button>

@@ -7,7 +7,7 @@ import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 import {useHttp} from "../../hooks/http.hook";
 
-const ProfileOwnTeamsTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, teamToEdit, newTeamUsed, messageOptions}: {
+const ProfileOwnTeamsTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, newTeamUsed, messageOptions}: {
     user: IUser,
     setTeamToEditAndActivatePopup: (team: ITeam) => void,
     saveTeamToEdit: () => Promise<void>,
@@ -16,7 +16,6 @@ const ProfileOwnTeamsTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit
     isEditTeamFormActive: boolean,
     setIsEditTeamFormActive: Dispatch<boolean>,
     newTeamUsed: any,
-    teamToEdit: ITeam,
     messageOptions: IMessageOptions
 }) => {
 
@@ -101,7 +100,6 @@ const ProfileOwnTeamsTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit
                 isEditTeamFormActive={isEditTeamFormActive}
                 setIsEditTeamFormActive={setIsEditTeamFormActive}
                 saveTeamToEdit={saveTeamToEdit}
-                teamToEdit={teamToEdit}
                 currentStep={currentStep}
                 setCurrentStep={setCurrentStep}
                 messageOptions={messageOptions}

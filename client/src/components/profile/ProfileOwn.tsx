@@ -22,7 +22,6 @@ import {getProfileUrl} from "../../functions/urls";
 
 
 const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
-    const [teamToEdit, setTeamToEdit] = useState<ITeam>(initNewTeam)
     const [isEditTeamFormActive, setIsEditTeamFormActive] = useState<boolean>(false)
     const [currentStep, setCurrentStep] = useState<number>(0)
     const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
@@ -35,7 +34,7 @@ const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
 
     const setTeamToEditAndActivatePopup = (team: ITeam) => {
         clearError()
-        setTeamToEdit(team)
+        newTeamUsed.setNewTeam(team)
         setIsEditTeamFormActive(true)
         setCurrentStep(0)
     }
@@ -92,7 +91,6 @@ const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
                                     setTeamToEditAndActivatePopup={setTeamToEditAndActivatePopup}
                                     messageOptions={messageOptions}
                                     newTeamUsed={newTeamUsed}
-                                    teamToEdit={teamToEdit}
                                 />
                             }
                             {tab === "friends" &&
@@ -109,7 +107,6 @@ const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
                                     setTeamToEditAndActivatePopup={setTeamToEditAndActivatePopup}
                                     messageOptions={messageOptions}
                                     newTeamUsed={newTeamUsed}
-                                    teamToEdit={teamToEdit}
                                 />
                             }
                             {tab === "settings" &&

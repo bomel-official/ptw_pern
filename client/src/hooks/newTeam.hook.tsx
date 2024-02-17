@@ -1,8 +1,9 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useReducer, useState} from "react";
 import {useDebounce} from "./debounce.hook";
 
 import {ITeam, IUser} from "../StoreTypes";
 import {useHttp} from "./http.hook";
+import {IRegisterForm} from "./tournamentRegistration.hook";
 
 export const initNewTeam: ITeam = {
     id: null,
@@ -13,8 +14,30 @@ export const initNewTeam: ITeam = {
     players: []
 }
 
+const teamReducer = (state: ITeam, action: {type: string, data: any}) => {
+    if (action.type === 'changeField') {
+        return {...state, [action.data.name]: action.data.value};
+    }
+    if (action.type === 'removePlayer') {
+        return {
+            ...state,
+            'players': state.players.filter((player: IUser) => player.id !== action.data.requestPlayer.id)
+        };
+    }
+    if (action.type === 'addPlayer') {
+        return {
+            ...state,
+            'players': [...state.players, action.data.requestPlayer]
+        };
+    }
+    if (action.type === 'update') {
+        return action.data
+    }
+    throw Error('Unknown action.');
+}
+
 export const useNewTeam = () => {
-    const [newTeam, setNewTeam] = useState(initNewTeam)
+    const [newTeam, reduceNewTeam] = useReducer(teamReducer, initNewTeam)
 
     const changeNewTeam = (name: string | null, value: any) => {
         if (name === 'avatar') {
@@ -22,15 +45,16 @@ export const useNewTeam = () => {
                 let fr = new FileReader();
                 fr.onload = function () {
                     if (typeof fr.result === 'string') {
-                        setNewTeam({...newTeam, [name]: value, avatar_path: fr.result})
+                        reduceNewTeam({type: 'changeField', data: {name, value}})
+                        reduceNewTeam({type: 'changeField', data: {name: 'avatar_path', value: fr.result}})
                     } else {
-                        setNewTeam({...newTeam, [name]: value})
+                        reduceNewTeam({type: 'changeField', data: {name, value}})
                     }
                 }
                 fr.readAsDataURL(value);
             }
         } else if (name && name in newTeam) {
-            setNewTeam({...newTeam, [name]: value})
+            reduceNewTeam({type: 'changeField', data: {name, value}})
         }
     }
 
@@ -45,10 +69,10 @@ export const useNewTeam = () => {
 
     const changeNewTeamPlayers = (requestPlayer: IUser, action: 'remove' | 'add') => {
         if (action === 'remove') {
-            changeNewTeam('players', newTeam.players.filter((player: IUser) => player.id !== requestPlayer.id))
+            reduceNewTeam({type: 'removePlayer', data: {requestPlayer}})
         } else if (action === 'add') {
             if (!isUserIdIncluded(requestPlayer.id)) {
-                changeNewTeam('players', [...newTeam.players, requestPlayer])
+                reduceNewTeam({type: 'addPlayer', data: {requestPlayer}})
             }
         }
     }
@@ -81,6 +105,9 @@ export const useNewTeam = () => {
         changeNewTeamPlayers,
         clearNewPlayersSearch,
         isUserIdIncluded,
-        setNewTeam,
+        setNewTeam: (data: ITeam) => {
+            reduceNewTeam({type: 'update', data})
+        },
+        reduceNewTeam
     }
 }
