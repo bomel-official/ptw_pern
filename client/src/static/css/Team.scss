@@ -85,6 +85,13 @@
       }
     }
 
+    &-small-info {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: $textWhite;
+    }
+
     &-bottom {
       &.profile {
         .team__tablet-edit {

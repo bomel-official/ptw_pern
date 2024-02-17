@@ -7,6 +7,7 @@ import {IUser} from "../../StoreTypes";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/http.hook";
 import {getFile} from "../../functions/getFile";
+import Loader from "../base/Loader";
 
 const ProfileTablet = ({user, actions, type}: {
     user: IUser,
@@ -22,7 +23,7 @@ const ProfileTablet = ({user, actions, type}: {
     const [isAdded, setIsAdded] = useState<boolean>(false)
     const [isRestricted, setIsRestricted] = useState<boolean>(false)
 
-    const {request} = useHttp()
+    const {request, loading} = useHttp()
 
     const addFriend = useCallback(async () => {
         await request(`/api/friend/add-friend`, 'POST', {to: user.id}, {authorization: `Bearer ${token}`})
@@ -41,7 +42,7 @@ const ProfileTablet = ({user, actions, type}: {
     }, [])
 
     const restrictFriedRequest = useCallback(async () => {
-        await request(`/api/friend/restrict`, 'POST', {to: currentUser?.id, from: user.id}, {authorization: `Bearer ${token}`})
+        await request(`/api/friend/remove-friend`, 'POST', {to: user.id}, {authorization: `Bearer ${token}`})
         setIsRestricted(true)
         if (actions && actions.restrictFriendCallback) {
             actions.restrictFriendCallback(user)
@@ -70,15 +71,19 @@ const ProfileTablet = ({user, actions, type}: {
                 </div>
             </div>
             { currentUser?.id !== user.id && type === 'request' && <div className="team__tablet-bottom flex profile">
-                {!isRestricted && !isAdded && <button className="team__tablet-ignore" onClick={restrictFriedRequest}>
-                    <span>{__('Игнорировать')}</span>
-                </button>}
-                {!isRestricted && !isAdded && <button className="team__tablet-edit" onClick={addFriend}>
-                    <span className="ds">{__('Принять заявку')}</span>
-                    <span className="mb">{__('Принять')}</span>
-                </button>}
-                {isRestricted && <span>{__('Отклонено')}</span>}
-                {isAdded && <span>{__('Принято')}</span>}
+                {!loading && <>
+                    {!loading && !isRestricted && !isAdded && <button className="team__tablet-ignore" onClick={restrictFriedRequest}>
+                        <span>{__('Игнорировать')}</span>
+                    </button>}
+                    {!loading && !isRestricted && !isAdded && <button className="team__tablet-edit" onClick={addFriend}>
+                        <span className="ds">{__('Принять заявку')}</span>
+                        <span className="mb">{__('Принять')}</span>
+                    </button>}
+                    {loading && <Loader/>}
+                    {isRestricted && <span className="team__tablet-small-info">{__('Отклонено')}</span>}
+                    {isAdded && <span className="team__tablet-small-info">{__('Принято')}</span>}
+                </>}
+                {loading && <Loader/>}
             </div>}
             { currentUser?.id !== user.id && (type === 'friend' || type === 'mini' || type === 'search') && <>
                 {(currentUser?.friends.includes(user.id)) && <>
@@ -108,7 +113,7 @@ const ProfileTablet = ({user, actions, type}: {
                         </button>
                         <ul className="dropdown__values">
                             <li className="dropdown__value">
-                                {!isDeleted && <button
+                                {!isDeleted && !loading && <button
                                     onClick={async (e: MouseEvent<HTMLButtonElement>) => {
                                         e.preventDefault()
                                         e.currentTarget.parentElement?.parentElement?.parentElement?.classList.toggle('active')
@@ -125,7 +130,8 @@ const ProfileTablet = ({user, actions, type}: {
                                     </svg>
                                     <span>{__('Удалить из друзей')}</span>
                                 </button>}
-                                {isDeleted && <span>{__('Удалён из друзей')}</span>}
+                                {loading && <Loader/>}
+                                {isDeleted && <span className="team__tablet-small-info">{__('Удалён из друзей')}</span>}
                             </li>
                         </ul>
                     </div>
@@ -136,10 +142,11 @@ const ProfileTablet = ({user, actions, type}: {
                         <span>{__('Турниров сыграно:')} {user.toursPlayed ? user.toursPlayed : '-'}</span>
                     </div>
                     <div className="team__tablet-bottom flex profile">
-                        {!isAdded && <button className="team__tablet-edit" onClick={addFriend}>
+                        {!loading && !isAdded && <button className="team__tablet-edit" onClick={addFriend}>
                             <span>{__('Добавить в друзья')}</span>
                         </button>}
-                        {isAdded && <span>{__('Заявка отпралена')}</span>}
+                        {isAdded && <span className="team__tablet-small-info">{__('Заявка отпралена')}</span>}
+                        {loading && <Loader/>}
                     </div>
                 </>}
             </>}

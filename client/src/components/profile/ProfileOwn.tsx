@@ -80,7 +80,7 @@ const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
                     <ProfileTop user={user} isOwn={true} currentTab={tab} url={getProfileUrl(user, false)} tabs={ProfileTabs}/>
                     <div className="side__content-bottom">
                         <div className="side__container pt24">
-                            <ProfileTabsMenu currentTab={tab} url={getProfileUrl(user, false)}/>
+                            <ProfileTabsMenu currentTab={tab} url={getProfileUrl(user, false)} tabs={ProfileTabs} user={user}/>
                             {tab === "general" &&
                                 <ProfileOwnGeneralTab
                                     user={user}

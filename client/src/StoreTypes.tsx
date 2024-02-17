@@ -53,6 +53,7 @@ export type IBuild = {
 }
 
 export type IFriendRequest = {
+    to: number;
     isAccepted: boolean,
     id: number,
     user_from: IUser,

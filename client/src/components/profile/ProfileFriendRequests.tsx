@@ -19,6 +19,10 @@ const ProfileFriendRequests = ({user}: {user: IUser}) => {
         setFriendsList(data.requests)
     }, [])
 
+    const removeRequest = useCallback(async (user: IUser) => {
+        setFriendsList(friendsList.filter((reqItem: IFriendRequest) => (reqItem.userToId !== user.id && reqItem.userFromId !== user.id)))
+    }, [])
+
     useEffect(() => {
         if (user.id) {
             fetchFriends().catch()
@@ -49,7 +53,7 @@ const ProfileFriendRequests = ({user}: {user: IUser}) => {
             {!!amountPages && <><h2 className="profile__heading mb12">{__('Заявки в друзья')}</h2>
             <div className="profile__teams-tablet mb24">
                 { displayFriendsList.map((friend, index) => (
-                    <ProfileTablet key={index} user={friend.user_from} actions={{}} type="request"/>
+                    <ProfileTablet key={index} user={friend.user_from} actions={{restrictFriendCallback: removeRequest, addFriendCallback: removeRequest}} type="request"/>
                 ))}
             </div>
             <Pagination

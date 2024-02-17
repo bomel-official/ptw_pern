@@ -1,106 +1,81 @@
 const jwt = require("jsonwebtoken");
 const {User, FriendRequest} = require("../models/models");
-const {Op} = require("sequelize");
+const {Op, Sequelize} = require("sequelize");
 
+function areFriends(user1, user2) {
+    return user1.friends?.includes(user2.id) && user2.friends?.includes(user1.id);
+}
 
 class FriendsController {
     async addFriend(req, res, next) {
-        const {to} = req.body
-        const from = req.user.id
+        try {
+            const { to } = req.body;
+            const from = req.user.id;
 
-        const toUser = await User.findByPk(to)
-        const fromUser = await User.findByPk(from)
+            const recipient = await User.findByPk(to);
+            const sender = await User.findByPk(from);
 
-        if (toUser.friends?.includes(from) && fromUser.friends?.includes(to)) {
-            return res.json({message: 'Пользователь является вашим другом'})
+            if (areFriends(recipient, sender)) {
+                return res.json({ message: 'Пользователь является вашим другом' });
+            }
+
+            const existingRequest = await FriendRequest.findOne({
+                where: { userToId: to, userFromId: from }
+            });
+
+            if (existingRequest) {
+                return res.json({ message: 'Заявка отправлена!' });
+            }
+
+            const oppositeRequest = await FriendRequest.findOne({
+                where: { userToId: from, userFromId: to }
+            });
+
+            if (oppositeRequest) {
+                await recipient.update({friends: [...recipient.friends, sender.id]});
+                await sender.update({friends: [...sender.friends, recipient.id]});
+                await oppositeRequest.update({isAccepted: true});
+                return res.json({ message: 'Пользователь добавлен в друзья!' });
+            } else {
+                await FriendRequest.create({
+                    userToId: to,
+                    userFromId: from,
+                    isAccepted: false
+                });
+                return res.json({ message: 'Заявка отправлена!' });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.json({ message: 'Что-то пошло не так...' });
         }
-
-        const prevRequest = await FriendRequest.findOne({
-            where: { userToId: to, userFromId: from }
-        })
-        if (prevRequest) {
-            return res.json({message: 'Заявка отправлена!'})
-        }
-
-        const oppositeRequest = await FriendRequest.findOne({
-            where: { userToId: from, userFromId: to }
-        })
-        if (oppositeRequest) {
-            oppositeRequest.isAccepted = true
-            let message = 'Пользователь добавлен в друзья!'
-            await Promise.all([
-                new Promise((resolve) => {
-                    toUser.set({friends: [...toUser.friends, from]})
-                    toUser.save().then(resolve)
-                }),
-                new Promise((resolve) => {
-                    fromUser.set({friends: [...fromUser.friends, to]})
-                    fromUser.save().then(resolve)
-                }),
-                new Promise((resolve) => {
-                    oppositeRequest.save().then(resolve)
-                })
-            ]).catch(() => {
-                message = 'Что-то пошло не так...'
-            })
-            return res.json({message})
-        } else {
-            const newRequest = await FriendRequest.create({
-                userToId: to,
-                userFromId: from,
-                isAccepted: false
-            })
-            return res.json({message: 'Заявка отправлена!'})
-        }
-
     }
 
     async removeFriend(req, res, next) {
-        const {to} = req.body
-        const from = req.user.id
+        try {
+            const { to } = req.body;
+            const from = req.user.id;
 
-        const toUser = await User.findByPk(to)
-        const fromUser = await User.findByPk(from)
+            const toUser = await User.findByPk(to);
+            const fromUser = await User.findByPk(from);
 
-        let message = 'Пользователь успешно удалён из друзей'
-        await Promise.all([
-            new Promise((resolve) => {
-                if (toUser.friends?.length) {
-                    toUser.friends = toUser.friends.filter((friendId) => friendId !== from)
-                    toUser.save().then(resolve)
-                } else {
-                    resolve()
-                }
-            }),
-            new Promise((resolve) => {
-                if (fromUser.friends?.length) {
-                    fromUser.friends = fromUser.friends.filter((friendId) => friendId !== to)
-                    fromUser.save().then(resolve)
-                } else {
-                    resolve()
-                }
-            }),
-            async () => {
-                const request = await FriendRequest.findOne({
+            await Promise.all([
+                toUser.friends?.length && toUser.update({ friends: toUser.friends.filter((friendId) => friendId !== from) }),
+                fromUser.friends?.length && fromUser.update({ friends: fromUser.friends.filter((friendId) => friendId !== to) }),
+                FriendRequest.destroy({
                     where: {
                         [Op.or]: [
-                            {
-                                userFromId: from,
-                                userToId: to
-                            },
-                            {
-                                userFromId: to,
-                                userToId: from
-                            },
-                        ]
-                    }
-                })
-                await request.destroy()
-            }
-        ]).catch(() => {
-            message = 'Что-то пошло не так...'
-        })
-        return res.json({message})
+                            { userFromId: from, userToId: to },
+                            { userFromId: to, userToId: from },
+                        ],
+                    },
+                }),
+            ]);
+
+            return res.json({ message: 'Пользователь успешно удалён из друзей' });
+        } catch (error) {
+            console.error(error);
+            return res.json({ message: 'Что-то пошло не так...' });
+        }
     }
 
     async getFriends(req, res, next) {
