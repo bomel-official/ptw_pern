@@ -47,7 +47,7 @@ async function createInvoice(participantId) {
 
     const {data: enotInvoice} = await axios.post('https://api.enot.io/invoice/create', {
         amount: tournament.participationPrice,
-        order_id: 'test-' + JSON.stringify(newInvoice.id),
+        order_id: 'invoice-' + JSON.stringify(newInvoice.id),
         currency: newInvoice.currency,
         shop_id: process.env.ENOT_SHOP_ID,
         hook_url: `${process.env.CLIENT_URL}/tournament/${tournament.slug}`,

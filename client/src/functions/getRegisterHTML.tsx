@@ -14,6 +14,10 @@ export const getRegisterHTML = (tournament: ITournament | null | undefined, user
             return (<button className="side__top-register" onClick={onClick}>
                 {__('Добавить участника')}
             </button>) // () => setIsRegisterFormActive(true)
+        } else if (!user) {
+            return (<NavLink to="/auth" className="side__top-register">
+                {__('Принять участие')}
+            </NavLink>)
         } else if (isUserRegistered) {
             return (<button className="side__top-unregister" onClick={onClick}>
                 {__('Изменить заявку')}
@@ -22,10 +26,6 @@ export const getRegisterHTML = (tournament: ITournament | null | undefined, user
             return (<button className="side__top-register" onClick={onClick}>
                 {__('Принять участие')}
             </button>) // () => setIsRegisterFormActive(true)
-        } else if (!user) {
-            return (<NavLink to="/auth" className="side__top-register">
-                {__('Принять участие')}
-            </NavLink>)
         }
     }
     return (<span className="side__top-reg-inactive">Регистрация закрыта</span>)
