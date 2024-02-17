@@ -5,6 +5,7 @@ import {getSlotWord} from "../../data/Translations";
 import {NavLink} from "react-router-dom";
 import {ITournament} from "../../StoreTypes";
 import {getTournamentAdditionalFields} from "../../functions/getTournamentAdditionalFields";
+import {parseUrls} from "../../functions/parseUrls";
 
 const SingleTournamentAbout = ({tournament}: {tournament: ITournament}) => {
     const {slots} = getTournamentAdditionalFields(tournament)
@@ -78,7 +79,7 @@ const SingleTournamentAbout = ({tournament}: {tournament: ITournament}) => {
                 </div>
                 <div className="tournament__block">
                     <h2 className="tournament__block-subheading">{__('Дополнительные сведения')}</h2>
-                    <p className="tournament__block-text">{_f(tournament, 'descAdditional')}</p>
+                    <p className="tournament__block-text">{parseUrls(_f(tournament, 'descAdditional'))}</p>
                 </div>
             </div>
             <div className="tournament__sidebar ds">

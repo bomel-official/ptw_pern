@@ -312,6 +312,10 @@
       letter-spacing: 0;
       text-align: left;
       color: $textHoverWhite;
+
+      a {
+        color: $accent;
+      }
     }
   }
 

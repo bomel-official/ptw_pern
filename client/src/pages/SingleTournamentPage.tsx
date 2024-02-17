@@ -22,6 +22,7 @@ import {getRegisterHTML} from "../functions/getRegisterHTML";
 import {IParticipant} from "../StoreTypes";
 import {useHttp} from "../hooks/http.hook";
 import NavDropdown from "../components/base/NavDropdown";
+import {parseUrls} from "../functions/parseUrls";
 
 export const SingleTournamentPage = () => {
     const {user} = useContext(AuthContext)
@@ -130,7 +131,7 @@ export const SingleTournamentPage = () => {
                                 <div className="tournament__content">
                                     <div className="tournament__block">
                                         <h2 className="tournament__block-subheading">{__('Правила турнира')}</h2>
-                                        <p className="tournament__block-text">{_f(tournament, 'descRules')}</p>
+                                        <p className="tournament__block-text">{parseUrls(_f(tournament, 'descRules'))}</p>
                                     </div>
                                 </div>
                             </div> }
