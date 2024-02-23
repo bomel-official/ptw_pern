@@ -583,10 +583,10 @@ class TournamentController {
                     const user = participant.users[userIndex]
 
                     if (user.statsToursList.includes(participant.tournamentId)) {
-                        if (i === 0) {
+                        if (i === 0 && user.statsToursWon > 0) {
                             user.statsToursWon -= 1
                         }
-                        if (i < 3) {
+                        if (i < 3 && user.statsToursTop3 > 0) {
                             user.statsToursTop3 -= 1
                         }
                         user.statsAmountKills -= calcAmountKills(participant.dataArray, userIndex)
