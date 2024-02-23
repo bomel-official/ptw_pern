@@ -558,7 +558,7 @@ class TournamentController {
                 }
                 participant.points = points
             }
-            participants.sort((a, b) => (a.points - b.points))
+            participants.sort((a, b) => (b.points - a.points))
 
             const firstParticipant = await Participant.findByPk(participants[0].id) // To know tournamentId
             const tournamentId = firstParticipant.tournamentId
@@ -594,6 +594,7 @@ class TournamentController {
                     }
                 }
             }
+
 
             for (let i = 0; i < participants.length; i++) {
                 const updatedParticipant = participants[i]

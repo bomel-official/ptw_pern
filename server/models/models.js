@@ -22,12 +22,12 @@ const User = sequelize.define('user', {
     platform: {type: DataTypes.STRING, defaultValue: 'pc'},
     device: {type: DataTypes.STRING, defaultValue: 'km'},
 
-    statsToursPlayed: {type: DataTypes.INTEGER, defaultValue: 0},
-    statsToursList: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
-    statsToursWon: {type: DataTypes.INTEGER, defaultValue: 0},
-    statsToursTop3: {type: DataTypes.INTEGER, defaultValue: 0},
-    statsAverageKills: {type: DataTypes.FLOAT, defaultValue: 0},
-    statsAmountKills: {type: DataTypes.FLOAT, defaultValue: 0},
+    statToursPlayed: {type: DataTypes.INTEGER, defaultValue: 0},
+    statToursList: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    statToursWon: {type: DataTypes.INTEGER, defaultValue: 0},
+    statToursTop3: {type: DataTypes.INTEGER, defaultValue: 0},
+    statAverageKills: {type: DataTypes.FLOAT, defaultValue: 0},
+    statAmountKills: {type: DataTypes.FLOAT, defaultValue: 0},
 
     // cart: Cart   ------------------ done
     // friends: User(Many)   ------------------ done
