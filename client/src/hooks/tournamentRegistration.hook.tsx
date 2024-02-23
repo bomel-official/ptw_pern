@@ -7,13 +7,15 @@ export interface IRegisterForm {
     capitan: null | number,
     teamId: null | number,
     players: Array<IUser>,
+    payMethod: string
 }
 
 const initRegisterForm: IRegisterForm = {
     tournamentId: null,
     capitan: null,
     teamId: null,
-    players: []
+    players: [],
+    payMethod: 'paypal'
 }
 
 const requestReducer = (state: IRegisterForm, action: {type: string, data: any}) => {

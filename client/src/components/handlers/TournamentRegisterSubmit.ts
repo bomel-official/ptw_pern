@@ -25,7 +25,8 @@ export const TournamentRegisterSubmit = async (
             teamId: team.id,
             tournamentId: tournamentRegistrationUsed.registerRequest.tournamentId,
             players: tournamentRegistrationUsed.registerRequest.players.map((pl: IUser) => pl.id),
-            id: tournamentRegistrationUsed.registerRequest.id ?? ''
+            id: tournamentRegistrationUsed.registerRequest.id ?? '',
+            payMethod: tournamentRegistrationUsed.registerRequest.payMethod
         }, {
             Authorization: `Bearer ${token}`
         }, true)

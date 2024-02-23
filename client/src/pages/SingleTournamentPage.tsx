@@ -23,6 +23,8 @@ import {IParticipant} from "../StoreTypes";
 import {useHttp} from "../hooks/http.hook";
 import NavDropdown from "../components/base/NavDropdown";
 import {parseUrls} from "../functions/parseUrls";
+import getPayPalText from "../functions/getPayPalText";
+import PayPalData from "../data/PayPalData";
 
 export const SingleTournamentPage = () => {
     const {user} = useContext(AuthContext)
@@ -82,12 +84,32 @@ export const SingleTournamentPage = () => {
                             <NavDropdown currentTab={currentTab} tabs={TournamentTabs} defaultTab={'about'} url={`/tournament/${slug}`}/>
                             {!!tournament.participationPrice && !!participant && !participant.isPaid && <div className="pb32">
                                 <div className="tournament__content">
-                                    <p className="text">{__('Вам необходимо оплатить участие на турнир.')}</p>
-                                    <div className="flex">
-                                        {!!participant.invoiceUrl && <>
+                                    {participant.payMethod === 'enot' &&
+                                        <>
+                                            <p className="text">{__('Вам необходимо оплатить участие на турнир.')}</p>
+                                            <div className="flex">
+                                                {!!participant.invoiceUrl && <>
+                                                    <NavLink
+                                                        className="button-both-accent corner-margin"
+                                                        to={`${participant.invoiceUrl}`}
+                                                        target="_blank"
+                                                        style={{
+                                                            marginRight: "16px"
+                                                        }}
+                                                    >
+                                                        <span>{__('Оплатить')}</span>
+                                                    </NavLink>
+                                                </>}
+                                            </div>
+                                        </>
+                                    }
+                                    {participant.payMethod === 'paypal' &&
+                                    <>
+                                        <p className="text">{PayPalData.getText(tournament.participationPrice)}</p>
+                                        <div className="flex">
                                             <NavLink
                                                 className="button-both-accent corner-margin"
-                                                to={`${participant.invoiceUrl}`}
+                                                to={PayPalData.url}
                                                 target="_blank"
                                                 style={{
                                                     marginRight: "16px"
@@ -95,8 +117,9 @@ export const SingleTournamentPage = () => {
                                             >
                                                 <span>{__('Оплатить')}</span>
                                             </NavLink>
-                                        </>}
-                                    </div>
+                                        </div>
+                                    </>
+                                }
                                 </div>
                             </div>}
                             { (currentTab === 'about') && <SingleTournamentAbout tournament={tournament}/>}

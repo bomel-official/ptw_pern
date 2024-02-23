@@ -1182,6 +1182,29 @@ input[type=file] {
     opacity: 1;
     pointer-events: all;
   }
+
+  &__payMethod {
+    &-items {
+      display: flex;
+      align-items: stretch;
+      gap: 24px;
+    }
+    &-item {
+      padding: 12px;
+      border-radius: 4px;
+      border: 2px solid $gray;
+      width: 50%;
+
+      svg {
+        max-height: 139px;
+        width: 100%;
+      }
+
+      &.active {
+        border-color: $accent;
+      }
+    }
+  }
 }
 
 .profileCard {

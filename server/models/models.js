@@ -93,6 +93,7 @@ const Participant = sequelize.define('participant', {
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
     roomNumber: {type: DataTypes.INTEGER, defaultValue: 0},
     invoiceUrl: {type: DataTypes.STRING, allowNull: true },
+    payMethod: {type: DataTypes.STRING, defaultValue: 'paypal' },
     isPaid: {type: DataTypes.BOOLEAN, defaultValue: false}
     // tournament: Tournament   ------------------ done
     // team: Team   ------------------ done

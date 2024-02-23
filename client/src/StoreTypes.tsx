@@ -129,6 +129,7 @@ export type IParticipant = {
     places: Array<[number, number]>,
     isRoundsHidden: Array<boolean>,
     players: Array<number>,
+    payMethod: string,
     roomNumber: number,
     isPaid: boolean,
     invoiceUrl: string

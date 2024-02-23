@@ -336,7 +336,7 @@ class TournamentController {
     }
 
     async register (req, res, next) {
-        const {teamId, players, tournamentId, id} = req.body
+        const {teamId, players, tournamentId, id, payMethod} = req.body
 
         try {
             const tournament = await Tournament.findByPk(tournamentId)
@@ -386,6 +386,7 @@ class TournamentController {
                     points: 0,
                     players,
                     teamId,
+                    payMethod,
                     isRoundHidden: Array(AMOUNT_ROUNDS).fill(false),
                     dataArray: Array(players.length).fill(Array(AMOUNT_ROUNDS).fill(0)),
                     places: Array(AMOUNT_ROUNDS).fill([-1, 0]),
@@ -403,8 +404,12 @@ class TournamentController {
 
                 if (tournament.participationPrice) {
                     newReq = (await createInvoice(newReq.id)).participant
+                    await newReq.save()
+                    if (newReq.payMethod === 'enot') {
+                        return res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!', url: newReq.invoiceUrl})
+                    }
                 }
-                res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!', url: newReq.invoiceUrl})
+                return res.json({isOk: true, message: 'Вы зарегистрировалиь на турнир!'})
             } else { // Edit participant
                 const alreadyRegisteredParticipant = await Participant.findOne({
                     where: {
@@ -437,6 +442,7 @@ class TournamentController {
                     }
                 })
                 participant.teamId = teamId
+                participant.payMethod = payMethod
                 await participant.save()
                 const participantUsers = participant.users.map((user) => (user.id))
 
@@ -687,6 +693,14 @@ class TournamentController {
             console.log(e)
             return res.json({participant: null, participantUsers: []})
         }
+    }
+
+    async changeIsPaidStatus(req, res, next) {
+        const {participantId} = req.body
+        const participant = await Participant.findByPk(participantId)
+        participant.isPaid = !participant.isPaid
+        await participant.save()
+        return res.json({message: 'Статус оплаты изменён!', isOk: true})
     }
 }
 

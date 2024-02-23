@@ -1471,5 +1471,89 @@ export const Translations: ITranslations = {
     "Шаг 4. Сбор состава": {
         "RU": "Шаг 4. Сбор состава",
         "EU": "Step 4. Select the players"
+    },
+    "Не оплачено": {
+        "RU": "Не оплачено",
+        "EU": "Not paid",
+    },
+    "Удалить участника": {
+        "RU": "Удалить участника",
+        "EU": "Delete participant"
+    },
+    "Переопределить номер": {
+        "RU": "Переопределить номер",
+        "EU": "Redeclare room number"
+    },
+    "Изменить статус оплаты": {
+        "RU": "Изменить статус оплаты",
+        "EU": "Change payment status"
+    },
+    "Чтобы принять участие в турнире вам необходимо перести": {
+        "RU": "Чтобы принять участие в турнире вам необходимо перести",
+        "EU": "To participate in this tournament you need to transfer"
+    },
+    "на PayPal аккаунт": {
+        "RU": "на PayPal аккаунт",
+        "EU": "to PayPal account"
+    },
+    "После оплаты напишите любому PTW Administrator в нашем Discord, который онлайн.\nНаш Discord": {
+        "RU": "После оплаты напишите любому PTW Administrator в нашем Discord, который онлайн.\nНаш Discord",
+        "EU": "After transfer write to any PTW Administrator in our Discord, which is online\nOur Discord"
+    },
+    "Для оплаты перейдите по ссылке": {
+        "RU": "Для оплаты перейдите по ссылке",
+        "EU": "For payment, please follow this link"
+    },
+    "FAQ": {
+        "RU": "FAQ",
+        "EU": "FAQ"
+    },
+    "Соц.сети": {
+        "RU": "Соц.сети",
+        "EU": "Social networks"
+    },
+    "Участие в турнирах": {
+        "RU": "Участие в турнирах",
+        "EU": "Participation in tournaments"
+    },
+    "Удалить": {
+        "RU": "Удалить",
+        "EU": "Delete"
+    },
+    "Пользователи не найдены": {
+        "RU": "Пользователи не найдены",
+        "EU": "Users not found"
+    },
+    "Activision ID": {
+        "RU": "Activision ID",
+        "EU": "Activision ID"
+    },
+    "Playstation": {
+        "RU": "Playstation",
+        "EU": "Playstation"
+    },
+    "XBOX": {
+        "RU": "XBOX",
+        "EU": "XBOX"
+    },
+    "Выберите устройство": {
+        "RU": "Выберите устройство",
+        "EU": "Select a device"
+    },
+    "Геймпад": {
+        "RU": "Геймпад",
+        "EU": "Gamepad"
+    },
+    "Клавиатура и мышь": {
+        "RU": "Клавиатура и мышь",
+        "EU": "Keyboard and mouse"
+    },
+    "Оружие": {
+        "RU": "Оружие",
+        "EU": "Weapon"
+    },
+    "Название": {
+        "RU": "Название",
+        "EU": "Title"
     }
 }
