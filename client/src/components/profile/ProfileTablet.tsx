@@ -139,7 +139,7 @@ const ProfileTablet = ({user, actions, type}: {
                 {(!currentUser?.friends.includes(user.id)) && <>
                     <div className="team__tablet-info">
                         <span>{__('Среднее место:')} {user.averagePlace ? user.averagePlace : '-'}</span>
-                        <span>{__('Турниров сыграно:')} {user.toursPlayed ? user.toursPlayed : '-'}</span>
+                        <span>{__('Турниров сыграно:')} {user.statsToursPlayed ? user.statsToursPlayed : '-'}</span>
                     </div>
                     <div className="team__tablet-bottom flex profile">
                         {!loading && !isAdded && <button className="team__tablet-edit" onClick={addFriend}>

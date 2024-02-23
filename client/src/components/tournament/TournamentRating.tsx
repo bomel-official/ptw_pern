@@ -8,6 +8,7 @@ import {useHttp} from "../../hooks/http.hook";
 import {getFile} from "../../functions/getFile";
 import {AuthContext} from "../../context/AuthContext";
 import {isUserAdmin} from "../../functions/isUserAdmin";
+import Loader from "../base/Loader";
 
 export const AMOUNT_ROUNDS = 5
 export const DEFAULT_ROUNDS_HIDDEN = Array(AMOUNT_ROUNDS).fill(false)
@@ -19,7 +20,7 @@ const TournamentRating = ({tournament, type, refetch}: {
 }) => {
     const [participants, setParticipants] = useState<Array<IParticipant>>([])
     const [isEditActive, setIsEditActive] = useState<boolean>(false)
-    const {request} = useHttp()
+    const {request, loading} = useHttp()
     const {user, token} = useContext(AuthContext)
     const [messageOptions, setMessageOptions] = useState<IMessageOptions>({
         status: '', text: ''
@@ -140,15 +141,18 @@ const TournamentRating = ({tournament, type, refetch}: {
                     <span>{__('Редактировать')}</span>
                 </button>}
                 {user && (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') && isEditActive && <div className="flex pt12 pb12" style={{gap: '8px'}}>
-                    <button
-                        className="button-tl-accent mb8 corner-margin"
-                        onClick={saveHandler}
-                    >
-                        <span>{__('Сохранить')}</span>
-                    </button>
-                    <button className="button-br-gray mb8 corner-margin" onClick={() => setIsEditActive(false)}>
-                        <span>{__('Отмена')}</span>
-                    </button>
+                    {!loading && <>
+                        <button
+                            className="button-tl-accent mb8 corner-margin"
+                            onClick={saveHandler}
+                        >
+                            <span>{__('Сохранить')}</span>
+                        </button>
+                        <button className="button-br-gray mb8 corner-margin" onClick={() => setIsEditActive(false)}>
+                            <span>{__('Отмена')}</span>
+                        </button>
+                    </>}
+                    {loading && <Loader/>}
                 </div>}
                 {user && (isUserAdmin(user)) && messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>
                     {__(messageOptions.text)}
@@ -187,7 +191,7 @@ const TournamentRating = ({tournament, type, refetch}: {
                                         className="input-text"
                                         type="number"
                                         value={participant.dataArray[j][i]}
-                                        onChange={(e) => setParticipantPlayerKills(index, i, j, parseInt(e.target.value))}
+                                        onChange={(e) => setParticipantPlayerKills(index, i, j, parseFloat(e.target.value))}
                                     />}
                                     {!isEditActive && <span>{participant.dataArray[j][i]}</span>}
                                 </div>)
@@ -218,7 +222,7 @@ const TournamentRating = ({tournament, type, refetch}: {
                                             className="input-text small"
                                             type="number"
                                             value={participant.places[i][1] || 0}
-                                            onChange={(e) => setParticipantPlaces(index, i, 1, parseInt(e.target.value))}
+                                            onChange={(e) => setParticipantPlaces(index, i, 1, parseFloat(e.target.value))}
                                         />
                                     </div>}
                                 </div>

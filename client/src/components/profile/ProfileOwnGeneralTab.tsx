@@ -84,7 +84,7 @@ const ProfileOwnGeneralTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEd
                 </>}
                 <h2 className="profile__heading mb12 ds">{__('Участие в турнирах')}</h2>
                 <div className="profile__tournaments-tablet ds">
-                    <TournamentsList columns={2}/>
+                    <TournamentsList columns={2} userId={user.id}/>
                 </div>
             </div>
             <div className="tournament__sidebar-box">

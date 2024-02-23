@@ -1476,6 +1476,10 @@ export const Translations: ITranslations = {
         "RU": "Не оплачено",
         "EU": "Not paid",
     },
+    "Оплачено": {
+        "RU": "Оплачено",
+        "EU": "Paid",
+    },
     "Удалить участника": {
         "RU": "Удалить участника",
         "EU": "Delete participant"
@@ -1555,5 +1559,13 @@ export const Translations: ITranslations = {
     "Название": {
         "RU": "Название",
         "EU": "Title"
+    },
+    "Турниров в ТОП 3": {
+        "RU": "Турниров в ТОП 3",
+        "EU": "Tournaments TOP 3"
+    },
+    "Среднее убийств": {
+        "RU": "Среднее убийств",
+        "EU": "Average kills"
     }
 }

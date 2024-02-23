@@ -18,12 +18,17 @@ const User = sequelize.define('user', {
     discord_id: {type: DataTypes.STRING, allowNull: true},
     discord_username: {type: DataTypes.STRING, allowNull: true},
     discord_avatar: {type: DataTypes.STRING, allowNull: true},
-    toursPlayed: {type: DataTypes.INTEGER, allowNull: true},
-    averagePlace: {type: DataTypes.FLOAT, allowNull: true},
-    bestPlace: {type: DataTypes.INTEGER, allowNull: true},
     friends: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
     platform: {type: DataTypes.STRING, defaultValue: 'pc'},
-    device: {type: DataTypes.STRING, defaultValue: 'km'}
+    device: {type: DataTypes.STRING, defaultValue: 'km'},
+
+    statsToursPlayed: {type: DataTypes.INTEGER, defaultValue: 0},
+    statsToursList: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    statsToursWon: {type: DataTypes.INTEGER, defaultValue: 0},
+    statsToursTop3: {type: DataTypes.INTEGER, defaultValue: 0},
+    statsAverageKills: {type: DataTypes.FLOAT, defaultValue: 0},
+    statsAmountKills: {type: DataTypes.FLOAT, defaultValue: 0},
+
     // cart: Cart   ------------------ done
     // friends: User(Many)   ------------------ done
 })
@@ -87,9 +92,9 @@ const Team = sequelize.define('team', {
 
 const Participant = sequelize.define('participant', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    points: {type: DataTypes.INTEGER, defaultValue: 0},
-    dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: [[]]},
-    places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)), defaultValue: []},
+    points: {type: DataTypes.FLOAT, defaultValue: 0},
+    dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: [[]]},
+    places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: []},
     isRoundsHidden: {type: DataTypes.ARRAY(DataTypes.BOOLEAN), defaultValue: []},
     roomNumber: {type: DataTypes.INTEGER, defaultValue: 0},
     invoiceUrl: {type: DataTypes.STRING, allowNull: true },

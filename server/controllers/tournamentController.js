@@ -10,6 +10,14 @@ const uploadImage = require("../funtions/uploadImage");
 
 const AMOUNT_ROUNDS = 5
 
+function calcAmountKills(dataArray, i) {
+    let points = 0
+    for (let round = 0; round < AMOUNT_ROUNDS; round++) {
+        points += dataArray[i][round]
+    }
+    return points
+}
+
 async function checkIsPaid(participantId) {
     const participant = await Participant.findByPk(participantId)
     const invoices = await Invoice.findAll({
@@ -243,7 +251,7 @@ class TournamentController {
     }
 
     async getAll (req, res, next) {
-        const {status, numberPosts, game, type} = req.query
+        const {status, numberPosts, game, type, userId} = req.query
         let whereDateEndObject = {}
         let orderType = [
             ['dateBegin', 'DESC'],
@@ -282,7 +290,10 @@ class TournamentController {
             include: [{
                 model: User,
                 as: 'players',
-                attributes: ['id']
+                attributes: ['id'],
+                where: userId ? {
+                    id: userId
+                } : {}
             }],
             limit: numberPosts === '-1' ? null : numberPosts
         })
@@ -520,53 +531,111 @@ class TournamentController {
             ],
             include: [
                 {model: User, as: 'users' },
-                {model: Team}]
+                {model: Team}
+            ]
         })
-
-        participants.map((participant => {
-            let isSorted = true
-            for (let i = 1; i < participant.users.length; i++) {
-                if (participant.users[i].id < participant.users[i - 1].id) {
-                    isSorted = false
-                }
-            }
-            if (!isSorted) {
-                console.log(`unsorted: ${participant.id}`)
-                participant.users.sort((a, b) => (a.id - b.id))
-            }
-            return participant
-        }))
 
         return res.json({participants})
     }
 
     async editRegister(req, res, next) {
         const {participants} = req.body
+
+        if (participants.length === 0) {
+            return res.json({isOk: true, message: 'Данные обновлены!'})
+        }
+
         try {
-            const requestPromises = []
             for (let participant of participants) {
-                requestPromises.push(new Promise((resolve, reject) => {
-                    let points = 0
-                    for (let i = 0; i < AMOUNT_ROUNDS; i++) {
-                        points += participant.places[i][1]
-                        if (!(participant.isRoundsHidden.length && participant.isRoundsHidden[i])) {
-                            for (let j = 0; j < participant.players; j++) {
-                                points += participant.dataArray[j][i]
-                            }
+                let points = 0
+                for (let i = 0; i < AMOUNT_ROUNDS; i++) {
+                    points += participant.places[i][1]
+                    if (!(participant.isRoundsHidden.length && participant.isRoundsHidden[i])) {
+                        for (let j = 0; j < participant.players; j++) {
+                            points += participant.dataArray[j][i]
                         }
                     }
-                    Participant.findByPk(participant.id).then(item => {
-                        item.dataArray = participant.dataArray
-                        item.places = participant.places
-                        item.isRoundsHidden = participant.isRoundsHidden
-                        item.points = points
-                        item.save().then(resolve)
-                    })
-                }))
+                }
+                participant.points = points
             }
-            await Promise.all(requestPromises).catch(e => {
-                return res.json({isOk: false, message: e.message})
+            participants.sort((a, b) => (a.points - b.points))
+
+            const firstParticipant = await Participant.findByPk(participants[0].id) // To know tournamentId
+            const tournamentId = firstParticipant.tournamentId
+
+            const oldParticipants = await Participant.findAll({
+                where: {
+                    tournamentId: tournamentId
+                },
+                order: [
+                    ['points', 'DESC'],
+                    ['id', 'ASC'],
+                    [{ model: User, as: 'users' }, 'id', 'ASC'],
+                ],
+                include: [
+                    {model: User, as: 'users' }
+                ]
             })
+
+            for (let i = 0; i < oldParticipants.length; i++) {
+                const participant = oldParticipants[i]
+                for (let userIndex = 0; userIndex < participant.users.length; userIndex++) {
+                    const user = participant.users[userIndex]
+
+                    if (user.statsToursList.includes(participant.tournamentId)) {
+                        if (i === 0) {
+                            user.statsToursWon -= 1
+                        }
+                        if (i < 3) {
+                            user.statsToursTop3 -= 1
+                        }
+                        user.statsAmountKills -= calcAmountKills(participant.dataArray, userIndex)
+                        await user.save()
+                    }
+                }
+            }
+
+            for (let i = 0; i < participants.length; i++) {
+                const updatedParticipant = participants[i]
+                const participant = await Participant.findByPk(participants[i].id, {
+                    order: [
+                        [{ model: User, as: 'users' }, 'id', 'ASC'],
+                    ],
+                    include: [
+                        {model: User, as: 'users' },
+                    ]
+                })
+
+                // User stats start
+                for (let userIndex = 0; userIndex < participant.users.length; userIndex++) {
+                    const user = participant.users[userIndex]
+
+                    if (!user.statsToursList.includes(participant.tournamentId)) {
+                        user.statsToursList = [...user.statsToursList, participant.tournamentId]
+                    }
+
+                    if (i === 0) {
+                        user.statsToursWon += 1
+                    }
+                    if (i < 3) {
+                        user.statsToursTop3 += 1
+                    }
+                    user.statsToursPlayed = user.statsToursList.length
+                    user.statsAmountKills += calcAmountKills(updatedParticipant.dataArray, userIndex)
+                    user.statsAverageKills = user.statsAmountKills / (user.statsToursPlayed * AMOUNT_ROUNDS)
+
+                    await user.save()
+                }
+
+                // User stats end
+
+                participant.dataArray = updatedParticipant.dataArray
+                participant.places = updatedParticipant.places
+                participant.isRoundsHidden = updatedParticipant.isRoundsHidden
+                participant.points = updatedParticipant.points
+                await participant.save()
+            }
+
             return res.json({isOk: true, message: 'Данные обновлены!'})
         } catch (e) {
             return res.json({isOk: false, message: e.message})

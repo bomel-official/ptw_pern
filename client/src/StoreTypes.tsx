@@ -72,7 +72,6 @@ export type IUser = {
     activisionId?: string,
     createdAt?: string,
     averagePlace?: number,
-    toursPlayed?: number,
     friends: number[],
     discord_id?: string,
     discord_username?: string,
@@ -80,7 +79,13 @@ export type IUser = {
     youtube?: string,
     twitter?: string;
     twitch?: string,
-    notifications?: number
+    notifications?: number,
+    statsToursPlayed: number,
+    statsToursList: Array<number>,
+    statsToursWon: number,
+    statsToursTop3: number,
+    statsAverageKills: number,
+    statsAmountKills: number
 }
 export type ITournament = {
     id: number,
