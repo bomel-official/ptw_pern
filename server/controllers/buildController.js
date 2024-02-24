@@ -162,10 +162,7 @@ class BuildController {
                 return res.json({items})
             } else if (object === 'attachment-list') {
                 const {rows: items} = await BuildAttachmentType.findAndCountAll({
-                    order: [[
-                        [{ model: BuildAttachment}, 'title_RU', 'ASC'],
-                        ['title_RU', 'ASC']
-                    ]],
+                    ...getWhere(BuildAttachmentType, req),
                     include: {
                         model: BuildAttachment,
                     }
