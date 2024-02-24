@@ -154,16 +154,18 @@
     background: $gray;
   }
   &__image-wrapper {
-    object-fit: contain;
-    object-position: center;
     max-width: 176px;
+    max-height: 90px;
     margin-left: auto;
     display: flex;
     cursor: pointer;
   }
   &__weapon-image {
     width: 100%;
+    height: 100%;
     border-radius: 4px;
+    object-fit: contain;
+    object-position: center;
   }
   &__buttons {
     position: absolute;
