@@ -269,7 +269,7 @@ class BuildController {
     }
 
     async buildSearch(req, res, next) {
-        const {s, userId} = req.query
+        const {s, userId, weaponTypeId, weaponId} = req.query
         try {
             const {rows: items} = await Build.findAndCountAll({
                 where: {
@@ -295,7 +295,14 @@ class BuildController {
                         }: true,
                         userId ? {
                             userId
-                        } : true
+                        } : true,
+                        weaponTypeId ? {
+                            buildWeaponTypeId: weaponTypeId
+                        } : true,
+                        weaponId ? {
+                            buildWeaponId: weaponId
+                        } : true,
+
                     ]
                 },
                 include: [

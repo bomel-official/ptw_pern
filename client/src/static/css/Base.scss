@@ -2,6 +2,10 @@ $header-border-color: #292929;
 $white: #fff;
 $black: #000;
 
+$paypalBgColor: #0070E0;
+$paypalBgHoverColor: #368BE0;
+$paypalBgActiveColor: #0070E0;
+
 $textTransparentWhite: rgba(255,255,255,.25);
 $textWhite: rgba(255,255,255,.5);
 $textHoverWhite: rgba(255,255,255,.75);
@@ -462,6 +466,40 @@ input[type=file] {
 }
 .button-accent {
   @include rounded-button('accent', $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
+}
+
+.button-paypal {
+  background: $paypalBgColor;
+  color: $white;
+
+
+  &::after {
+    border-left-color: $paypalBgColor
+  }
+  &::before {
+    border-right-color: $paypalBgColor
+  }
+
+  &:hover {
+    background: $paypalBgHoverColor;
+
+    &::after {
+      border-left-color: $paypalBgHoverColor
+    }
+    &::before {
+      border-right-color: $paypalBgHoverColor
+    }
+  }
+  &:active {
+    background: $paypalBgActiveColor;
+
+    &::after {
+      border-left-color: $paypalBgActiveColor
+    }
+    &::before {
+      border-right-color: $paypalBgActiveColor
+    }
+  }
 }
 
 .text-link {

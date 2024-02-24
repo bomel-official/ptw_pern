@@ -1567,5 +1567,17 @@ export const Translations: ITranslations = {
     "Среднее убийств": {
         "RU": "Среднее убийств",
         "EU": "Average kills"
+    },
+    "Оплатить PayPal": {
+        "RU": "Оплатить PayPal",
+        "EU": "Pay with PayPal"
+    },
+    "Оплатить картой": {
+        "RU": "Оплатить картой",
+        "EU": "Pay with card"
+    },
+    "Очистить": {
+        "RU": "Очистить",
+        "EU": "Clear"
     }
 }

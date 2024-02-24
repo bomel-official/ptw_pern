@@ -108,15 +108,25 @@ export const SingleTournamentPage = () => {
                                         <p className="text">{PayPalData.getText(tournament.participationPrice)}</p>
                                         <div className="flex">
                                             <NavLink
-                                                className="button-both-accent corner-margin"
+                                                className="button-tl-accent corner-margin button-paypal"
                                                 to={PayPalData.url}
                                                 target="_blank"
                                                 style={{
                                                     marginRight: "16px"
                                                 }}
                                             >
-                                                <span>{__('Оплатить')}</span>
+                                                <span>{__('Оплатить PayPal')}</span>
                                             </NavLink>
+                                            {!!participant.invoiceUrl && <NavLink
+                                                className="button-br-accent corner-margin"
+                                                to={`${participant.invoiceUrl}`}
+                                                target="_blank"
+                                                style={{
+                                                    marginRight: "16px"
+                                                }}
+                                            >
+                                                <span>{__('Оплатить картой')}</span>
+                                            </NavLink>}
                                         </div>
                                     </>
                                 }

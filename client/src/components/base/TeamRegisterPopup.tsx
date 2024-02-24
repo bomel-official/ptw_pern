@@ -27,6 +27,8 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
         status: '', text: ''
     })
     const [teams, setTeams] = useState<Array<ITeam>>([])
+    const [displayTeams, setDisplayTeams] = useState<Array<ITeam>>([])
+    const [teamsSearchString, setTeamsSearchString] = useState<string>('')
     const {user, token} = useContext(AuthContext)
     const {request, error, clearError} = useHttp()
     const [isLoading, setIsLoading] = useState(false)
@@ -112,6 +114,10 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
     }
 
     useEffect(() => {
+        setDisplayTeams(teams.filter((team: ITeam) => (team.name?.toLowerCase().includes(teamsSearchString.toLowerCase()))))
+    }, [teamsSearchString, teams])
+
+    useEffect(() => {
         fetchTeams().catch()
     }, [fetchTeams, user])
 
@@ -175,10 +181,10 @@ const TeamRegisterPopup = ({tournament, isRegisterFormActive, setIsRegisterFormA
                                     <span className="profileCard__nickname">{newTeam.name}</span>
                                 </div>
                             </div>}
-                            {!newTeam.id &&<span>{__('Выберите команду')}</span>}
+                            {!newTeam.id && <input type="text" placeholder={__('Выберите команду')} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setTeamsSearchString(e.target.value)}}/>}
                         </label>
                         <ul className={isDropdownActive ? "dropdown__values active" : "dropdown__values"}>
-                            {teams.map((team: ITeam) => (
+                            {displayTeams.map((team: ITeam) => (
                                 <li className="dropdown__value" key={team.id}>
                                     <button
                                         onClick={() => {
