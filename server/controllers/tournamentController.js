@@ -274,6 +274,18 @@ class TournamentController {
                 },
             }
         }
+
+        let includeUser = {
+            model: User,
+            as: 'players',
+            attributes: ['id'],
+        }
+        if (userId) {
+            includeUser = {...includeUser, where:  {
+                id: userId
+            }}
+        }
+
         const rows = await Tournament.findAll({
             where: {
                 [Op.and]: [
@@ -287,14 +299,7 @@ class TournamentController {
                 ]
             },
             order: orderType,
-            include: [{
-                model: User,
-                as: 'players',
-                attributes: ['id'],
-                where: userId ? {
-                    id: userId
-                } : {}
-            }],
+            include: [includeUser],
             limit: numberPosts === '-1' ? null : numberPosts
         })
         return res.json({
