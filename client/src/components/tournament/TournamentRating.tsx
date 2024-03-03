@@ -130,6 +130,22 @@ const TournamentRating = ({tournament, type, refetch}: {
             console.log(e)
         }
     }
+    const increasePriority = async (participantId: number) => {
+        try {
+            const {isOk}: {isOk: boolean, message: string} = await request(
+                '/api/tournament/increase-priority',
+                'POST',
+                {participantId},
+                {
+                    Authorization: `Bearer ${token}`
+                }, true)
+            if (isOk) {
+                await fetchParticipants()
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     if (!tournament) {
         return (<></>)
@@ -336,6 +352,20 @@ const TournamentRating = ({tournament, type, refetch}: {
                                                     <path d="M14.1667 1.66666L17.5 4.99999M17.5 4.99999L14.1667 8.33332M17.5 4.99999H5.83333C4.94928 4.99999 4.10143 5.35118 3.47631 5.9763C2.85119 6.60142 2.5 7.44927 2.5 8.33332V9.16666M5.83333 18.3333L2.5 15M2.5 15L5.83333 11.6667M2.5 15H14.1667C15.0507 15 15.8986 14.6488 16.5237 14.0237C17.1488 13.3986 17.5 12.5507 17.5 11.6667V10.8333" stroke="white" strokeOpacity="0.75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                 </svg>
                                                 <span>{__('Изменить статус оплаты')}</span>
+                                            </button>
+                                        </li>
+                                        <li className="dropdown__value">
+                                            <button
+                                                onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                                                    e.preventDefault()
+                                                    e.currentTarget.parentElement?.parentElement?.parentElement?.classList.toggle('active')
+                                                    increasePriority(participant.id).catch(() => {})
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                    <path d="M18.3346 5.83331L11.2513 12.9166L7.08464 8.74998L1.66797 14.1666M18.3346 5.83331H13.3346M18.3346 5.83331V10.8333" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                                <span>{__('Повысить в рейтинге')}</span>
                                             </button>
                                         </li>
                                     </ul>

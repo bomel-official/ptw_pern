@@ -17,6 +17,7 @@ router.post('/register', AuthMiddleware, TournamentController.register)
 router.post('/unregister', AuthMiddleware, TournamentController.unregister)
 router.post('/edit-register', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.editRegister)
 router.post('/change-pay-status', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.changeIsPaidStatus)
+router.post('/increase-priority', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), TournamentController.increasePriority)
 
 
 module.exports = router

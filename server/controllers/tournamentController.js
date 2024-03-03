@@ -531,6 +531,7 @@ class TournamentController {
                 [{ model: User, as: 'users' }, 'id', 'ASC'],
             ] : [
                 ['points', 'DESC'],
+                ['priority', 'DESC'],
                 ['id', 'ASC'],
                 [{ model: User, as: 'users' }, 'id', 'ASC'],
             ],
@@ -541,6 +542,18 @@ class TournamentController {
         })
 
         return res.json({participants})
+    }
+
+    async increasePriority(req, res, next) {
+        const { participantId } = req.body;
+
+        const participant = await Participant.findByPk(participantId);
+        if (participant) {
+            participant.priority += 1;
+            await participant.save();
+        }
+
+        return res.json({isOk: true, message: 'Данные обновлены!'})
     }
 
     async editRegister(req, res, next) {
