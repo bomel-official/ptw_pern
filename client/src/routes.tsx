@@ -18,6 +18,9 @@ import AdminMetaBuildsPage from "./components/adminPages/AdminMetaBuildsPage";
 import {DiscordAuthPage} from "./pages/DiscordAuth";
 import AdminRoleEditorPage from "./components/adminPages/AdminRoleEditorPage";
 import AdminFAQPage from "./components/adminPages/AdminFAQPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import Contact from "./pages/Contact";
+import UserRules from "./pages/UserRules";
 
 export const useRoutes = () => {
     return (
@@ -38,6 +41,9 @@ export const useRoutes = () => {
             <Route path="/builds" element={<MetaBuildsPage/>} />
             <Route path="/builds/create" element={<MetaBuildCreatePage/>} />
             <Route path="/shop" element={<ShopPage/>} />
+            <Route path="/privacy" element={<PrivacyPage/>} />
+            <Route path="/user-rules" element={<UserRules/>} />
+            <Route path="/contact" element={<Contact/>} />
             <Route path="/admin/tournaments" element={<AdminTournamentsPage/>} />
             <Route path="/admin/builds" element={<AdminMetaBuildsPage/>} />
             <Route path="/admin/roles" element={<AdminRoleEditorPage/>} />

@@ -327,6 +327,29 @@ button {
   padding: 12px 0;
   background-color: $gray;
 
+  &Menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 24px;
+
+    &__item-link {
+      color: $white;
+      opacity: .75;
+      transition: opacity .3s ease-in-out;
+      font-size: 14px;
+      line-height: 16px;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+
   &__logo {
     margin-right: 32px;
 
@@ -437,6 +460,10 @@ button {
 
   // Footer mobile
   .footer {
+    &Menu {
+      margin-bottom: 24px;
+      padding: 0;
+    }
     &__logo {
       margin-right: 0;
       margin-bottom: -18px;

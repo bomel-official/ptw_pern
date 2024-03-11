@@ -78,6 +78,21 @@ export const menuItems = [
     },
 ]
 
+export const footerMenuItems = [
+    {
+        to: '/privacy',
+        name: 'Политика конфиденциальности'
+    },
+    {
+        to: '/user-rules',
+        name: 'Условия пользования'
+    },
+    {
+        to: '/contact',
+        name: 'Контакты'
+    }
+]
+
 export const socialItems = [
     {
         to: process.env.REACT_APP_DISCORD_LINK_URL || '/',

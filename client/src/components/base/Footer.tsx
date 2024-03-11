@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 import FooterLogo from '../../static/icons/logo-footer.png'
 import {__} from "../../multilang/Multilang";
 import {socialItems} from "../../data/Links";
+import FooterMenu from "./FooterMenu";
 
 export const Footer = () => {
     return (
@@ -26,6 +27,7 @@ export const Footer = () => {
                             </NavLink>
                         )) }
                     </div>
+                    <FooterMenu/>
                     <button
                         className="footer__up"
                         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
