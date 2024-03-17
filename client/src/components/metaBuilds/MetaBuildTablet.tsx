@@ -165,6 +165,9 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                                 <p className="meta-build__data-item-title">{_f(attachment, 'title')}</p>
                                 <p className="meta-build__data-item-type">{_f(attachment.build_attachment_type, 'title')}</p>
                             </div>
+                            {attachment.image && <div className="meta-build__image">
+                                <img src={getFile(attachment.image)} alt={_f(attachment, 'title')} className="meta-build__image-obj"/>
+                            </div>}
                         </div>
                     </li>))}
                 </ul>

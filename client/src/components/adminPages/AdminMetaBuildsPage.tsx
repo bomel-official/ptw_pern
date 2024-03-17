@@ -126,6 +126,11 @@ const AdminMetaBuildsPage = () => {
                                         type: 'text'
                                     },
                                     {
+                                        title: 'Изображение',
+                                        name: 'image',
+                                        type: 'image'
+                                    },
+                                    {
                                         title: 'Тип обвеса',
                                         name: 'buildAttachmentTypeId',
                                         type: 'select',

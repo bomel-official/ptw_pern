@@ -18,7 +18,7 @@ import StateSelect from "../components/base/StateSelect";
 
 
 const MetaBuildsPage = () => {
-    const [buildType, setBuildType] = useState<IBuildType>('all')
+    const [buildType, setBuildType] = useState<IBuildType>('admin')
     const auth = useContext(AuthContext)
 
     const [searchString, setSearchString] = useState<string>('')
@@ -121,7 +121,7 @@ const MetaBuildsPage = () => {
                                     text={searchWeapon ? _f(searchWeapon, 'title') : __('Оружие')}
                                 />
                             </div>
-                            <MetaBuildList weapon={searchWeapon} weaponType={searchType} s={debouncedString} userId={(auth.user && auth.isAuthenticated && buildType === 'own') ? auth.user.id : ''}/>
+                            <MetaBuildList weapon={searchWeapon} weaponType={searchType} s={debouncedString} userId={(auth.user && auth.isAuthenticated && buildType === 'own') ? auth.user.id : ''} buildType={buildType}/>
                         </div>
                     </div>
                 </div>

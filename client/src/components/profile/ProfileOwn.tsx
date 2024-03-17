@@ -127,7 +127,7 @@ const ProfileOwn = ({user, tab}: {user: IUser, tab: ProfileTabsIds}) => {
                                             <span>{__('Создать сборку')}</span>
                                         </NavLink>
                                     </div>
-                                    <MetaBuildList userId={user.id}/>
+                                    <MetaBuildList userId={user.id} buildType={'own'}/>
                                 </>
                             }
                         </div>

@@ -267,7 +267,8 @@
   }
   &__data-item-container {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
   }
   &__data-item {
@@ -314,6 +315,15 @@
       line-height: 20px;
       text-align: center;
       color: $accentGradHover;
+    }
+  }
+
+  &__image {
+    &-obj {
+      max-height: 44px;
+      border-radius: 4px;
+      object-fit: contain;
+      object-position: center;
     }
   }
 }

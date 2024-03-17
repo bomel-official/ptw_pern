@@ -32,7 +32,7 @@ const ProfileView = ({user, tab}: {user: IUser | null, tab: ProfileTabsIds}) => 
                             {tab === "builds" &&
                                 <>
                                     <h1 className="side__title">{__(`Мета-сборки`)}</h1>
-                                    <MetaBuildList userId={user.id}/>
+                                    <MetaBuildList userId={user.id} buildType={'own'}/>
                                 </>
                             }
                         </div>

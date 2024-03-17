@@ -4,8 +4,9 @@ import {IBuild, IBuildWeapon, IBuildWeaponType} from "../../StoreTypes";
 import {useHttp} from "../../hooks/http.hook";
 import {AuthContext} from "../../context/AuthContext";
 import Loader from "../base/Loader";
+import {IBuildType} from "../../data/BuildTypes";
 
-const MetaBuildList = ({userId, s, weaponType, weapon}: {userId?: number|string, s?: string, weaponType?: IBuildWeaponType | null, weapon?: IBuildWeapon | null}) => {
+const MetaBuildList = ({userId, s, weaponType, weapon, buildType}: {userId?: number|string, s?: string, weaponType?: IBuildWeaponType | null, weapon?: IBuildWeapon | null, buildType: IBuildType}) => {
     const [builds, setBuilds] = useState<Array<IBuild>>([])
 
     const {loading, request} = useHttp()
@@ -15,11 +16,11 @@ const MetaBuildList = ({userId, s, weaponType, weapon}: {userId?: number|string,
         let result = {items: []}
         try {
             result = await request(
-                `/api/build/search?s=${s || ''}&userId=${userId}&weaponTypeId=${weaponType?.id || ''}&weaponId=${weapon?.id || ''}`,
+                `/api/build/search?s=${s || ''}&userId=${userId}&weaponTypeId=${weaponType?.id || ''}&weaponId=${weapon?.id || ''}&buildType=${buildType}`,
                 'GET')
         } catch (e) {}
         setBuilds(result.items)
-    }, [userId, s, weaponType, weapon])
+    }, [userId, s, weaponType, weapon, buildType])
 
     const deleteHandler = async (buildId: number) => {
         try {
@@ -32,7 +33,7 @@ const MetaBuildList = ({userId, s, weaponType, weapon}: {userId?: number|string,
 
     useEffect(() => {
         getBuilds().catch()
-    }, [userId, s, weaponType, weapon])
+    }, [userId, s, weaponType, weapon, buildType])
 
     return (
         <ul className="build__items">

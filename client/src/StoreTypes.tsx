@@ -28,7 +28,8 @@ export type IBuildAttachment = {
     buildAttachmentType: IBuildAttachmentType,
     build_attachment_type: number,
     title_RU: string,
-    title_EU: string
+    title_EU: string,
+    image: string
 }
 
 export type IBuildWeaponType = {

@@ -56,11 +56,22 @@ class BuildController {
                 return res.json({message: 'Добавлено!', item: newItem})
             } else if (object === 'attachment') {
                 const {title_RU, title_EU, gameVersion, buildAttachmentTypeId} = req.body
+                const {image} = req.files || {image: null}
+
+                let filename = ''
+                try {
+                    filename = await uploadImage(image, 352, 180)
+                } catch (e) {
+                    console.log(e)
+                    return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
+                }
+
                 const newItem = await BuildAttachment.create({
                     title_EU,
                     title_RU,
                     gameVersion,
-                    buildAttachmentTypeId
+                    buildAttachmentTypeId,
+                    image: filename
                 })
                 return res.json({message: 'Добавлено!', item: newItem})
             } else if (object === 'attachment-type') {
@@ -118,13 +129,24 @@ class BuildController {
                 return res.json({message: 'Обновлено!', item})
             } else if (object === 'attachment') {
                 const {id, title_RU, title_EU, gameVersion, buildAttachmentTypeId} = req.body
+                const {image} = req.files || {image: null}
+                let filename = ''
                 const item = await BuildAttachment.findByPk(id)
+
+                try {
+                    filename = await uploadImage(image, 352, 180)
+                    console.log('uploaded: ' + filename)
+                } catch (e) {
+                    console.log(e)
+                    return next(ApiError.badRequest(e.message || 'Произошла ошибка, попробуйте позже'))
+                }
 
                 item.set({
                     title_EU,
                     title_RU,
                     gameVersion,
-                    buildAttachmentTypeId
+                    buildAttachmentTypeId,
+                    image: filename || item.image
                 })
 
                 await item.save()
@@ -272,7 +294,29 @@ class BuildController {
     }
 
     async buildSearch(req, res, next) {
-        const {s, userId, weaponTypeId, weaponId} = req.query
+        const {s, userId, weaponTypeId, weaponId, buildType} = req.query
+
+        let userQuery = {}
+        if (buildType === 'admin') {
+            userQuery = {
+                ...userQuery,
+                [Op.or]: [
+                    {
+                        '$user.role$': 'SUPERADMIN'
+                    },
+                    {
+                        '$user.role$': 'ADMIN'
+                    }
+                ]
+            }
+        }
+        if (userId) {
+            userQuery = {
+                ...userQuery,
+                userId
+            }
+        }
+
         try {
             const {rows: items} = await Build.findAndCountAll({
                 where: {
@@ -296,9 +340,7 @@ class BuildController {
                                 }
                             ]
                         }: true,
-                        userId ? {
-                            userId
-                        } : true,
+                        userQuery,
                         weaponTypeId ? {
                             buildWeaponTypeId: weaponTypeId
                         } : true,
