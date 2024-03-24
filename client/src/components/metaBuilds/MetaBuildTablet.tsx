@@ -11,7 +11,7 @@ import {getDateString} from "../../functions/getDateString";
 import {AuthContext} from "../../context/AuthContext";
 import {GameVersions} from "../../data/Games";
 
-const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: (id: number) => void}) => {
+const MetaBuildTablet = ({build, deleteHandler, toggleIsMeta}: {build: IBuild, deleteHandler: (id: number) => void, toggleIsMeta: (id: number) => void}) => {
     const {user, token} = useContext(AuthContext)
 
     const [isLiked, setIsLiked] = useState<boolean>(false)
@@ -65,10 +65,12 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                             {!!build.title && <h3 className="meta-build__title">{build.title}</h3>}
                             <h3 className="meta-build__header">{_f(build.build_weapon, 'title')}</h3>
                             <div className="meta-build__author">
-                                <NavLink to={`/profile/${build.user.nickname}`} className="meta-build__author-name">{build.user.nickname}</NavLink>
-                                {build.user.twitch && <NavLink target="_blank" to={getSocialLink(build.user.twitch, 'twitch')}>
+                                {!build.isMeta && <NavLink to={`/profile/${build.user.nickname}`}
+                                          className="meta-build__author-name">{build.user.nickname}</NavLink>}
+                                {!build.isMeta && build.user.twitch && <NavLink target="_blank" to={getSocialLink(build.user.twitch, 'twitch')}>
                                     <img src={icons.twitchUser} alt={`${build.user.nickname} twitch`}/>
                                 </NavLink>}
+                                {build.isMeta && <span className="meta-build__author-name">{__('Warzone Meta')}</span>}
                             </div>
                             <div className="meta-build__tags">
                                 <div className="meta-build__mode">
@@ -129,6 +131,25 @@ const MetaBuildTablet = ({build, deleteHandler}: {build: IBuild, deleteHandler: 
                                                         strokeLinejoin="round"/>
                                                 </svg>
                                                 <span>{__('Удалить')}</span>
+                                            </button>
+                                        </li>
+                                        <li className="dropdown__value">
+                                            <button
+                                                onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                                                    e.preventDefault()
+                                                    e.currentTarget.parentElement?.parentElement?.parentElement?.classList.toggle('active')
+                                                    toggleIsMeta(build.id)
+                                                }}
+                                            >
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M2.5 4.99996H17.5M15.8333 4.99996V16.6666C15.8333 17.5 15 18.3333 14.1667 18.3333H5.83333C5 18.3333 4.16667 17.5 4.16667 16.6666V4.99996M6.66667 4.99996V3.33329C6.66667 2.49996 7.5 1.66663 8.33333 1.66663H11.6667C12.5 1.66663 13.3333 2.49996 13.3333 3.33329V4.99996"
+                                                        stroke="white" strokeOpacity="0.75" strokeWidth="1.5"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"/>
+                                                </svg>
+                                                <span>{build.isMeta ? __('Убрать из META') : __('Добавить в META')}</span>
                                             </button>
                                         </li>
                                     </ul>

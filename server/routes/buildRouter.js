@@ -13,6 +13,7 @@ router.post('/admin/:object/delete', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]
 router.post('/create', AuthMiddleware, BuildController.buildCreate)
 router.post('/like', AuthMiddleware, BuildController.like)
 router.post('/delete', AuthMiddleware, BuildController.buildDelete)
+router.post('/toggle-meta', CheckRoleMiddleware(["ADMIN", "SUPERADMIN"]), BuildController.buildToggleIsMeta)
 router.get('/search', BuildController.buildSearch)
 router.get('/attachment/get-all-included', BuildController.buildAttachmentGetAllIncluded)
 

@@ -75,7 +75,7 @@ const MetaBuildsPage = () => {
                             </div>}
                             <div className="side__tab-headings">
                                 { Object.entries(BuildTypes).map(([currentBuildTypeId, currentBuildType], index) => (
-                                    (currentBuildTypeId === 'all' || auth.isAuthenticated) && <button
+                                    (currentBuildTypeId !== 'own' || auth.isAuthenticated) && <button
                                         key={index}
                                         className={buildType === currentBuildType.id ? "side__tab-heading active": "side__tab-heading"}
                                         onClick={() => setBuildType(currentBuildType.id)}

@@ -51,6 +51,7 @@ export type IBuild = {
     likes: Array<number>,
     likesCount: number
     title: string,
+    isMeta: boolean,
 }
 
 export type IFriendRequest = {

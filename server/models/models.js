@@ -131,6 +131,7 @@ const Build = sequelize.define('build', {
     attachments: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: []},
     likes: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
     likesCount: {type: DataTypes.INTEGER, defaultValue: 0},
+    isMeta: {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
 

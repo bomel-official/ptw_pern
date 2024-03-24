@@ -31,13 +31,27 @@ const MetaBuildList = ({userId, s, weaponType, weapon, buildType}: {userId?: num
         } catch (e) {}
     }
 
+    const toggleIsMeta = async (buildId: number) => {
+        try {
+            const {isMeta} = await request(
+                `/api/build/toggle-meta`, 'POST', {buildId}, {
+                    Authorization: `Bearer ${auth.token}`
+                }, true)
+            setBuilds(builds.map((build: IBuild) => {
+                if (build.id !== buildId) return build;
+                build.isMeta = isMeta
+                return build
+            }))
+        } catch (e) {}
+    }
+
     useEffect(() => {
         getBuilds().catch()
     }, [userId, s, weaponType, weapon, buildType])
 
     return (
         <ul className="build__items">
-            {!loading && builds.map(build => (<MetaBuildTablet key={build.id} build={build} deleteHandler={deleteHandler}/>))}
+            {!loading && builds.map(build => (<MetaBuildTablet key={build.id} build={build} deleteHandler={deleteHandler} toggleIsMeta={toggleIsMeta}/>))}
             {loading && <Loader/>}
         </ul>
     );

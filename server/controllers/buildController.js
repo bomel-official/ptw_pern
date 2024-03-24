@@ -293,6 +293,19 @@ class BuildController {
         return res.json({message: 'Сборка успешно удалена!'})
     }
 
+    async buildToggleIsMeta(req, res, next) {
+        const {buildId} = req.body
+        try {
+            const build = await Build.findByPk(buildId)
+            build.isMeta = !build.isMeta
+            await build.save()
+            return res.json({isMeta: build.isMeta})
+        } catch (e) {
+            console.log(e)
+            return next(ApiError.badRequest('Ошибка...'))
+        }
+    }
+
     async buildSearch(req, res, next) {
         const {s, userId, weaponTypeId, weaponId, buildType} = req.query
 
@@ -300,14 +313,7 @@ class BuildController {
         if (buildType === 'admin') {
             userQuery = {
                 ...userQuery,
-                [Op.or]: [
-                    {
-                        '$user.role$': 'SUPERADMIN'
-                    },
-                    {
-                        '$user.role$': 'ADMIN'
-                    }
-                ]
+                isMeta: true
             }
         }
         if (userId) {
