@@ -44,7 +44,7 @@ const SingleTournamentTop = ({tournament, registerHTML}: {tournament: ITournamen
                                 </clipPath>
                             </defs>
                         </svg>
-                        <span>{tournament.participationPrice ? tournament.participationPrice + '€ ' + __('за участие') : __('Свободное участие')}</span>
+                        <span>{tournament.participationPrice ? tournament.participationPrice + '₽ ' + __('за участие') : __('Свободное участие')}</span>
                     </div>
                 </div>
             </div>
