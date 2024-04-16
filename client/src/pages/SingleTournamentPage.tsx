@@ -11,7 +11,7 @@ import {TournamentTabs} from "../data/SingleTournamentTabs";
 import React, {useContext, useEffect, useState} from "react";
 import {getSlotWord} from "../data/Translations";
 import TeamRegisterPopup from "../components/base/TeamRegisterPopup";
-import TournamentRating from "../components/tournament/TournamentRating";
+import TournamentRating from "../components/tournament/TournamentRating/TournamentRating";
 import {AuthContext} from "../context/AuthContext";
 
 import {useGetTournamentBySlugQuery} from '../store/playtowin/playtowin.api'

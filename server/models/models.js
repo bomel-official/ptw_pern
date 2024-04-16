@@ -105,6 +105,14 @@ const Participant = sequelize.define('participant', {
     // team: Team   ------------------ done
 })
 
+ const ParticipantRequest = sequelize.define('participant_request', {
+     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+     dataArray: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: [[]]},
+     places: {type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.FLOAT)), defaultValue: []},
+     approveUrl: {type: DataTypes.STRING, allowNull: false},
+     status: {type: DataTypes.STRING, defaultValue: 'new'},
+ })
+
 const ParticipantUser = sequelize.define('participant_user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
@@ -204,6 +212,9 @@ const Invoice = sequelize.define('invoice', {
 Participant.belongsTo(Invoice)
 Invoice.belongsTo(Participant)
 
+ParticipantRequest.belongsTo(Participant)
+Participant.hasOne(ParticipantRequest)
+
 FriendRequest.belongsTo(User, {as: 'user_from'})
 FriendRequest.belongsTo(User, {as: 'user_to'})
 
@@ -247,5 +258,6 @@ module.exports = {
     BuildAttachment,
     BuildAttachmentType,
     Question,
-    TournamentUser
+    TournamentUser,
+    ParticipantRequest
 }

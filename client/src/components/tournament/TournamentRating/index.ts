@@ -1,0 +1,1 @@
+export { TournamentRating } from './TournamentRating';

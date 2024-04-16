@@ -1,9 +1,9 @@
 import {ReactChildren} from "../../ReactTypes";
 
-export const Popup = ({children, isActive, onHide, title}: {children: ReactChildren, isActive: boolean, onHide: () => void, title: string}) => {
+export const Popup = ({children, isActive, onHide, title, width, height, overflow}: {children: ReactChildren, isActive: boolean, onHide: () => void, title: string, width?: string, height?: string, overflow?: string}) => {
     return (
         <div className={isActive ? "popup active" : "popup"}>
-            <div className="popup__wrapper">
+            <div className="popup__wrapper" style={{width: width ?? '440px', height: height ?? 'auto', display: 'flex', flexDirection: 'column', overflow: overflow ?? 'visible' }}>
                 <div className="popup__header flex">
                     <h2 className="popup__title">{title}</h2>
                     <button

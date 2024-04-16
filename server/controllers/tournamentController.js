@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError");
-const {Tournament, Participant, User, Team, ParticipantUser, TournamentUser, Invoice} = require('../models/models')
+const {Tournament, Participant, User, Team, ParticipantUser, TournamentUser, Invoice, ParticipantRequest} = require('../models/models')
 const {Op, Sequelize} = require("sequelize");
 const isUserAdmin = require("../funtions/isUserAdmin");
 const uploadImage = require("../funtions/uploadImage");
@@ -466,7 +466,8 @@ class TournamentController {
             ],
             include: [
                 {model: User, as: 'users' },
-                {model: Team}
+                {model: Team},
+                {model: ParticipantRequest},
             ]
         })
 
@@ -718,6 +719,67 @@ class TournamentController {
         participant.isPaid = !participant.isPaid
         await participant.save()
         return res.json({message: 'Статус оплаты изменён!', isOk: true})
+    }
+
+    async createParticipantRequest(req, res, next) {
+        const {participantId, dataArray: json_dataArray, places: json_places} = req.body
+        const dataArray = JSON.parse(json_dataArray)
+        const places = JSON.parse(json_places)
+
+        const {approve} = req.files || {approve: null}
+        if (!approve) {
+            return next(ApiError.badRequest('Нет подтверждающего изображения'))
+        }
+
+        const participant = await Participant.findByPk(participantId, {include: [{
+            model: User, as: 'users'
+        }]})
+
+        if (!participant || !participant.users.find((user) => user.id === req.user.id)) {
+            return next(ApiError.badRequest('Некорректный запрос'))
+        }
+
+        const tournament = await Tournament.findByPk(participant.tournamentId)
+
+        for (let j = 0; j < AMOUNT_ROUNDS; j++) {
+            for (let i = 0; i < tournament.playersInTeam; i++) {
+                if (typeof dataArray[i][j] !== 'number') {
+                    return next(ApiError.badRequest('Некорректно заполнена таблица убийств'))
+                }
+            }
+            if (places[j].length !== 2 || typeof places[j][0] !== 'number' || typeof places[j][1] !== 'number') {
+                return next(ApiError.badRequest('Некорректно заполнены места'))
+            }
+        }
+        const filename = await uploadImage(approve, 1280, 720, { fit: 'contain' })
+        const newParticipantRequest = await ParticipantRequest.create({
+            dataArray,
+            places,
+            approveUrl: filename,
+            participantId
+        })
+
+        return res.json({participantRequest: newParticipantRequest})
+    }
+
+    async changeParticipantRequestStatus(req, res, next) {
+        const {participantRequestId, status} = req.body
+        try {
+            const participantRequest = await ParticipantRequest.findByPk(participantRequestId)
+            const participant = await Participant.findByPk(participantRequest.participantId)
+            if (status === 'approved') {
+                participant.set({
+                    dataArray: participantRequest.dataArray
+                })
+                await participant.save()
+            }
+            if (status === 'discarded') {
+                await participantRequest.destroy()
+            }
+        } catch (e) {
+            return res.json({isOk: false})
+        }
+        return res.json({isOk: true})
     }
 }
 

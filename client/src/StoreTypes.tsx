@@ -139,7 +139,28 @@ export type IParticipant = {
     payMethod: string,
     roomNumber: number,
     isPaid: boolean,
-    invoiceUrl: string
+    invoiceUrl: string,
+    participant_request: IParticipantRequest
+}
+
+export type IParticipantRequest = {
+    id: number,
+    points: number,
+    dataArray: Array<Array<number>>,
+    places: Array<[number, number]>,
+    isRoundsHidden: Array<boolean>,
+    status: string,
+    participantId: number,
+    approveUrl: string,
+}
+
+export type IParticipantRequestDTO = {
+    dataArray: Array<Array<number>>,
+    places: Array<[number, number]>,
+    isRoundsHidden: Array<boolean>,
+    participantId: number,
+    approve: null | File,
+    approveFilename: string,
 }
 
 export type IQuestion = {
