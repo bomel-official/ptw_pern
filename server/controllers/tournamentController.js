@@ -759,6 +759,11 @@ class TournamentController {
             participantId
         })
 
+        participant.set({
+            dataArray: newParticipantRequest.dataArray
+        })
+        await participant.save()
+
         return res.json({participantRequest: newParticipantRequest})
     }
 

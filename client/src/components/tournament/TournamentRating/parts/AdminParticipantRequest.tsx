@@ -56,78 +56,7 @@ export const AdminParticipantRequest = ({participant, isActive, onHide, manualRe
     }
 
     return (
-        <Popup isActive={isActive} onHide={onHide} title={'Опубликовать результаты'} width="1280px" height="calc(100% - 30px)" overflow="auto">
-            <div className="rating">
-                <table>
-                    <tbody>
-                    <tr>
-                        <td className="rating__team">
-                            <div className="rating__team-flex">
-                                <div className="rating__team-images">
-                                    <img src={(participant.team && getFile(participant.team.avatar)) ? getFile(participant.team.avatar) : DefaultUserPic} alt="nickname"/>
-                                </div>
-                                <div className="rating__team-nicks">
-                                    <div className="bold flex">
-                                        <span>{participant.team ? participant.team.name : 'Команда распущена...'}</span>
-                                        <NavLink
-                                            target='_blank'
-                                            to={`https://www.multitwitch.tv/${participant.users.map((user) => user.twitch).join('/')}`}
-                                            className="multitwitch"
-                                        >
-                                            <img src={icons.video} alt="MultiTwitch"/>
-                                        </NavLink>
-                                    </div>
-                                    {participant.users && participant.users.map((reqUser) => (
-                                        <NavLink to={`/profile/${reqUser.nickname}`} className="text flex" key={`user-${reqUser.id}`}>
-                                            <img src={icons[reqUser?.platform || 'pc']} alt="User platform"/>
-                                            <img src={icons[reqUser?.device || 'km']} alt="User device"/>
-                                            <span>{reqUser.nickname}</span>
-                                        </NavLink>
-                                    ))}
-                                </div>
-                            </div>
-                        </td>
-                        {roundsInfo}
-                        <td>
-                            <div
-                                className="bold"
-                            >
-                                {amountPoints} {__('очков')}
-                            </div>
-                            {participant.users.map((reqUser, index) => (
-                                <div className="bold"
-                                     key={`killAmount-${reqUser.id}`}
-                                >
-                                    {killAmounts[index]}
-                                </div>
-                            ))}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div className="flex mt24" style={{flexDirection: 'column', alignItems: 'stretch', gap: '8px'}}>
-                {!loading && <div className="flex" style={{gap: '8px'}}>
-                    <button className="button-tl-accent corner-margin" onClick={async () => {
-                        const res = await approveRequest()
-                        if (res) {
-                            onHide()
-                            manualRefetch()
-                        }
-                    }}>{__('Подтвердить')}</button>
-                    <button className="button-br-gray corner-margin" onClick={async () => {
-                        const res = await discardRequest()
-                        if (res) {
-                            onHide()
-                            manualRefetch()
-                        }
-                    }}>{__('Отменить')}</button>
-                </div>}
-                {loading && <Loader/>}
-                {messageOptions.text && <div className={`${messageOptions.status}-message mb24`}>
-                    {__(messageOptions.text)}
-                </div>}
-            </div>
+        <Popup isActive={isActive} onHide={onHide} title={'Подтвержение результатов'} width="1280px" height="calc(100% - 30px)" overflow="auto">
             <div className="image-wrapper mt24" style={{
                 flexGrow: 1
             }}>

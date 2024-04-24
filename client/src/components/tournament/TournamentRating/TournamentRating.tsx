@@ -176,14 +176,11 @@ export const TournamentRating = ({tournament, type, refetch}: {
                                                     setIsAdminParticipantRequestActive(true)
                                                 }}
                                             >
-                                                {__('Смотреть результаты')}
+                                                {__('Смотреть подтверждение')}
                                             </button>
                                         </>}
                                         {!isUserAdmin(user) && isUserInParticipant(participant, user) && participant.participant_request?.status === 'new' && <>
-                                            <div className="text" style={{marginTop: '12px'}}>{__('Результаты на рассмотрении')}</div>
-                                        </>}
-                                        {!isUserAdmin(user) && isUserInParticipant(participant, user) && participant.participant_request?.status === 'approved' && <>
-                                            <div className="text" style={{marginTop: '12px'}}>{__('Результаты подтверждены')}</div>
+                                            <div className="text" style={{marginTop: '12px'}}>{__('Результаты отправлены')}</div>
                                         </>}
                                         {isUserAdmin(user) && <div className={`${participant.isPaid ? 'pos' : 'neg'}-message mt12`}>
                                             {__(participant.isPaid ? 'Оплачено' : 'Не оплачено')}
