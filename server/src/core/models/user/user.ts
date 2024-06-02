@@ -1,5 +1,4 @@
 import { Device, Platform, UserRole } from "@constants";
-import { Build, Participant, Team, Tournament } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { User } from "./types";
@@ -37,15 +36,9 @@ User.init( {
     statsAverageKills: { type: DataTypes.FLOAT, defaultValue: 0 },
     statsAmountKills: { type: DataTypes.FLOAT, defaultValue: 0 },
 }, {
-    tableName: "user",
+    freezeTableName: true,
+    tableName: "users",
     sequelize: Database
 } );
-
-User.hasMany( Build );
-User.hasMany( Team, { as: "own_teams" } );
-User.belongsToMany( Team, { as: "teams", through: "team_request" } );
-User.belongsToMany( Participant, { through: "participant_user" } );
-User.belongsToMany( Tournament,
-    { as: "tournaments", through: "tournament_user" } );
 
 export { User };

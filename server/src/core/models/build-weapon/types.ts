@@ -1,5 +1,4 @@
 import { Game } from "@constants";
-import { BuildWeaponType } from "@core";
 import {
     CreationOptional,
     ForeignKey,
@@ -8,6 +7,7 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
+import { BuildWeaponType } from "../build-weapon-type";
 
 export class BuildWeapon
     extends Model<InferAttributes<BuildWeapon>, InferCreationAttributes<BuildWeapon>> {

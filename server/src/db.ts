@@ -1,11 +1,11 @@
-import { getEnv } from "./core/libs";
+import { getEnv } from "@libs";
 
 const { Sequelize } = require( "sequelize" );
 
 export const Database = new Sequelize(
     getEnv( process.env.DB_NAME ),
     getEnv( process.env.DB_USER ),
-    getEnv( process.env.DB_PASSWORD ),
+    getEnv( process.env.DB_PASSWORD) ,
     {
         dialect: "postgres",
         host: getEnv( process.env.DB_HOST ),

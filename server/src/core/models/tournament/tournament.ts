@@ -1,5 +1,4 @@
 import { TournamentType } from "@constants";
-import { Participant, User } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { Tournament } from "./types";
@@ -35,11 +34,9 @@ Tournament.init( {
         type: DataTypes.ARRAY( DataTypes.INTEGER ), defaultValue: []
     }
 }, {
-    modelName: "tournament",
+    freezeTableName: true,
+    modelName: "tournaments",
     sequelize: Database
 } );
-
-Tournament.hasMany( Participant, { as: "participants" } );
-Tournament.belongsToMany( User, { as: "players", through: "tournament_user" } );
 
 export { Tournament };

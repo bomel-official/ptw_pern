@@ -1,4 +1,3 @@
-import { Invoice, ParticipantRequest, Team, Tournament, User } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { Participant } from "./types";
@@ -23,14 +22,9 @@ Participant.init( {
     isPaid: { type: DataTypes.BOOLEAN, defaultValue: false },
     priority: { type: DataTypes.INTEGER, defaultValue: 0 },
 }, {
-    modelName: "participant",
+    freezeTableName: true,
+    modelName: "participants",
     sequelize: Database
 } );
-
-Participant.belongsToMany( User, { through: "participant_user" } );
-Participant.belongsTo( Team );
-Participant.belongsTo( Tournament );
-Participant.hasOne( ParticipantRequest );
-Participant.belongsTo( Invoice );
 
 export { Participant };

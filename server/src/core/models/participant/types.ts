@@ -1,4 +1,3 @@
-import { Invoice, Team, Tournament, User } from "@core";
 import {
     CreationOptional,
     ForeignKey,
@@ -8,6 +7,10 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
+import { Invoice } from "../invoice";
+import { Team } from "../team";
+import { Tournament } from "../tournament";
+import { User } from "../user";
 
 export class Participant
     extends Model<InferAttributes<Participant>, InferCreationAttributes<Participant, { omit: "invoice" | "team" | "tournament" | "users" }>> {

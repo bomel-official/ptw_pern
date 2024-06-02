@@ -1,4 +1,3 @@
-import { Participant } from "@core";
 import {
     CreationOptional,
     ForeignKey,
@@ -7,6 +6,7 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
+import { Participant } from "../participant";
 
 export class ParticipantRequest
     extends Model<InferAttributes<ParticipantRequest>, InferCreationAttributes<ParticipantRequest>> {

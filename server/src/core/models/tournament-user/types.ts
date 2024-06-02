@@ -1,10 +1,11 @@
-import { Tournament, User } from "@core";
 import {
     ForeignKey,
     InferAttributes,
     InferCreationAttributes,
     Model
 } from "sequelize";
+import { Tournament } from "../tournament";
+import { User } from "../user";
 
 export class TournamentUser extends Model<InferAttributes<TournamentUser>,
     InferCreationAttributes<TournamentUser>> {

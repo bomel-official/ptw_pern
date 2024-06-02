@@ -1,4 +1,3 @@
-import { Participant } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { Invoice } from "./types";
@@ -12,10 +11,9 @@ Invoice.init( {
     status: { type: DataTypes.STRING, defaultValue: "created" },
     expired: { type: DataTypes.DATE, allowNull: true }
 }, {
-    modelName: "invoice",
+    freezeTableName: true,
+    modelName: "invoices",
     sequelize: Database
 } );
-
-Invoice.belongsTo( Participant );
 
 export { Invoice };

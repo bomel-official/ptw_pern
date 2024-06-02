@@ -1,5 +1,5 @@
 import { Game, TournamentType } from "@constants";
-import { User } from "@core";
+import { User } from "../user";
 import {
     CreationOptional,
     HasManyRemoveAssociationMixin,

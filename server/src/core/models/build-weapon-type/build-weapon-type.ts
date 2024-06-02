@@ -1,4 +1,3 @@
-import { Build, BuildWeapon } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { BuildWeaponType } from "./types";
@@ -9,11 +8,9 @@ BuildWeaponType.init(
         title_RU: { type: DataTypes.STRING, allowNull: true },
         title_EU: { type: DataTypes.STRING, allowNull: true },
     }, {
-        modelName: "build_weapon_type",
+        freezeTableName: true,
+        modelName: "build_weapon_types",
         sequelize: Database
     } );
-
-BuildWeaponType.hasMany( BuildWeapon );
-BuildWeaponType.hasMany( Build );
 
 export { BuildWeaponType };

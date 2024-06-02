@@ -1,4 +1,3 @@
-import { Participant, User } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { Team } from "./types";
@@ -9,12 +8,9 @@ Team.init( {
     name: { type: DataTypes.STRING, allowNull: true },
     avatar: { type: DataTypes.STRING, allowNull: true },
 }, {
-    modelName: "team",
+    freezeTableName: true,
+    modelName: "teams",
     sequelize: Database
 } );
-
-Team.belongsTo( User, { as: "capitan" } );
-Team.belongsToMany( User, { as: "players", through: "team_request" } );
-Team.hasOne( Participant );
 
 export { Team };

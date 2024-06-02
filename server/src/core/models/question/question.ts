@@ -11,7 +11,8 @@ Question.init( {
     answer_RU: { type: DataTypes.TEXT, allowNull: true },
     answer_EU: { type: DataTypes.TEXT, allowNull: true },
 }, {
-    modelName: "question",
+    freezeTableName: true,
+    modelName: "questions",
     sequelize: Database
 } );
 

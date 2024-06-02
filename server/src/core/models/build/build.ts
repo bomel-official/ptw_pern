@@ -1,4 +1,3 @@
-import { BuildWeapon, BuildWeaponType, User } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { Build } from "./types";
@@ -15,12 +14,9 @@ Build.init( {
     likesCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     isMeta: { type: DataTypes.BOOLEAN, defaultValue: false },
 }, {
-    modelName: "build",
+    freezeTableName: true,
+    modelName: "builds",
     sequelize: Database
 } );
-
-Build.belongsTo( User );
-Build.belongsTo( BuildWeaponType );
-Build.belongsTo( BuildWeapon );
 
 export { Build };

@@ -8,7 +8,8 @@ BuildMode.init( {
     title_RU: { type: DataTypes.STRING, allowNull: true },
     title_EU: { type: DataTypes.STRING, allowNull: true },
 }, {
-    modelName: "build_mode",
+    freezeTableName: true,
+    modelName: "build_modes",
     sequelize: Database
 } );
 

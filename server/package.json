@@ -4,12 +4,11 @@
   "description": "",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc --outDir dist",
     "dev": "concurrently --kill-others \"npm run dev:tsc\" \"npm run dev:nodemon\"",
     "dev:tsc": "tsc --watch",
     "dev:nodemon": "nodemon -p tsconfig.json ./src/index.ts",
     "dev:ts-node": "npx ts-node -p tsconfig.json -r tsconfig-paths/register src/index.ts",
-    "prod": "node dist/index.js",
+    "prod": "tsc && node -r tsconfig-paths/register ./dist/index.js",
     "lint": "npx eslint"
   },
   "author": "",
@@ -48,13 +47,13 @@
     "typescript": "^5.4.5"
   },
   "_moduleAliases": {
-    "@constants": "core/constants",
-    "@controllers": "controllers",
-    "@core": "core",
-    "@db": "db",
-    "@error": "error",
-    "@libs": "core/libs",
-    "@middleware": "middleware",
-    "@types": "core/types"
+    "@constants": "dist/core/constants",
+    "@controllers": "dist/controllers",
+    "@core": "dist/core",
+    "@db": "dist/db",
+    "@error": "dist/error",
+    "@libs": "dist/core/libs",
+    "@middleware": "dist/middleware",
+    "@types": "dist/core/types"
   }
 }

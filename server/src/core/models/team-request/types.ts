@@ -5,7 +5,7 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
-import { Team } from "@core";
+import { Team } from "../team";
 
 export class TeamRequest
     extends Model<InferAttributes<TeamRequest>, InferCreationAttributes<TeamRequest>> {

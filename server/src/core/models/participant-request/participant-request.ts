@@ -1,4 +1,3 @@
-import { Participant } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { ParticipantRequest } from "./types";
@@ -16,10 +15,9 @@ ParticipantRequest.init( {
     approveUrl: { type: DataTypes.STRING, allowNull: false },
     status: { type: DataTypes.STRING, defaultValue: "new" },
 }, {
-    modelName: "participant_request",
+    freezeTableName: true,
+    modelName: "participant_requests",
     sequelize: Database
 } );
-
-ParticipantRequest.belongsTo( Participant );
 
 export { ParticipantRequest };

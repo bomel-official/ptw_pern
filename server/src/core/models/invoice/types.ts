@@ -1,4 +1,4 @@
-import { Participant } from "@core";
+import { Participant } from "../participant";
 import {
     CreationOptional,
     ForeignKey,

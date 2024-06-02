@@ -1,4 +1,3 @@
-import { User } from "@core";
 import {
     CreationOptional,
     ForeignKey,
@@ -8,6 +7,7 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
+import { User } from "../user";
 
 export class Team
     extends Model<InferAttributes<Team, { omit: "capitan" | "players" }>,

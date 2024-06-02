@@ -5,7 +5,8 @@ import { TeamRequest } from "./types";
 TeamRequest.init( {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 }, {
-    modelName: "team_request",
+    freezeTableName: true,
+    modelName: "team_requests",
     sequelize: Database
 } );
 

@@ -1,4 +1,3 @@
-import { BuildAttachmentType } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { BuildAttachment } from "./types";
@@ -10,10 +9,9 @@ BuildAttachment.init( {
     title_EU: { type: DataTypes.STRING, allowNull: true },
     image: { type: DataTypes.STRING, allowNull: true },
 }, {
-    modelName: "build_attachment",
+    freezeTableName: true,
+    modelName: "build_attachments",
     sequelize: Database
 } );
-
-BuildAttachment.belongsTo( BuildAttachmentType );
 
 export { BuildAttachment };

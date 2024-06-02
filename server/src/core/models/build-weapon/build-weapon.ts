@@ -1,4 +1,3 @@
-import { Build, BuildWeaponType } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { BuildWeapon } from "./types";
@@ -13,11 +12,9 @@ BuildWeapon.init( {
         type: DataTypes.ARRAY( DataTypes.INTEGER ), defaultValue: []
     }
 }, {
-    modelName: "build_weapon",
+    freezeTableName: true,
+    modelName: "build_weapons",
     sequelize: Database
 } );
-
-BuildWeapon.belongsTo( BuildWeaponType );
-BuildWeapon.hasMany( Build );
 
 export { BuildWeapon };

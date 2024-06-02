@@ -1,4 +1,4 @@
-import { JWTUserData } from "./../core";
+import { JWTUserData } from "@core";
 
 declare global {
     namespace Express {

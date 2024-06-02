@@ -1,15 +1,22 @@
-import "@types";
+require( "dotenv" ).config();
+import "module-alias/register";
+import "tsconfig-paths/register";
+import { JWTUserData } from "@core";
+import { Database } from "@db";
+import { getEnv } from "@libs";
+import { errorHandlingMiddleware } from "@middleware";
 import cors from "cors";
 import express from "express";
 import fileUpload from "express-fileupload";
-import "module-alias/register";
-import "tsconfig-paths/register";
-import { getEnv } from "./core/libs";
-import { Database } from "./db";
-import { errorHandlingMiddleware } from "./middleware";
 import { router } from "./routes";
 
-require( "dotenv" ).config();
+declare global {
+    namespace Express {
+        export interface Request {
+            user?: JWTUserData,
+        }
+    }
+}
 
 const PORT = getEnv( process.env.PORT ) || 5000;
 const app = express();

@@ -1,4 +1,3 @@
-import { ProductCat } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { Product } from "./types";
@@ -10,10 +9,9 @@ Product.init( {
     price: { type: DataTypes.FLOAT, allowNull: false },
     description: { type: DataTypes.TEXT, allowNull: true },
 }, {
-    modelName: "product",
+    freezeTableName: true,
+    modelName: "products",
     sequelize: Database
 } );
-
-Product.belongsTo( ProductCat );
 
 export { Product };

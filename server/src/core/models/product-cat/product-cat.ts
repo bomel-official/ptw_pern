@@ -1,4 +1,3 @@
-import { Product } from "@core";
 import { Database } from "@db";
 import { DataTypes } from "sequelize";
 import { ProductCat } from "./types";
@@ -8,10 +7,9 @@ ProductCat.init( {
     title: { type: DataTypes.STRING, allowNull: false },
     slug: { type: DataTypes.STRING, allowNull: false }
 }, {
-    modelName: "product_cat",
+    freezeTableName: true,
+    modelName: "product_cats",
     sequelize: Database
 } );
-
-ProductCat.hasMany( Product );
 
 export { ProductCat };

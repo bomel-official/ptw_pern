@@ -1,5 +1,4 @@
 import { Device, Platform, UserRole } from "@constants";
-import { Team } from "@core";
 import {
     CreationOptional,
     HasManyAddAssociationMixin,
@@ -8,6 +7,7 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
+import { Team } from "../team";
 
 export class User
     extends Model<InferAttributes<User, { omit: "own_teams" }>,

@@ -5,7 +5,8 @@ import { ParticipantUser } from "./types";
 ParticipantUser.init( {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 }, {
-    modelName: "participant_user",
+    freezeTableName: true,
+    modelName: "participant_users",
     sequelize: Database
 } );
 

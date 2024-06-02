@@ -5,7 +5,8 @@ import { TournamentUser } from "./types";
 TournamentUser.init( {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 }, {
-    modelName: "tournament_user",
+    freezeTableName: true,
+    modelName: "tournament_users",
     sequelize: Database
 } );
 

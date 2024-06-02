@@ -1,4 +1,3 @@
-import { BuildAttachment } from "@core";
 import {
     CreationOptional,
     ForeignKey,
@@ -7,6 +6,7 @@ import {
     Model,
     NonAttribute
 } from "sequelize";
+import { BuildAttachment } from "../build-attachment";
 
 export class BuildAttachmentType
     extends Model<InferAttributes<BuildAttachmentType>, InferCreationAttributes<BuildAttachmentType>> {

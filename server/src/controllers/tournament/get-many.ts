@@ -21,18 +21,6 @@ export async function getMany( req: Request, res: Response,
         };
     }
 
-    let includeUser = {
-        model: User,
-        as: "players",
-        attributes: [ "id" ],
-        where: {}
-    };
-    if ( userId ) {
-        includeUser.where = {
-            id: userId
-        };
-    }
-
     const rows = await Tournament.findAll( {
         where: {
             [Op.and]: [
@@ -42,7 +30,14 @@ export async function getMany( req: Request, res: Response,
             ]
         },
         order: orderType,
-        include: [ includeUser ],
+        include: [ {
+            model: User,
+            as: "players",
+            attributes: [ "id" ],
+            where: userId ? {
+                id: userId
+            } : {}
+        } ],
         limit: typeof numberPosts === "string" && numberPosts !== "-1" ?
             parseInt( numberPosts ) : -1,
     } );

@@ -1,10 +1,11 @@
-import { Participant, User } from "@core";
 import {
     ForeignKey,
     InferAttributes,
     InferCreationAttributes,
     Model
 } from "sequelize";
+import { Participant } from "../participant";
+import { User } from "../user";
 
 export class ParticipantUser
     extends Model<InferAttributes<ParticipantUser>, InferCreationAttributes<ParticipantUser>> {
