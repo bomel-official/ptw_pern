@@ -1,0 +1,58 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es6"],
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "outDir": "tmp",
+    "rootDir": "src",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@constants": [
+        "core/constants"
+      ],
+      "@controllers": [
+        "controllers"
+      ],
+      "@core": [
+        "core"
+      ],
+      "@db": [
+        "db"
+      ],
+      "@error": [
+        "error"
+      ],
+      "@libs": [
+        "core/libs"
+      ],
+      "@middleware": [
+        "middleware"
+      ],
+      "@types": [
+        "core/types"
+      ]
+    }
+  },
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  },
+  "include": [
+    "./src/**/*",
+    "./src/@types/**/*"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./**/*.spec.ts"
+  ]
+}
