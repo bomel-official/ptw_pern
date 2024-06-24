@@ -1,33 +1,32 @@
 import {
-    BuildAttachment,
-    BuildAttachmentType,
-    BuildWeapon,
-    BuildWeaponType
+    BuildAttachmentRepository,
+    BuildAttachmentTypeRepository,
+    BuildWeaponRepository,
+    BuildWeaponTypeRepository
 } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { parseModelWhere } from "../libs";
 
-export async function getOne( req: Request, res: Response,
-                              next: NextFunction ) {
+export async function getOne( req: Request, res: Response, next: NextFunction ) {
     const { object } = req.params;
 
     try {
         if ( object === "weapon-type" ) {
-            const item = await BuildWeaponType.findOne(
-                parseModelWhere( BuildWeaponType, req ) );
+            const item = await BuildWeaponTypeRepository.findOne(
+                parseModelWhere( BuildWeaponTypeRepository, req ) );
             return res.json( { item } );
         } else if ( object === "weapon" ) {
-            const item = await BuildWeapon.findOne(
-                parseModelWhere( BuildWeapon, req ) );
+            const item = await BuildWeaponRepository.findOne(
+                parseModelWhere( BuildWeaponRepository, req ) );
             return res.json( { item } );
         } else if ( object === "attachment" ) {
-            const item = await BuildAttachment.findOne(
-                parseModelWhere( BuildAttachment, req ) );
+            const item = await BuildAttachmentRepository.findOne(
+                parseModelWhere( BuildAttachmentRepository, req ) );
             return res.json( { item } );
         } else if ( object === "attachment-type" ) {
-            const item = await BuildAttachmentType.findOne(
-                parseModelWhere( BuildAttachmentType, req ) );
+            const item = await BuildAttachmentTypeRepository.findOne(
+                parseModelWhere( BuildAttachmentTypeRepository, req ) );
             return res.json( { item } );
         }
     } catch ( e ) {

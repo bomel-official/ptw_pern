@@ -1,11 +1,10 @@
-import { Tournament } from "@core";
+import { TournamentRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
 import { uploadImage } from "../libs";
 
-export async function putOne( req: Request, res: Response,
-                              next: NextFunction ) {
+export async function putOne( req: Request, res: Response, next: NextFunction ) {
     const previewImg = req.files?.previewImg;
     const {
         title_RU,
@@ -37,7 +36,7 @@ export async function putOne( req: Request, res: Response,
         title_EU.toString().toLowerCase().trim().replace( / /g, "-" )
             .replace( /[^\w-]+/g, "" );
 
-    const slugTournament = await Tournament.findOne( {
+    const slugTournament = await TournamentRepository.findOne( {
         where: {
             [Op.and]: [
                 {
@@ -52,16 +51,14 @@ export async function putOne( req: Request, res: Response,
         }
     } );
     if ( slugTournament ) {
-        return next(
-            ApiError.badRequest( "Турнир с такой ссылкой уже существует" ) );
+        return next( ApiError.badRequest( "Турнир с такой ссылкой уже существует" ) );
     }
 
-    const tournament = await Tournament.findOne( {
+    const tournament = await TournamentRepository.findOne( {
         where: { id: req.body.id }
     } );
     if ( !tournament ) {
-        return next(
-            ApiError.badRequest( "Турнир не найден" ) );
+        return next( ApiError.badRequest( "Турнир не найден" ) );
     }
 
     tournament.set( {

@@ -1,1 +1,1 @@
-export { ParticipantRequest } from "./participant-request";
+export { ParticipantRequest } from "./types";

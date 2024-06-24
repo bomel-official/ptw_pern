@@ -66,7 +66,7 @@ export const useParticipantRequest = (participants: Array<IParticipant>, user: I
         })
         if (participant && user && !participantRequest) {
             const dataArray = [];
-            for (let _i = 0; _i < participant.users.length; _i++) {
+            for ( const item of participant.users ) {
                 const dataArrayItem = []
                 for (let _j = 0; _j < AMOUNT_ROUNDS; _j++) {
                     dataArrayItem.push(0)

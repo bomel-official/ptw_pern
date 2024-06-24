@@ -1,17 +1,16 @@
-import { User } from "@core";
+import { UserRepository } from "@core";
 import { ApiError } from "@error";
 import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
 import { genJwt } from "../libs";
 
-export async function login( req: Request, res: Response,
-                             next: NextFunction ) {
+export async function login( req: Request, res: Response, next: NextFunction ) {
     const { email, password } = req.body;
-    const nicknameUser = await User.findOne( {
+    const nicknameUser = await UserRepository.findOne( {
         where: { nickname: email },
         attributes: [ "email", "password", "id", "role", "nickname" ]
     } );
-    const emailUser = await User.findOne( {
+    const emailUser = await UserRepository.findOne( {
         where: { email },
         attributes: [ "email", "password", "id", "role", "nickname" ]
     } );

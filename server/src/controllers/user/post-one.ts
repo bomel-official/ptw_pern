@@ -1,11 +1,10 @@
-import { User } from "@core";
+import { UserRepository } from "@core";
 import { ApiError } from "@error";
 import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
 import { genJwt } from "../libs";
 
-export async function postOne( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function postOne( req: Request, res: Response, next: NextFunction ) {
     const { email, password, repeatPassword, nickname } = req.body;
     if ( !nickname ) {
         return next( ApiError.badRequest( "Поле никнейм не заполнено" ) );
@@ -25,7 +24,7 @@ export async function postOne( req: Request, res: Response,
         return next( ApiError.badRequest( "Некоректный email" ) );
     }
 
-    const emailCandidate = await User.findOne( {
+    const emailCandidate = await UserRepository.findOne( {
         where: { email: email.trim() },
         attributes: [ "id" ]
     } );
@@ -35,13 +34,12 @@ export async function postOne( req: Request, res: Response,
                 "Пользователь с таким email уже существует" ) );
     }
 
-    const nicknameCandidate = await User.findOne( {
+    const nicknameCandidate = await UserRepository.findOne( {
         where: { nickname: nickname.trim() },
         attributes: [ "id" ]
     } );
     if ( nicknameCandidate ) {
-        return next( ApiError.badRequest(
-            "Пользователь с таким никнеймом уже существует" ) );
+        return next( ApiError.badRequest( "Пользователь с таким никнеймом уже существует" ) );
     }
 
     if ( password !== repeatPassword ) {
@@ -49,7 +47,7 @@ export async function postOne( req: Request, res: Response,
     }
 
     const hashPassword = await bcrypt.hash( password, 5 );
-    const newUser = await User.create( {
+    const newUser = await UserRepository.create( {
         email: email.trim(),
         password: hashPassword,
         nickname: nickname.trim()

@@ -1,9 +1,8 @@
-import { Tournament, User } from "@core";
+import { TournamentRepository, UserRepository } from "@core";
 import { NextFunction, Request, Response } from "express";
 import { Op, Sequelize, WhereOptions } from "sequelize";
 
-export async function getMany( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function getMany( req: Request, res: Response, next: NextFunction ) {
     const { status, numberPosts, game, type, userId } = req.query;
 
     let whereDateEnd: WhereOptions = {};
@@ -21,7 +20,7 @@ export async function getMany( req: Request, res: Response,
         };
     }
 
-    const rows = await Tournament.findAll( {
+    const rows = await TournamentRepository.findAll( {
         where: {
             [Op.and]: [
                 whereDateEnd,
@@ -31,7 +30,7 @@ export async function getMany( req: Request, res: Response,
         },
         order: orderType,
         include: [ {
-            model: User,
+            model: UserRepository,
             as: "players",
             attributes: [ "id" ],
             where: userId ? {

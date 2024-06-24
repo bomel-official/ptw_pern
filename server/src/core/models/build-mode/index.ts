@@ -1,1 +1,1 @@
-export { BuildMode } from "./build-mode";
+export { BuildMode } from "./types";

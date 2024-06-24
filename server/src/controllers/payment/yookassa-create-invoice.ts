@@ -1,20 +1,26 @@
-import { Invoice, Participant, Tournament } from "@core";
+import {
+    Invoice,
+    InvoiceRepository,
+    Participant,
+    ParticipantRepository,
+    TournamentRepository
+} from "@core";
 import { getEnv } from "@libs";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 export async function yookassaCreateInvoice( participantId: number ): Promise<{ invoice: Invoice, participant: Participant }> {
-    const participant = await Participant.findByPk( participantId );
+    const participant = await ParticipantRepository.findByPk( participantId );
     if ( !participant ) {
         throw new Error( "Ошибка платёжной системы" );
     }
 
-    const tournament = await Tournament.findByPk( participant.tournamentId );
+    const tournament = await TournamentRepository.findByPk( participant.tournamentId );
     if ( !tournament ) {
         throw new Error( "Ошибка платёжной системы" );
     }
 
-    const newInvoice = await Invoice.create( {
+    const newInvoice = await InvoiceRepository.create( {
         amount: tournament.participationPrice,
         currency: "RUB",
     } );

@@ -1,20 +1,19 @@
-import { Team, TeamRequest, User } from "@core";
+import { TeamRepository, TeamRequestRepository, UserRepository } from "@core";
 import { NextFunction, Request, Response } from "express";
 import { WhereOptions } from "sequelize";
 
-export async function getMany( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function getMany( req: Request, res: Response, next: NextFunction ) {
     const { type, userId } = req.query;
     let where: WhereOptions = {};
 
     if ( userId && type === "own" ) {
         where = {
-            userId: userId
+            capitanId: userId
         };
     }
 
-    if ( userId && typeof userId === 'string' && type === "part" ) {
-        const teamReqs = await TeamRequest.findAll( { where: { userId } as WhereOptions } );
+    if ( userId && typeof userId === "string" && type === "part" ) {
+        const teamReqs = await TeamRequestRepository.findAll( { where: { userId } } );
         const teamIds: number[] = [];
         for ( const item of teamReqs ) {
             teamIds.push( item.teamId );
@@ -23,16 +22,18 @@ export async function getMany( req: Request, res: Response,
             id: teamIds
         };
     }
-    const rows = await Team.findAll( {
+    const rows = await TeamRepository.findAll( {
         where,
         include: [
             {
-                model: User,
-                as: "players"
+                model: UserRepository,
+                association: "players",
+                as: "players",
             },
             {
-                model: User,
-                association: "capitan"
+                model: UserRepository,
+                as: "capitan",
+                foreignKey: "capitanId"
             },
         ]
     } );

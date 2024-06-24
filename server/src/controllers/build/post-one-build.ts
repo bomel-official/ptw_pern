@@ -1,10 +1,9 @@
 import { Game } from "@constants";
-import { Build, CV, generateValidator, isError } from "@core";
+import { BuildRepository, CV, generateValidator, isError } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 
-export async function postOneBuild( req: Request, res: Response,
-                                    next: NextFunction ) {
+export async function postOneBuild( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
             weaponTypeId: new CV( req.body.weaponTypeId,
@@ -20,11 +19,11 @@ export async function postOneBuild( req: Request, res: Response,
                 .included( Object.values( Game ) as Game[] ).val,
             attachments: new CV( req.body.attachments,
                 { label: "attachments" } ).array(
-                (attachment => new CV( attachment ).object((att) => ({
-                    attachment: new CV(att.attachment).number().val,
-                    attachmentType: new CV(att.attachmentType).number().val,
-                    range: new CV(att.range).array((rangeItem => new CV(rangeItem).number().val)).val,
-                })).val) ).val
+                (attachment => new CV( attachment ).object( ( att ) => ({
+                    attachment: new CV( att.attachment ).number().val,
+                    attachmentType: new CV( att.attachmentType ).number().val,
+                    range: new CV( att.range ).array( (rangeItem => new CV( rangeItem ).number().val) ).val,
+                }) ).val) ).val
         }) );
     if ( isError( validated ) ) {
         return validated.errorObject;
@@ -44,7 +43,7 @@ export async function postOneBuild( req: Request, res: Response,
     }
 
     try {
-        const newItem = await Build.create( {
+        const newItem = await BuildRepository.create( {
             title,
             userId: req.user.id,
             gameVersion,

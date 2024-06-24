@@ -1,11 +1,10 @@
-import { CV, isError, Question } from "@core";
+import { CV, generateValidator, isError, QuestionRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
-import { generateValidator } from "@core";
 
 export async function postPutOne( req: Request, res: Response,
                                   next: NextFunction ) {
-    const validated = generateValidator(() => ({
+    const validated = generateValidator( () => ({
         id: new CV( req.body.id, { label: "id" } ).optional().number().val,
         question_EU: new CV( req.body.question_EU,
             { label: "question_EU" } ).string().val,
@@ -15,7 +14,7 @@ export async function postPutOne( req: Request, res: Response,
             { label: "answer_RU" } ).string().val,
         answer_EU: new CV( req.body.answer_EU,
             { label: "answer_EU" } ).string().val,
-    }));
+    }) );
     if ( isError( validated ) ) {
         return next( validated.errorObject );
     }
@@ -24,7 +23,7 @@ export async function postPutOne( req: Request, res: Response,
     } = validated.data;
 
     if ( id ) { // Edit
-        const item = await Question.findByPk( id );
+        const item = await QuestionRepository.findByPk( id );
         if ( !item ) {
             return next( ApiError.badRequest( "Запись не найдена" ) );
         }
@@ -39,7 +38,7 @@ export async function postPutOne( req: Request, res: Response,
 
         res.json( { message: "Вопрос обновлён!" } );
     } else { // Create
-        const newItem = await Question.create( {
+        const newItem = await QuestionRepository.create( {
             question_RU,
             question_EU,
             answer_RU,

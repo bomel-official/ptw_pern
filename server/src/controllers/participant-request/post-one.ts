@@ -1,20 +1,24 @@
 import { AMOUNT_ROUNDS } from "@constants";
-import { Participant, ParticipantRequest, Tournament, User } from "@core";
+import {
+    ParticipantRepository,
+    ParticipantRequestRepository,
+    TournamentRepository,
+    UserRepository
+} from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { postOneValidate } from "./post-one-validate";
 
-export async function postOne( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function postOne( req: Request, res: Response, next: NextFunction ) {
     const validated = await postOneValidate( req );
     if ( validated instanceof Error ) {
         return next( validated );
     }
     const { participantId, dataArray, places, reqUser, filename } = validated;
 
-    const participant = await Participant.findByPk( participantId, {
+    const participant = await ParticipantRepository.findByPk( participantId, {
         include: [ {
-            model: User, as: "users"
+            model: UserRepository, as: "users"
         } ]
     } );
 
@@ -23,7 +27,7 @@ export async function postOne( req: Request, res: Response,
         return next( ApiError.badRequest( "Некорректный запрос" ) );
     }
 
-    const tournament = await Tournament.findByPk( participant.tournamentId );
+    const tournament = await TournamentRepository.findByPk( participant.tournamentId );
     if ( !tournament ) {
         return next( ApiError.badRequest( "Турнир не найден" ) );
     }
@@ -40,7 +44,7 @@ export async function postOne( req: Request, res: Response,
             return next( ApiError.badRequest( "Некорректно заполнены места" ) );
         }
     }
-    const newParticipantRequest = await ParticipantRequest.create( {
+    const newParticipantRequest = await ParticipantRequestRepository.create( {
         dataArray,
         places,
         approveUrl: filename,

@@ -1,17 +1,17 @@
-import { Game } from "@constants";
 import {
-    Build,
-    BuildWeapon,
-    BuildWeaponType, CV,
-    generateValidator, isError,
-    User
+    BuildRepository,
+    BuildWeaponRepository,
+    BuildWeaponTypeRepository,
+    CV,
+    generateValidator,
+    isError,
+    UserRepository
 } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
 
-export async function getManyBuild( req: Request, res: Response,
-                                    next: NextFunction ) {
+export async function getManyBuild( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
             s: new CV( req.body.id, { label: "s" } ).string().val,
@@ -47,7 +47,7 @@ export async function getManyBuild( req: Request, res: Response,
     }
 
     try {
-        const { rows: items } = await Build.findAndCountAll( {
+        const { rows: items } = await BuildRepository.findAndCountAll( {
             where: {
                 [Op.and]: [
                     s ? {
@@ -81,15 +81,15 @@ export async function getManyBuild( req: Request, res: Response,
             },
             include: [
                 {
-                    model: User,
+                    model: UserRepository,
                     as: "user"
                 },
                 {
-                    model: BuildWeapon,
+                    model: BuildWeaponRepository,
                     as: "build_weapon"
                 },
                 {
-                    model: BuildWeaponType,
+                    model: BuildWeaponTypeRepository,
                     as: "build_weapon_type"
                 }
             ],

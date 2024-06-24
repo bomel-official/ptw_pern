@@ -4,9 +4,9 @@
   "description": "",
   "type": "commonjs",
   "scripts": {
-    "dev": "concurrently --kill-others \"npm run dev:tsc\" \"npm run dev:nodemon\"",
+    "dev": "tsc && concurrently --kill-others \"npm run dev:tsc\" \"npm run dev:nodemon\"",
     "dev:tsc": "tsc --watch",
-    "dev:nodemon": "nodemon -p tsconfig.json ./src/index.ts",
+    "dev:nodemon": "npx nodemon dist/index.js",
     "dev:ts-node": "npx ts-node -p tsconfig.json -r tsconfig-paths/register src/index.ts",
     "prod": "tsc && node -r tsconfig-paths/register ./dist/index.js",
     "lint": "npx eslint"
@@ -26,6 +26,7 @@
     "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.6.5",
+    "sequelize-typescript": "^2.1.6",
     "sharp": "^0.32.1",
     "uuid": "^9.0.0"
   },

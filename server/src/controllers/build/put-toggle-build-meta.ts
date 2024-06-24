@@ -1,12 +1,11 @@
-import { Build } from "@core";
+import { BuildRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 
-export async function putToggleBuildMeta( req: Request, res: Response,
-                                          next: NextFunction ) {
+export async function putToggleBuildMeta( req: Request, res: Response, next: NextFunction ) {
     const { buildId } = req.body;
 
-    const build = await Build.findByPk( buildId );
+    const build = await BuildRepository.findByPk( buildId );
     if ( !build ) {
         return next( ApiError.badRequest( "Сборка не найдена" ) );
     }

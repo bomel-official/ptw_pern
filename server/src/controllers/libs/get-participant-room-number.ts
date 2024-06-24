@@ -1,7 +1,7 @@
-import { Participant } from "@core";
+import { ParticipantRepository } from "@core";
 
 export async function getParticipantRoomNumber( tournamentId: number ) {
-    const participants = await Participant.findAll( {
+    const participants = await ParticipantRepository.findAll( {
         where: {
             tournamentId: tournamentId
         },

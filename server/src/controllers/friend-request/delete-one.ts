@@ -1,10 +1,9 @@
-import { FriendRequest, User } from "@core";
+import { FriendRequestRepository, UserRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
 
-export async function deleteOne( req: Request, res: Response,
-                                 next: NextFunction ) {
+export async function deleteOne( req: Request, res: Response, next: NextFunction ) {
     if ( !req.user || !req.user.id ) {
         return next(
             ApiError.unauthorized( "Не авторизован" ) );
@@ -13,8 +12,8 @@ export async function deleteOne( req: Request, res: Response,
     const { to } = req.body;
     const from = req.user.id;
 
-    const toUser = await User.findByPk( to );
-    const fromUser = await User.findByPk( from );
+    const toUser = await UserRepository.findByPk( to );
+    const fromUser = await UserRepository.findByPk( from );
 
     if ( !toUser || !fromUser ) {
         return next(
@@ -27,7 +26,7 @@ export async function deleteOne( req: Request, res: Response,
     await fromUser.update( {
         friends: fromUser.friends.filter( ( friendId ) => friendId !== to )
     } );
-    await FriendRequest.destroy( {
+    await FriendRequestRepository.destroy( {
         where: {
             [Op.or]: [
                 { userFromId: from, userToId: to },

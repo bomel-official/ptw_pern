@@ -1,1 +1,1 @@
-export { Build } from "./build";
+export { Build } from "./types";

@@ -1,18 +1,18 @@
-import { Invoice, Participant } from "@core";
+import { InvoiceRepository, ParticipantRepository } from "@core";
 import { getEnv } from "@libs";
 import axios from "axios";
 import { WhereOptions } from "sequelize";
 
 export async function yookassaGetStatus( participantId: number ) {
-    const participant = await Participant.findByPk( participantId );
+    const participant = await ParticipantRepository.findByPk( participantId );
     if ( !participant ) {
         return false;
     }
 
-    const invoices = await Invoice.findAll( {
+    const invoices = await InvoiceRepository.findAll( {
         where: {
             participantId: participant.id
-        } as WhereOptions
+        }
     } );
 
     for ( const invoice of invoices ) {

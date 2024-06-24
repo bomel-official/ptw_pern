@@ -1,1 +1,1 @@
-export { Tournament } from "./tournament";
+export { Tournament } from "./types";

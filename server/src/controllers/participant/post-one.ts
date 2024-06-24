@@ -1,14 +1,13 @@
 import { AMOUNT_ROUNDS } from "@constants";
 import { yookassaCreateInvoice } from "@controllers";
-import { Participant, User } from "@core";
+import { ParticipantRepository, User, UserRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { isAdmin } from "../libs";
 import { getParticipantRoomNumber } from "../libs/get-participant-room-number";
 import { postOneValidate } from "./post-one-validate";
 
-export async function postOne( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function postOne( req: Request, res: Response, next: NextFunction ) {
     const validated = await postOneValidate( req );
     if ( validated instanceof Error ) {
         return next( validated );
@@ -20,7 +19,7 @@ export async function postOne( req: Request, res: Response,
     if ( !id || isAdmin( reqUser ) ) { // Create participant
         const roomNumber = await getParticipantRoomNumber( tournament.id );
 
-        let newReq = await Participant.create( {
+        let newReq = await ParticipantRepository.create( {
             tournamentId: tournament.id,
             points: 0,
             teamId: team.id,
@@ -32,7 +31,7 @@ export async function postOne( req: Request, res: Response,
             roomNumber
         } );
         for ( const playerId of players ) {
-            const player = await User.findByPk( playerId );
+            const player = await UserRepository.findByPk( playerId );
             if ( player ) {
                 await newReq.addUser( player );
                 await tournament.addPlayer( player );
@@ -56,12 +55,12 @@ export async function postOne( req: Request, res: Response,
         return res.json(
             { isOk: true, message: "Вы зарегистрировалиь на турнир!" } );
     } else { // Edit participant
-        const participant = await Participant.findOne( {
+        const participant = await ParticipantRepository.findOne( {
             where: {
                 id
             },
             include: {
-                model: User,
+                model: UserRepository,
                 as: "users"
             }
         } );
@@ -80,7 +79,7 @@ export async function postOne( req: Request, res: Response,
         const toRemoveUsers: User[] = [];
 
         for ( const playerId of players ) {
-            const player = await User.findByPk( playerId );
+            const player = await UserRepository.findByPk( playerId );
             if ( player && !participantUsers.includes( player.id ) ) {
                 toAddUsers.push( player );
             }

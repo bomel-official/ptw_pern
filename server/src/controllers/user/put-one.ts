@@ -1,4 +1,4 @@
-import { User } from "@core";
+import { UserRepository } from "@core";
 import { ApiError } from "@error";
 import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
@@ -22,18 +22,17 @@ export async function putOne( req: Request, res: Response,
     } = req.body;
     const { avatar } = req.files || { avatar: null };
 
-    const user = await User.findByPk( id );
+    const user = await UserRepository.findByPk( id );
     if ( !user ) {
         return next( ApiError.badRequest( "Пользователь не найден" ) );
     }
 
-    const nicknameCandidate = await User.findOne( {
+    const nicknameCandidate = await UserRepository.findOne( {
         where: { nickname: nickname.trim() },
         attributes: [ "id" ]
     } );
     if ( nicknameCandidate && (nicknameCandidate?.id !== parseInt( id )) ) {
-        return next( ApiError.badRequest(
-            "Пользователь с таким никнеймом уже существует" ) );
+        return next( ApiError.badRequest( "Пользователь с таким никнеймом уже существует" ) );
     }
 
     user.avatar = await uploadImage( avatar, { width: 240, height: 240 } );
@@ -50,9 +49,8 @@ export async function putOne( req: Request, res: Response,
     user.platform = platform ? platform : user.platform;
     user.device = device ? device : user.device;
 
-    const hashPassword = password ? await bcrypt.hash( password, 5 ) : "";
-
     if ( password ) {
+        const hashPassword = password ? await bcrypt.hash( password, 5 ) : "";
         if ( oldPassword && bcrypt.compareSync( oldPassword, user.password ) ) {
             user.password = hashPassword;
         } else {
