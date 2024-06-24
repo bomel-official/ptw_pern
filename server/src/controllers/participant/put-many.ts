@@ -1,5 +1,5 @@
 import { AMOUNT_ROUNDS } from "@constants";
-import { CV, generateValidator, isError, Participant, User } from "@core";
+import { CV, generateValidator, isError, ParticipantRepository, UserRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { calcAmountKills } from "../libs";
@@ -7,9 +7,8 @@ import { calcAmountKills } from "../libs";
 export async function putMany( req: Request, res: Response,
                                next: NextFunction ) {
     const validated = generateValidator( () => ({
-        participants: new CV( req.body.participants,
-            { label: "participants" } ).array(
-            ( item ) => new CV( item ).object( ( participant ) => ({
+        participants: new CV( req.body.participants, { label: "participants" } ).array( ( item ) =>
+            new CV( item ).object( ( participant ) => ({
                 id: new CV( participant.id ).number().val,
                 dataArray: new CV( participant.dataArray ).array(
                     ( dataRow ) => new CV( dataRow ).array(
@@ -51,7 +50,7 @@ export async function putMany( req: Request, res: Response,
     }
     participants.sort( ( a, b ) => (b.points - a.points) );
 
-    const firstParticipant = await Participant.findByPk(
+    const firstParticipant = await ParticipantRepository.findByPk(
         participants[0].id ); // To know tournamentId
 
     if ( !firstParticipant ) {
@@ -59,17 +58,17 @@ export async function putMany( req: Request, res: Response,
     }
     const tournamentId = firstParticipant.tournamentId;
 
-    const oldParticipants = await Participant.findAll( {
+    const oldParticipants = await ParticipantRepository.findAll( {
         where: {
             tournamentId: tournamentId
         },
         order: [
             [ "points", "DESC" ],
             [ "id", "ASC" ],
-            [ { model: User, as: "users" }, "id", "ASC" ],
+            [ { model: UserRepository, as: "users" }, "id", "ASC" ],
         ],
         include: [
-            { model: User, as: "users" }
+            { model: UserRepository, as: "users" }
         ]
     } );
 
@@ -97,13 +96,13 @@ export async function putMany( req: Request, res: Response,
 
     for ( let i = 0; i < participants.length; i++ ) {
         const updatedParticipant = participants[i];
-        const participant = await Participant.findByPk( participants[i].id,
+        const participant = await ParticipantRepository.findByPk( participants[i].id,
             {
                 order: [
-                    [ { model: User, as: "users" }, "id", "ASC" ],
+                    [ { model: UserRepository, as: "users" }, "id", "ASC" ],
                 ],
                 include: [
-                    { model: User, as: "users" },
+                    { model: UserRepository, as: "users" },
                 ]
             } );
         if ( !participant ) {

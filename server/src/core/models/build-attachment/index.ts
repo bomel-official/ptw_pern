@@ -1,1 +1,1 @@
-export { BuildAttachment } from "./build-attachment";
+export { BuildAttachment } from "./types";

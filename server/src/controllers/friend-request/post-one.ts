@@ -1,4 +1,4 @@
-import { CV, FriendRequest, generateValidator, isError, User } from "@core";
+import { CV, FriendRequestRepository, generateValidator, isError, UserRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { areFriends } from "../libs";
@@ -6,8 +6,7 @@ import { areFriends } from "../libs";
 export async function postOne( req: Request, res: Response,
                                next: NextFunction ) {
     if ( !req.user || !req.user.id ) {
-        return next(
-            ApiError.unauthorized( "Не авторизован" ) );
+        return next( ApiError.unauthorized( "Не авторизован" ) );
     }
 
     const from = req.user.id;
@@ -21,19 +20,18 @@ export async function postOne( req: Request, res: Response,
     }
     const { to } = validated.data;
 
-    const recipient = await User.findByPk( to );
-    const sender = await User.findByPk( from );
+    const recipient = await UserRepository.findByPk( to );
+    const sender = await UserRepository.findByPk( from );
 
     if ( !sender || !recipient ) {
-        return next(
-            ApiError.badRequest( "Пользователь не найден" ) );
+        return next( ApiError.badRequest( "Пользователь не найден" ) );
     }
 
     if ( areFriends( recipient, sender ) ) {
         return res.json( { message: "Пользователь является вашим другом" } );
     }
 
-    const existingRequest = await FriendRequest.findOne( {
+    const existingRequest = await FriendRequestRepository.findOne( {
         where: { userToId: to, userFromId: from }
     } );
 
@@ -41,7 +39,7 @@ export async function postOne( req: Request, res: Response,
         return res.json( { message: "Заявка отправлена!" } );
     }
 
-    const oppositeRequest = await FriendRequest.findOne( {
+    const oppositeRequest = await FriendRequestRepository.findOne( {
         where: { userToId: from, userFromId: to }
     } );
 
@@ -52,7 +50,7 @@ export async function postOne( req: Request, res: Response,
         await oppositeRequest.update( { isAccepted: true } );
         return res.json( { message: "Пользователь добавлен в друзья!" } );
     } else {
-        await FriendRequest.create( {
+        await FriendRequestRepository.create( {
             userToId: to,
             userFromId: from,
             isAccepted: false

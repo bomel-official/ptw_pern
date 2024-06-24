@@ -1,1 +1,1 @@
-export { BuildWeaponType } from "./build-weapon-type";
+export { BuildWeaponType } from "./types";

@@ -1,1 +1,1 @@
-export { TournamentUser } from "./tournament-user";
+export { TournamentUser } from "./types";

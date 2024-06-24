@@ -1,1 +1,1 @@
-export { Participant } from "./participant";
+export { Participant } from "./types";

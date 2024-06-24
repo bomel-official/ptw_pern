@@ -1,1 +1,1 @@
-export { FriendRequest } from "./friend-request";
+export { FriendRequest } from "./types";

@@ -1,12 +1,11 @@
-import { FriendRequest, User } from "@core";
+import { FriendRequestRepository, UserRepository } from "@core";
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
 
-export async function getMany( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function getMany( req: Request, res: Response, next: NextFunction ) {
     const { id } = req.params;
 
-    const { count, rows: requests } = await FriendRequest.findAndCountAll( {
+    const { count, rows: requests } = await FriendRequestRepository.findAndCountAll( {
         where: {
             [Op.and]: [
                 {
@@ -17,7 +16,7 @@ export async function getMany( req: Request, res: Response,
                 },
             ]
         },
-        include: { model: User, as: "user_from" }
+        include: { model: UserRepository, as: "user_from" }
     } );
     return res.json( {
         message: `Заявок найдено: ${ count }`,

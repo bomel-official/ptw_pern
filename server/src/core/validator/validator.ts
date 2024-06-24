@@ -3,7 +3,9 @@ import { Val } from "./types";
 
 export class CV<TValue, TIsRequired extends boolean = true> {
     private readonly value: TValue;
+
     private readonly label?: string;
+
     private readonly isRequired: boolean;
 
     private message( text: string ) {

@@ -1,17 +1,18 @@
 import {
     CV,
-    generateValidator, isError,
+    generateValidator,
+    isError,
     Participant,
-    ParticipantUser,
-    Tournament,
-    User
+    ParticipantRepository,
+    ParticipantUserRepository,
+    TournamentRepository,
+    UserRepository
 } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { isAdmin } from "../libs";
 
-export async function deleteOne( req: Request, res: Response,
-                                 next: NextFunction ) {
+export async function deleteOne( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
             participantId: new CV( req.body.participantId,
@@ -30,20 +31,20 @@ export async function deleteOne( req: Request, res: Response,
 
     let participant: Participant | null;
     if ( participantId ) {
-        participant = await Participant.findOne( {
+        participant = await ParticipantRepository.findOne( {
             where: {
                 id: participantId
             },
-            include: [ { model: User } ]
+            include: [ { model: UserRepository } ]
         } );
     } else {
-        participant = await Participant.findOne( {
+        participant = await ParticipantRepository.findOne( {
             where: {
                 tournamentId
             },
             include: [
                 {
-                    model: User,
+                    model: UserRepository,
                     as: "users",
                     where: {
                         id: req.user.id,
@@ -55,7 +56,7 @@ export async function deleteOne( req: Request, res: Response,
     if ( !participant ) {
         return next( ApiError.forbidden( "Ошибка сервера..." ) );
     }
-    const participantUsers = await ParticipantUser.findAll( {
+    const participantUsers = await ParticipantUserRepository.findAll( {
         where: {
             participantId: participant.id
         }
@@ -63,7 +64,7 @@ export async function deleteOne( req: Request, res: Response,
     const participantPlayerIds = participantUsers.map(
         participantUser => (participantUser.userId) );
 
-    const tournament = await Tournament.findByPk( participant.tournamentId );
+    const tournament = await TournamentRepository.findByPk( participant.tournamentId );
     if ( !tournament ) {
         return next( ApiError.forbidden( "Ошибка сервера..." ) );
     }
@@ -73,7 +74,7 @@ export async function deleteOne( req: Request, res: Response,
         return next( ApiError.forbidden( "Нет доступа" ) );
     }
     for ( const user of participant.users ) {
-        await tournament.removePlayer( user );
+        await tournament.$remove( "player", user );
     }
     await participant.destroy();
     return res.json( { isOk: true, message: "Удалено!" } );

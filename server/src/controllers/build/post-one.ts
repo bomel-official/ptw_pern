@@ -1,16 +1,18 @@
 import { Game } from "@constants";
 import {
-    BuildAttachment,
-    BuildAttachmentType,
-    BuildWeapon,
-    BuildWeaponType, CV, generateValidator, isError
+    BuildAttachmentRepository,
+    BuildAttachmentTypeRepository,
+    BuildWeaponRepository,
+    BuildWeaponTypeRepository,
+    CV,
+    generateValidator,
+    isError
 } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { uploadImage } from "../libs";
 
-export async function postOne( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function postOne( req: Request, res: Response, next: NextFunction ) {
     const { object } = req.params;
 
     if ( object === "weapon-type" ) {
@@ -26,7 +28,7 @@ export async function postOne( req: Request, res: Response,
         }
         const { title_RU, title_EU } = validated.data;
 
-        const newItem = await BuildWeaponType.create( {
+        const newItem = await BuildWeaponTypeRepository.create( {
             title_EU, title_RU
         } );
 
@@ -60,7 +62,7 @@ export async function postOne( req: Request, res: Response,
             width: 352, height: 180
         } );
 
-        const newItem = await BuildWeapon.create( {
+        const newItem = await BuildWeaponRepository.create( {
             title_EU,
             title_RU,
             buildWeaponTypeId,
@@ -95,7 +97,7 @@ export async function postOne( req: Request, res: Response,
             width: 352, height: 180
         } );
 
-        const newItem = await BuildAttachment.create( {
+        const newItem = await BuildAttachmentRepository.create( {
             title_EU,
             title_RU,
             gameVersion,
@@ -117,7 +119,7 @@ export async function postOne( req: Request, res: Response,
         }
         const { title_RU, title_EU } = validated.data;
 
-        const newItem = await BuildAttachmentType.create( {
+        const newItem = await BuildAttachmentTypeRepository.create( {
             title_EU, title_RU
         } );
 

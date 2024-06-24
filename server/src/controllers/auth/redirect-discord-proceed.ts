@@ -1,13 +1,12 @@
-import { User } from "@core";
+import { UserRepository } from "@core";
 import { getEnv, jwtUserData } from "@libs";
-import { Oauth2TokenResponse } from "@types";
+import { DiscordUserResponse, Oauth2TokenResponse } from "@types";
 import axios from "axios";
 import type { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
 import { genJwt } from "../libs";
 
-export async function redirectDiscordProceed( req: Request, res: Response,
-                                              next: NextFunction ) {
+export async function redirectDiscordProceed( req: Request, res: Response, next: NextFunction ) {
     const { code } = req.query;
     if ( !code || typeof code !== "string" ) {
         return res.redirect( getEnv( process.env.CLIENT_URL ) + `/auth/` );
@@ -39,8 +38,8 @@ export async function redirectDiscordProceed( req: Request, res: Response,
                     Authorization: `Bearer ${ response.data.access_token }`, ...headers
                 }
             } );
-        const { id, username, avatar, email } = userResponse.data;
-        const UserAlreadyExist = await User.findOne( {
+        const { id, username, avatar, email } = userResponse.data as DiscordUserResponse;
+        const UserAlreadyExist = await UserRepository.findOne( {
             where: {
                 [Op.or]: [ {
                     email
@@ -52,8 +51,7 @@ export async function redirectDiscordProceed( req: Request, res: Response,
         if ( UserAlreadyExist ) {
             UserAlreadyExist.discord_id = id;
             UserAlreadyExist.discord_username = username;
-            UserAlreadyExist.discord_avatar =
-                `https://cdn.discordapp.com/avatars/${ id }/${ avatar }`;
+            UserAlreadyExist.discord_avatar = `https://cdn.discordapp.com/avatars/${ id }/${ avatar }`;
             await UserAlreadyExist.save();
 
             const token = genJwt( jwtUserData( UserAlreadyExist ) );
@@ -61,18 +59,17 @@ export async function redirectDiscordProceed( req: Request, res: Response,
             res.cookie( "token", token, {
                 maxAge: 1000 * 60 * 15, httpOnly: true
             } );
-            return res.redirect( getEnv( process.env.CLIENT_URL ) +
-                `/profile/${ UserAlreadyExist.nickname }` );
+            return res.redirect( getEnv( process.env.CLIENT_URL ) + `/profile/${ UserAlreadyExist.nickname }` );
         } else {
             let counter = 0;
-            let UsernameTaken = await User.findOne(
+            let UsernameTaken = await UserRepository.findOne(
                 { where: { nickname: username } } );
             while ( UsernameTaken ) {
                 counter += 1;
-                UsernameTaken = await User.findOne(
-                    { where: { nickname: `${ username }${ counter }` } } );
+                UsernameTaken = await UserRepository.findOne( { where: { nickname: `${ username }${ counter }` } } );
             }
-            const newUser = await User.create( {
+
+            const newUser = await UserRepository.create( {
                 email: email ? email.trim() : id,
                 discord_id: id,
                 discord_avatar: `https://cdn.discordapp.com/avatars/${ id }/${ avatar }`,
@@ -85,9 +82,7 @@ export async function redirectDiscordProceed( req: Request, res: Response,
             res.cookie( "token", token, {
                 maxAge: 1000 * 60 * 15, httpOnly: true
             } );
-            return res.redirect(
-                getEnv( process.env.CLIENT_URL ) +
-                `/profile/${ newUser.nickname }` );
+            return res.redirect( getEnv( process.env.CLIENT_URL ) + `/profile/${ newUser.nickname }` );
         }
     } catch ( e ) {
         console.log( e );

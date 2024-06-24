@@ -1,12 +1,11 @@
-import { Participant } from "@core";
+import { ParticipantRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { getParticipantRoomNumber } from "../libs/get-participant-room-number";
 
-export async function putOneRoomNumber( req: Request, res: Response,
-                                        next: NextFunction ) {
+export async function putOneRoomNumber( req: Request, res: Response, next: NextFunction ) {
     const { participantId } = req.body;
-    const participant = await Participant.findByPk( participantId );
+    const participant = await ParticipantRepository.findByPk( participantId );
     if ( !participant ) {
         return next( ApiError.badRequest( "Участник не найден" ) );
     }

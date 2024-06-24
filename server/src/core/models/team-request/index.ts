@@ -1,1 +1,1 @@
-export { TeamRequest } from "./team-request";
+export { TeamRequest } from "./types";

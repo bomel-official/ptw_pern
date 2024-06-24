@@ -1,1 +1,1 @@
-export { ProductCat } from "./product-cat";
+export { ProductCat } from "./types";

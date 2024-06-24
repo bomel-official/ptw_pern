@@ -3,8 +3,7 @@ import { CV, generateValidator, isError } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 
-export async function getOnePayUrl( req: Request, res: Response,
-                                    next: NextFunction ) {
+export async function getOnePayUrl( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
             participantId: new CV( req.body.participantId,

@@ -1,23 +1,44 @@
 import { Game } from "@constants";
-import {
-    CreationOptional,
-    ForeignKey,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-    NonAttribute
-} from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescript";
 import { BuildAttachmentType } from "../build-attachment-type";
 
+@Table( {
+    tableName: "build_attachment"
+} )
 export class BuildAttachment
     extends Model<InferAttributes<BuildAttachment>, InferCreationAttributes<BuildAttachment>> {
-    declare id: CreationOptional<number>;
-    declare gameVersion?: Game;
-    declare image?: string;
 
+    @Column( {
+        type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
+    } )
+    declare id: CreationOptional<number>;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: true
+    } )
+    declare gameVersion?: Game;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: true
+    } )
     declare title_RU?: string;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: true
+    } )
     declare title_EU?: string;
 
-    declare buildAttachmentTypeId: ForeignKey<BuildAttachmentType["id"]>;
-    declare buildAttachmentType: NonAttribute<BuildAttachmentType>;
+    @Column( {
+        type: DataTypes.STRING, allowNull: true
+    } )
+    declare image?: string;
+
+    @ForeignKey( () => BuildAttachmentType ) @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
+    declare buildAttachmentTypeId: number;
+
+    @BelongsTo( () => BuildAttachmentType )
+    declare buildAttachmentType?: NonAttribute<BuildAttachmentType>;
 }

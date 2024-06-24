@@ -2,10 +2,10 @@ import {
     CV,
     generateValidator,
     isError,
-    Participant,
-    Team,
-    Tournament,
-    User
+    ParticipantRepository,
+    TeamRepository,
+    TournamentRepository,
+    UserRepository
 } from "@core";
 import { ApiError } from "@error";
 import { Request } from "express";
@@ -34,9 +34,9 @@ export async function postOneValidate( req: Request ) {
         return ApiError.unauthorized( "Не авторизован" );
     }
 
-    const tournament = await Tournament.findByPk( tournamentId );
-    const team = await Team.findByPk( teamId );
-    const reqUser = await User.findByPk( req.user.id );
+    const tournament = await TournamentRepository.findByPk( tournamentId );
+    const team = await TeamRepository.findByPk( teamId );
+    const reqUser = await UserRepository.findByPk( req.user.id );
 
     if ( !reqUser ) {
         return ApiError.badRequest( "Пользователь не найден, перезайдите" );
@@ -58,7 +58,7 @@ export async function postOneValidate( req: Request ) {
         return ApiError.badRequest( "Некорректное количество участников!" );
     }
 
-    const alreadyRegisteredParticipant = await Participant.findOne( {
+    const alreadyRegisteredParticipant = await ParticipantRepository.findOne( {
         where: {
             id: id ? {
                 [Op.ne]: id
@@ -67,7 +67,7 @@ export async function postOneValidate( req: Request ) {
         },
         include: [
             {
-                model: User,
+                model: UserRepository,
                 as: "users",
                 where: {
                     id: {
@@ -77,8 +77,7 @@ export async function postOneValidate( req: Request ) {
             }
         ]
     } );
-    if ( alreadyRegisteredParticipant &&
-        alreadyRegisteredParticipant.users[0] ) {
+    if ( alreadyRegisteredParticipant && alreadyRegisteredParticipant.users[0] ) {
         return ApiError.badRequest(
             `${ alreadyRegisteredParticipant.users[0].nickname } - уже учавствует в другой команде` );
     }

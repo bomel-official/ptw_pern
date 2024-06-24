@@ -1,11 +1,10 @@
-import { User } from "@core";
+import { UserRepository } from "@core";
 import { NextFunction, Request, Response } from "express";
 
-export async function getOneByNickname( req: Request, res: Response,
-                                        next: NextFunction ) {
+export async function getOneByNickname( req: Request, res: Response, next: NextFunction ) {
     const { nickname } = req.params;
 
-    const user = await User.findOne( {
+    const user = await UserRepository.findOne( {
         where: { nickname }
     } );
     if ( !user ) {

@@ -1,12 +1,12 @@
 import { TEAMS_LIMIT, UserRoleGroup } from "@constants";
-import { isError, Team, User } from "@core";
+import type { User } from "@core";
+import { isError, TeamRepository, UserRepository } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { isUserInGroup } from "../libs";
 import { postPutOneValidate } from "./post-put-one-validate";
 
-export async function postPutOne( req: Request, res: Response,
-                                  next: NextFunction ) {
+export async function postPutOne( req: Request, res: Response, next: NextFunction ) {
     const validated = await postPutOneValidate( req );
     if ( isError( validated ) ) {
         return next( validated.errorObject );
@@ -20,23 +20,21 @@ export async function postPutOne( req: Request, res: Response,
         name
     } = validated.data;
 
-    const creator = await User.findOne( {
+    const creator = await UserRepository.findOne( {
         where: {
             id: reqUser.id
         },
         include: {
-            model: Team,
+            model: TeamRepository,
             as: "own_teams"
         }
     } );
 
     if ( !creator ) {
-        return next(
-            ApiError.unauthorized( "Не авторизован" ) );
+        return next( ApiError.unauthorized( "Не авторизован" ) );
     }
     if ( name.length < 3 ) {
-        return next( ApiError.badRequest(
-            "Название команды должно быть 3 и больше символов" ) );
+        return next( ApiError.badRequest( "Название команды должно быть 3 и больше символов" ) );
     }
     for ( let playerId of players ) {
         if (
@@ -44,17 +42,16 @@ export async function postPutOne( req: Request, res: Response,
             !creator.friends.includes( playerId ) &&
             creator.id !== playerId
         ) {
-            return next( ApiError.badRequest(
-                "Для добавления в команду игрок должен быть у вас в друзьях" ) );
+            return next( ApiError.badRequest( "Для добавления в команду игрок должен быть у вас в друзьях" ) );
         }
     }
     if ( id ) { // Edit
-        const team = await Team.findOne( {
+        const team = await TeamRepository.findOne( {
             where: {
                 id
             },
             include: {
-                model: User,
+                model: UserRepository,
                 as: "players"
             },
         } );
@@ -70,7 +67,7 @@ export async function postPutOne( req: Request, res: Response,
         }
         const playersResponse: User[] = [];
         for ( let playerId of players ) {
-            const player = await User.findByPk( playerId );
+            const player = await UserRepository.findByPk( playerId );
             if ( !player ) {
                 return next( ApiError.badRequest( "Пользователь не найден" ) );
             }
@@ -106,7 +103,7 @@ export async function postPutOne( req: Request, res: Response,
             return next( ApiError.badRequest(
                 "Название команды должно быть длиннее 3 символов, написано латиницей, без особых символов" ) );
         }
-        const team = await Team.create( {
+        const team = await TeamRepository.create( {
             name,
             avatar: filename,
             capitanId,
@@ -115,7 +112,7 @@ export async function postPutOne( req: Request, res: Response,
         const playersResponse: User[] = [];
         await creator.addOwn_team( team );
         for ( let playerId of players ) {
-            const player = await User.findByPk( playerId );
+            const player = await UserRepository.findByPk( playerId );
             if ( !player ) {
                 return next( ApiError.badRequest( "Пользователь не найден" ) );
             }

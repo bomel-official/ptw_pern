@@ -1,44 +1,151 @@
 import { Game, TournamentType } from "@constants";
-import { User } from "../user";
 import {
     CreationOptional,
-    HasManyRemoveAssociationMixin,
+    DataTypes,
+    HasManyAddAssociationMixin, HasManyRemoveAssociationMixin,
     InferAttributes,
     InferCreationAttributes,
-    Model
+    NonAttribute
 } from "sequelize";
+import { BelongsToMany, Column, Model, Table } from "sequelize-typescript";
+import { TournamentUser } from "../tournament-user";
 
-export class Tournament
-    extends Model<InferAttributes<Tournament>, InferCreationAttributes<Tournament>> {
+import { User } from "../user";
+
+@Table( {
+    tableName: "tournament"
+} )
+export class Tournament extends Model<InferAttributes<Tournament>, InferCreationAttributes<Tournament>> {
+
+    @Column( {
+        type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
+    } )
     declare id: CreationOptional<number>;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
+    declare title_RU: string;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
+    declare title_EU: string;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: true
+    } )
     declare previewImg?: CreationOptional<string>;
 
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
     declare slug: string;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
     declare game: Game;
+
+    @Column( {
+        type: DataTypes.STRING, defaultValue: TournamentType.TOURNAMENT
+    } )
     declare type: TournamentType;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
     declare twitchChannel: string;
+
+    @Column( {
+        type: DataTypes.DATE, allowNull: false
+    } )
     declare dateBegin: string;
+
+    @Column( {
+        type: DataTypes.DATE, allowNull: false
+    } )
     declare dateEnd: string;
+
+    @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
     declare maxUsers: number;
+
+    @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
     declare playersInTeam: number;
+
+    @Column( {
+        type: DataTypes.FLOAT, defaultValue: 0
+    } )
     declare participationPrice: CreationOptional<number>;
+
+    @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
     declare prizes: number;
+
+    @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
     declare prize_1: number;
+
+    @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
     declare prize_2: number;
+
+    @Column( {
+        type: DataTypes.INTEGER, allowNull: false
+    } )
     declare prize_3: number;
 
+    @Column( {
+        type: DataTypes.ARRAY( DataTypes.INTEGER ), defaultValue: []
+    } )
     declare participantsList: CreationOptional<number[]>;
+
+    @Column( {
+        type: DataTypes.BOOLEAN, defaultValue: true
+    } )
     declare isRegisterOn: CreationOptional<boolean>;
 
-    declare title_RU: string;
-    declare title_EU: string;
+    @Column( {
+        type: DataTypes.TEXT, allowNull: false
+    } )
     declare descRules_RU: string;
+
+    @Column( {
+        type: DataTypes.TEXT, allowNull: false
+    } )
     declare descRules_EU: string;
+
+    @Column( {
+        type: DataTypes.TEXT, allowNull: false
+    } )
     declare descAdditional_RU: string;
+
+    @Column( {
+        type: DataTypes.TEXT, allowNull: false
+    } )
     declare descAdditional_EU: string;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
     declare format_RU: string;
+
+    @Column( {
+        type: DataTypes.STRING, allowNull: false
+    } )
     declare format_EU: string;
 
+    @BelongsToMany( () => User, () => TournamentUser )
+    declare players: NonAttribute<User[]>;
+
+    declare addPlayer: HasManyAddAssociationMixin<User, number>;
+
     declare removePlayer: HasManyRemoveAssociationMixin<User, number>;
-    declare addPlayer: HasManyRemoveAssociationMixin<User, number>;
 }

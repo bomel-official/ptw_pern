@@ -3,12 +3,12 @@ import { getEnv } from "@libs";
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET_KEY = getEnv( getEnv(process.env.JWT_SECRET_KEY) ) ?? "JWT_SECRET_KEY";
+const JWT_SECRET_KEY = getEnv( getEnv( process.env.JWT_SECRET_KEY ) ) ?? "JWT_SECRET_KEY";
 
 export function authMiddleware( req: Request, res: Response,
                                 next: NextFunction ) {
     if ( req.method === "OPTIONS" ) {
-        next();
+        return next();
     }
 
     if ( req.headers.authorization ) {
@@ -17,8 +17,8 @@ export function authMiddleware( req: Request, res: Response,
             return res.status( 401 ).json( { message: "Не авторизован" } );
         }
         req.user = jwt.verify( token, JWT_SECRET_KEY ) as JWTUserData;
-        next();
+        return next();
     }
 
-    res.status( 401 ).json( { message: "Не авторизован" } );
+    return res.status( 401 ).json( { message: "Не авторизован" } );
 }

@@ -1,2 +1,1 @@
-export { User } from "./user";
-export { JWTUserData } from "./types";
+export { JWTUserData, User } from "./types";

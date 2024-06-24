@@ -1,9 +1,9 @@
 import {
-    BuildAttachment,
-    BuildAttachmentType,
-    BuildMode,
-    BuildWeapon,
-    BuildWeaponType,
+    BuildAttachmentRepository,
+    BuildAttachmentTypeRepository,
+    BuildModeRepository,
+    BuildWeaponRepository,
+    BuildWeaponTypeRepository,
     CV
 } from "@core";
 import { Request } from "express";
@@ -11,11 +11,11 @@ import { Op } from "sequelize";
 
 export const parseModelWhere = (
     WhereClass:
-        typeof BuildAttachment |
-        typeof BuildAttachmentType |
-        typeof BuildMode |
-        typeof BuildWeapon |
-        typeof BuildWeaponType,
+        typeof BuildAttachmentRepository |
+        typeof BuildAttachmentTypeRepository |
+        typeof BuildModeRepository |
+        typeof BuildWeaponRepository |
+        typeof BuildWeaponTypeRepository,
     req: Request
 ) => {
     return {

@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { genJwt } from "../libs";
 
-export function check( req: Request, res: Response,
-                       next: NextFunction ) {
+export function check( req: Request, res: Response, next: NextFunction ) {
     const token = req.user ? genJwt( {
         id: req.user.id,
         email: req.user.email,

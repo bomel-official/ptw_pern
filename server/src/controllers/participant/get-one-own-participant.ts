@@ -2,18 +2,17 @@ import { yookassaCreateInvoice, yookassaGetStatus } from "@controllers";
 import {
     CV,
     generateValidator,
-    Invoice,
+    InvoiceRepository,
     isError,
-    Participant,
-    ParticipantUser,
-    Team,
-    Tournament,
-    User
+    ParticipantRepository,
+    ParticipantUserRepository,
+    TeamRepository,
+    TournamentRepository,
+    UserRepository
 } from "@core";
 import { NextFunction, Request, Response } from "express";
 
-export async function getOneOwnParticipant( req: Request, res: Response,
-                                            next: NextFunction ) {
+export async function getOneOwnParticipant( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
             tournamentId: new CV( req.query.tournamentId,
@@ -25,28 +24,28 @@ export async function getOneOwnParticipant( req: Request, res: Response,
     }
     const { tournamentId, userId } = validated.data;
 
-    const participant = await Participant.findOne( {
+    const participant = await ParticipantRepository.findOne( {
         where: {
             tournamentId
         },
         include: [
             {
-                model: User,
+                model: UserRepository,
                 as: "users",
                 where: { id: userId }
             },
             {
-                model: Team,
+                model: TeamRepository,
                 as: "team",
-                include: [ { model: User, as: "players" } ]
+                include: [ { model: UserRepository, as: "players" } ]
             },
-            { model: Invoice }
+            { model: InvoiceRepository }
         ]
     } );
     if ( !participant ) {
         return res.json( { participant: null, participantUsers: [] } );
     }
-    const tournament = await Tournament.findByPk( participant.tournamentId );
+    const tournament = await TournamentRepository.findByPk( participant.tournamentId );
     if ( !tournament ) {
         return res.json( { participant: null, participantUsers: [] } );
     }
@@ -59,13 +58,11 @@ export async function getOneOwnParticipant( req: Request, res: Response,
         }
 
         if ( participant.invoice && participant.invoice.expired ) {
-            const invoiceExpired = new Date(
-                participant.invoice.expired ).getTime();
+            const invoiceExpired = new Date( participant.invoice.expired ).getTime();
             const now = new Date().getTime();
 
             if ( (invoiceExpired - 86400000) < now ) {
-                const updatedParticipant =
-                    (await yookassaCreateInvoice( participant.id )).participant;
+                const updatedParticipant = (await yookassaCreateInvoice( participant.id )).participant;
                 participant.invoiceUrl = updatedParticipant.invoiceUrl;
                 participant.invoiceId = updatedParticipant.invoiceId;
             }
@@ -77,7 +74,7 @@ export async function getOneOwnParticipant( req: Request, res: Response,
         }
     }
 
-    const participantUsers = await ParticipantUser.findAll( {
+    const participantUsers = await ParticipantUserRepository.findAll( {
         where: {
             participantId: participant.id
         }

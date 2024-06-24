@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { parseCookie } from "../libs";
 
-export async function getUserByCookie( req: Request, res: Response,
-                                         next: NextFunction ) {
+export async function getUserByCookie( req: Request, res: Response, next: NextFunction ) {
     const cookies = parseCookie( req.headers.cookie );
     if ( cookies.token ) {
         res.clearCookie( "token" );

@@ -2,15 +2,14 @@ import {
     CV,
     generateValidator,
     isError,
-    Participant,
-    ParticipantRequest,
-    Team,
-    User
+    ParticipantRepository,
+    ParticipantRequestRepository,
+    TeamRepository,
+    UserRepository
 } from "@core";
 import { NextFunction, Request, Response } from "express";
 
-export async function getMany( req: Request, res: Response,
-                               next: NextFunction ) {
+export async function getMany( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
             tournamentId: new CV( req.query.tournamentId,
@@ -23,24 +22,24 @@ export async function getMany( req: Request, res: Response,
     }
     const { tournamentId, type } = validated.data;
 
-    const participants = await Participant.findAll( {
+    const participants = await ParticipantRepository.findAll( {
         where: {
             tournamentId: tournamentId
         },
         order: (!type || type === "users") ? [
             [ "roomNumber", "ASC" ],
             [ "id", "ASC" ],
-            [ { model: User, as: "users" }, "id", "ASC" ],
+            [ { model: UserRepository, as: "users" }, "id", "ASC" ],
         ] : [
             [ "points", "DESC" ],
             [ "priority", "DESC" ],
             [ "id", "ASC" ],
-            [ { model: User, as: "users" }, "id", "ASC" ],
+            [ { model: UserRepository, as: "users" }, "id", "ASC" ],
         ],
         include: [
-            { model: User, as: "users" },
-            { model: Team },
-            { model: ParticipantRequest },
+            { model: UserRepository, as: "users" },
+            { model: TeamRepository },
+            { model: ParticipantRequestRepository },
         ]
     } );
 

@@ -1,19 +1,26 @@
-import { Invoice, Participant, Tournament } from "@core";
+import {
+    Invoice,
+    InvoiceRepository,
+    Participant,
+    ParticipantRepository,
+    Tournament,
+    TournamentRepository
+} from "@core";
 import { getEnv } from "@libs";
 import axios from "axios";
 
 export async function enotCreateInvoice( participantId: number ) {
-    const participant = await Participant.findByPk( participantId );
+    const participant = await ParticipantRepository.findByPk( participantId );
     if ( !participant ) {
         return { invoice: null, participant };
     }
 
-    const tournament = await Tournament.findByPk( participant.tournamentId );
+    const tournament = await TournamentRepository.findByPk( participant.tournamentId );
     if ( !tournament ) {
         return { invoice: null, participant };
     }
 
-    const newInvoice = await Invoice.create( {
+    const newInvoice = await InvoiceRepository.create( {
         amount: tournament.participationPrice
     } );
 

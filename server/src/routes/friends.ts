@@ -1,9 +1,4 @@
-import {
-    deleteOneFriendRequest,
-    getManyFriend,
-    getManyFriendRequest,
-    postOneFriendRequest
-} from "@controllers";
+import { deleteOneFriendRequest, getManyFriend, getManyFriendRequest, postOneFriendRequest } from "@controllers";
 import { authMiddleware } from "@middleware";
 import { Router } from "express";
 

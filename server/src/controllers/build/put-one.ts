@@ -1,9 +1,9 @@
 import { Game } from "@constants";
 import {
-    BuildAttachment,
-    BuildAttachmentType,
-    BuildWeapon,
-    BuildWeaponType,
+    BuildAttachmentRepository,
+    BuildAttachmentTypeRepository,
+    BuildWeaponRepository,
+    BuildWeaponTypeRepository,
     CV,
     generateValidator,
     isError
@@ -12,8 +12,7 @@ import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
 import { uploadImage } from "../libs";
 
-export async function putOne( req: Request, res: Response,
-                              next: NextFunction ) {
+export async function putOne( req: Request, res: Response, next: NextFunction ) {
     const validatedObject = generateValidator(
         () => ({
             object: new CV( req.params.object,
@@ -38,7 +37,7 @@ export async function putOne( req: Request, res: Response,
         }
         const { id, title_RU, title_EU } = validated.data;
 
-        const item = await BuildWeaponType.findByPk( id );
+        const item = await BuildWeaponTypeRepository.findByPk( id );
         if ( !item ) return next(
             ApiError.badRequest( "Редактируемый объект не найден" ) );
 
@@ -78,7 +77,7 @@ export async function putOne( req: Request, res: Response,
             width: 352, height: 180
         } );
 
-        const item = await BuildWeapon.findByPk( id );
+        const item = await BuildWeaponRepository.findByPk( id );
         if ( !item ) return next(
             ApiError.badRequest( "Редактируемый объект не найден" ) );
 
@@ -119,7 +118,7 @@ export async function putOne( req: Request, res: Response,
             width: 352, height: 180
         } );
 
-        const item = await BuildAttachment.findByPk( id );
+        const item = await BuildAttachmentRepository.findByPk( id );
         if ( !item ) return next(
             ApiError.badRequest( "Редактируемый объект не найден" ) );
 
@@ -147,7 +146,7 @@ export async function putOne( req: Request, res: Response,
         }
         const { id, title_RU, title_EU } = validated.data;
 
-        const item = await BuildAttachmentType.findByPk( id );
+        const item = await BuildAttachmentTypeRepository.findByPk( id );
         if ( !item ) return next(
             ApiError.badRequest( "Редактируемый объект не найден" ) );
 
