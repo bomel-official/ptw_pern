@@ -14,37 +14,20 @@ import { Op } from "sequelize";
 export async function getManyBuild( req: Request, res: Response, next: NextFunction ) {
     const validated = generateValidator(
         () => ({
-            s: new CV( req.body.id, { label: "s" } ).string().val,
-            userId: new CV( req.body.userId,
-                { label: "userId" } ).number().val,
-            weaponTypeId: new CV( req.body.weaponTypeId,
-                { label: "weaponTypeId" } ).number().val,
-            weaponId: new CV( req.body.weaponId,
-                { label: "weaponId" } ).number().val,
-            buildType: new CV( req.body.buildType,
-                { label: "buildType" } ).string().val,
+            s: new CV( req.query.s, { label: "s" } ).optional().string().val,
+            userId: new CV( req.query.userId,
+                { label: "userId" } ).optional().number().val,
+            weaponTypeId: new CV( req.query.weaponTypeId,
+                { label: "weaponTypeId" } ).optional().number().val,
+            weaponId: new CV( req.query.weaponId,
+                { label: "weaponId" } ).optional().number().val,
+            buildType: new CV( req.query.buildType,
+                { label: "buildType" } ).optional().string().val,
         }) );
     if ( isError( validated ) ) {
-        return validated.errorObject;
+        return next( validated.errorObject );
     }
     const { s, userId, weaponTypeId, weaponId, buildType } = validated.data;
-
-    let userQuery: {
-        isMeta?: boolean;
-        userId?: number;
-    } = {};
-    if ( buildType === "admin" ) {
-        userQuery = {
-            ...userQuery,
-            isMeta: true
-        };
-    }
-    if ( userId ) {
-        userQuery = {
-            ...userQuery,
-            userId
-        };
-    }
 
     try {
         const { rows: items } = await BuildRepository.findAndCountAll( {
@@ -53,23 +36,31 @@ export async function getManyBuild( req: Request, res: Response, next: NextFunct
                     s ? {
                         [Op.or]: [
                             {
+                                title: {
+                                    [Op.iLike]: "%" + s + "%"
+                                }
+                            },
+                            {
                                 "$user.nickname$": {
-                                    [Op.substring]: s
+                                    [Op.iLike]: "%" + s + "%"
                                 }
                             },
                             {
                                 "$build_weapon.title_RU$": {
-                                    [Op.substring]: s
+                                    [Op.iLike]: "%" + s + "%"
                                 }
                             },
                             {
                                 "$build_weapon.title_EU$": {
-                                    [Op.substring]: s
+                                    [Op.iLike]: "%" + s + "%"
                                 }
                             }
                         ]
                     } : {},
-                    userQuery,
+                    {
+                        ...(buildType === "admin" ? { isMeta: true } : {}),
+                        ...(userId ? { userId } : {})
+                    },
                     weaponTypeId ? {
                         buildWeaponTypeId: weaponTypeId
                     } : {},
@@ -86,11 +77,13 @@ export async function getManyBuild( req: Request, res: Response, next: NextFunct
                 },
                 {
                     model: BuildWeaponRepository,
-                    as: "build_weapon"
+                    as: "build_weapon",
+                    foreignKey: "buildWeaponId"
                 },
                 {
                     model: BuildWeaponTypeRepository,
-                    as: "build_weapon_type"
+                    as: "build_weapon_type",
+                    foreignKey: "buildWeaponTypeId"
                 }
             ],
             limit: 15,

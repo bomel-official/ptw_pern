@@ -58,16 +58,11 @@ export class CV<TValue, TIsRequired extends boolean = true> {
                 }
                 return new CV( this.value as Val<string, TIsRequired>,
                     this.options );
-            } else if ( typeof (this.value as { toString: () => string }).toString ===
-                "function" ) {
-                const stringValue = (this.value as { toString: () => string }).toString();
-                return new CV( stringValue as Val<string, TIsRequired>,
-                    this.options );
             }
             return this.optionalCheckedValue<string>();
         } catch ( e ) {
             throw ApiError.badRequest(
-                this.message( `Поле ${ this.label } должно быть срокой` ) );
+                this.message( `Поле ${ this.label } должно быть строкой` ) );
         }
     }
 
@@ -77,10 +72,15 @@ export class CV<TValue, TIsRequired extends boolean = true> {
                 return new CV( this.value as Val<number, TIsRequired>,
                     this.options );
             } else if ( typeof this.value === "string" ) {
+                if ( this.value === "" ) {
+                    return new CV( undefined as Val<number, TIsRequired>, this.options );
+                }
                 const numValue = JSON.parse( this.value );
                 if ( typeof numValue === "number" ) {
                     return new CV( numValue as Val<number, TIsRequired>,
                         this.options );
+                } else {
+                    throw ApiError.badRequest( this.message( `Поле ${ this.label } должно быть числом` ) );
                 }
             }
             return this.optionalCheckedValue<number>();
@@ -123,14 +123,14 @@ export class CV<TValue, TIsRequired extends boolean = true> {
                         this.options );
                 }
             }
-            return this.optionalCheckedValue<any[]>();
+            return this.optionalCheckedValue<TArrayValue[]>() as CV<Val<TArrayValue[], TIsRequired>, TIsRequired>;
         } catch ( e ) {
             throw ApiError.badRequest( this.message(
                 `Значения массива ${ this.label } - некорректны` ) );
         }
     }
 
-    public object<TObjectValue>( objectCheck: ( objectValue: any ) => TObjectValue ) {
+    public object<TObjectValue>( objectCheck: ( objectValue: any ) => TObjectValue ): CV<Val<TObjectValue, TIsRequired>, TIsRequired> {
         try {
             if ( typeof this.value === "object" && this.value !== null ) {
                 return new CV( objectCheck(
@@ -144,7 +144,7 @@ export class CV<TValue, TIsRequired extends boolean = true> {
                         this.options );
                 }
             }
-            return this.optionalCheckedValue<object>();
+            return this.optionalCheckedValue<object>() as CV<Val<TObjectValue, TIsRequired>, TIsRequired>;
         } catch ( e ) {
             throw ApiError.badRequest( this.message(
                 `Значения объекта ${ this.label } - некорректны` ) );

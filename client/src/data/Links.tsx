@@ -160,12 +160,12 @@ export const sideMenuItems: Record<string, {to: string, icon: string, name: stri
         name: 'Хабы',
         isMarginBottom: true
     },
-    '/rating': {
-        to: '/rating',
-        icon: BarChartIcon,
-        name: 'Общий рейтинг',
-        isMarginBottom: false
-    },
+    // '/rating': {
+    //     to: '/rating',
+    //     icon: BarChartIcon,
+    //     name: 'Общий рейтинг',
+    //     isMarginBottom: false
+    // },
     '/teammate-search': {
         to: '/teammate-search',
         icon: UserPlusIcon,

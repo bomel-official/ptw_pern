@@ -3,7 +3,8 @@ import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescrip
 import { Participant } from "../participant";
 
 @Table( {
-    tableName: "participant_request"
+    tableName: "participant_requests",
+    freezeTableName: true
 } )
 export class ParticipantRequest
     extends Model<InferAttributes<ParticipantRequest>, InferCreationAttributes<ParticipantRequest>> {
@@ -36,7 +37,7 @@ export class ParticipantRequest
     declare status: CreationOptional<string>;
 
     @ForeignKey( () => Participant ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare participantId: number;
 

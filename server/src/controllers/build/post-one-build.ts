@@ -12,8 +12,6 @@ export async function postOneBuild( req: Request, res: Response, next: NextFunct
                 { label: "title" } ).string().val,
             weaponId: new CV( req.body.weaponId,
                 { label: "weaponId" } ).number().val,
-            buildWeaponTypeId: new CV( req.body.buildWeaponTypeId,
-                { label: "buildWeaponTypeId" } ).number().val,
             gameVersion: new CV( req.body.gameVersion,
                 { label: "gameVersion" } ).string()
                 .included( Object.values( Game ) as Game[] ).val,
@@ -26,7 +24,7 @@ export async function postOneBuild( req: Request, res: Response, next: NextFunct
                 }) ).val) ).val
         }) );
     if ( isError( validated ) ) {
-        return validated.errorObject;
+        return next(validated.errorObject);
     }
     const {
         title, weaponId, weaponTypeId, gameVersion, attachments: parsedAttachments

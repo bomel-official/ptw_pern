@@ -2,7 +2,8 @@ import { DataTypes, InferAttributes, InferCreationAttributes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
 
 @Table( {
-    tableName: "product_cat"
+    tableName: "product_cats",
+    freezeTableName: true
 } )
 export class ProductCat extends Model<InferAttributes<ProductCat>, InferCreationAttributes<ProductCat>> {
 

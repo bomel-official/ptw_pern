@@ -24,7 +24,7 @@ export async function postOne( req: Request, res: Response, next: NextFunction )
                     { label: "title_EU" } ).string().val,
             }) );
         if ( isError( validated ) ) {
-            return validated.errorObject;
+            return next(validated.errorObject);
         }
         const { title_RU, title_EU } = validated.data;
 
@@ -50,7 +50,7 @@ export async function postOne( req: Request, res: Response, next: NextFunction )
                     (attachment => new CV( attachment ).number().val) ).val
             }) );
         if ( isError( validated ) ) {
-            return validated.errorObject;
+            return next(validated.errorObject);
         }
         const {
             title_RU, title_EU, buildWeaponTypeId, gameVersion,
@@ -86,7 +86,7 @@ export async function postOne( req: Request, res: Response, next: NextFunction )
                     .included( Object.values( Game ) as Game[] ).val
             }) );
         if ( isError( validated ) ) {
-            return validated.errorObject;
+            return next(validated.errorObject);
         }
         const {
             title_RU, title_EU, buildAttachmentTypeId, gameVersion,
@@ -115,7 +115,7 @@ export async function postOne( req: Request, res: Response, next: NextFunction )
                     { label: "title_EU" } ).string().val,
             }) );
         if ( isError( validated ) ) {
-            return validated.errorObject;
+            return next(validated.errorObject);
         }
         const { title_RU, title_EU } = validated.data;
 

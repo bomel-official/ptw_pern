@@ -35,7 +35,7 @@ export async function postOneValidate( req: Request ) {
                 { label: "playersInTeam" } ).number().val,
             participationPrice: new CV(
                 req.body.participationPrice,
-                { label: "participationPrice" } ).optional().number().val,
+                { label: "participationPrice" } ).optional().number().val || 0,
             prizes: new CV( req.body.prizes, { label: "prizes" } ).number().val,
             prize_1: new CV( req.body.prize_1,
                 { label: "prize_1" } ).number().val,

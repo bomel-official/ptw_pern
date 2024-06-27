@@ -1,10 +1,12 @@
 import { Game } from "@constants";
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
-import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { Build } from "../build";
 import { BuildWeaponType } from "../build-weapon-type";
 
 @Table( {
-    tableName: "build_weapon"
+    tableName: "build_weapons",
+    freezeTableName: true
 } )
 export class BuildWeapon extends Model<InferAttributes<BuildWeapon>, InferCreationAttributes<BuildWeapon>> {
 
@@ -39,10 +41,13 @@ export class BuildWeapon extends Model<InferAttributes<BuildWeapon>, InferCreati
     declare title_EU?: string;
 
     @ForeignKey( () => BuildWeaponType ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare buildWeaponTypeId: number;
 
     @BelongsTo( () => BuildWeaponType )
     declare buildWeaponType: NonAttribute<BuildWeaponType>;
+
+    @HasMany( () => Build, { foreignKey: "buildWeaponId" } )
+    declare builds: NonAttribute<Build[]>;
 }

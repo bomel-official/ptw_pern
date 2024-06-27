@@ -4,7 +4,8 @@ import { Team } from "../team";
 import { User } from "../user";
 
 @Table( {
-    tableName: "team_request"
+    tableName: "team_requests",
+    freezeTableName: true
 } )
 export class TeamRequest extends Model<InferAttributes<TeamRequest>, InferCreationAttributes<TeamRequest>> {
 
@@ -14,12 +15,12 @@ export class TeamRequest extends Model<InferAttributes<TeamRequest>, InferCreati
     declare id: number;
 
     @ForeignKey( () => Team ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare teamId: number;
 
     @ForeignKey( () => User ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare userId: number;
 }

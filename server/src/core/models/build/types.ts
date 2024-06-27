@@ -6,7 +6,8 @@ import { BuildWeaponType } from "../build-weapon-type";
 import { User } from "../user";
 
 @Table( {
-    tableName: "build"
+    tableName: "builds",
+    freezeTableName: true
 } )
 export class Build extends Model<InferAttributes<Build>, InferCreationAttributes<Build>> {
 
@@ -47,7 +48,7 @@ export class Build extends Model<InferAttributes<Build>, InferCreationAttributes
     declare isMeta: CreationOptional<boolean>;
 
     @ForeignKey( () => User ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare userId: number;
 
@@ -55,18 +56,18 @@ export class Build extends Model<InferAttributes<Build>, InferCreationAttributes
     declare user: NonAttribute<User>;
 
     @ForeignKey( () => BuildWeaponType ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare buildWeaponTypeId: number;
 
     @BelongsTo( () => BuildWeaponType )
-    declare buildWeaponType: NonAttribute<BuildWeaponType>;
+    declare build_weapon_type: NonAttribute<BuildWeaponType>;
 
     @ForeignKey( () => BuildWeapon ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare buildWeaponId: number;
 
     @BelongsTo( () => BuildWeapon )
-    declare buildWeapon: NonAttribute<BuildWeapon>;
+    declare build_weapon: NonAttribute<BuildWeapon>;
 }

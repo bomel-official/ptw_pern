@@ -13,7 +13,8 @@ import { TournamentUser } from "../tournament-user";
 import { User } from "../user";
 
 @Table( {
-    tableName: "tournament"
+    tableName: "tournaments",
+    freezeTableName: true
 } )
 export class Tournament extends Model<InferAttributes<Tournament>, InferCreationAttributes<Tournament>> {
 

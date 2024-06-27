@@ -12,7 +12,8 @@ import { Build } from "../build";
 import { Team } from "../team";
 
 @Table( {
-    tableName: "user"
+    tableName: "users",
+    freezeTableName: true
 } )
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 

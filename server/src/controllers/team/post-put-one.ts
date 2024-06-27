@@ -7,9 +7,9 @@ import { isUserInGroup } from "../libs";
 import { postPutOneValidate } from "./post-put-one-validate";
 
 export async function postPutOne( req: Request, res: Response, next: NextFunction ) {
-    const validated = await postPutOneValidate( req );
-    if ( isError( validated ) ) {
-        return next( validated.errorObject );
+    const validated = await postPutOneValidate( req ).catch( next );
+    if ( isError( validated ) || !validated ) {
+        return next( validated ? validated.errorObject : ApiError.internal( "Ошибка сервера" ) );
     }
     const {
         players,
@@ -106,7 +106,7 @@ export async function postPutOne( req: Request, res: Response, next: NextFunctio
         const team = await TeamRepository.create( {
             name,
             avatar: filename,
-            capitanId,
+            capitanId: capitanId || reqUser.id,
             slug
         } );
         const playersResponse: User[] = [];

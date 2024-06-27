@@ -3,7 +3,8 @@ import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescrip
 import { User } from "../user";
 
 @Table( {
-    tableName: "friend_request"
+    tableName: "friend_requests",
+    freezeTableName: true
 } )
 export class FriendRequest extends Model<InferAttributes<FriendRequest>, InferCreationAttributes<FriendRequest>> {
 
@@ -18,7 +19,7 @@ export class FriendRequest extends Model<InferAttributes<FriendRequest>, InferCr
     declare isAccepted: CreationOptional<boolean>;
 
     @ForeignKey( () => User ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare userFromId: number;
 
@@ -26,7 +27,7 @@ export class FriendRequest extends Model<InferAttributes<FriendRequest>, InferCr
     declare user_from: NonAttribute<User>;
 
     @ForeignKey( () => User ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare userToId: number;
 

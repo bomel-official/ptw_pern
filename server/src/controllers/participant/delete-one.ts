@@ -16,9 +16,9 @@ export async function deleteOne( req: Request, res: Response, next: NextFunction
     const validated = generateValidator(
         () => ({
             participantId: new CV( req.body.participantId,
-                { label: "participantId" } ).number().val,
+                { label: "participantId" } ).optional().number().val,
             tournamentId: new CV( req.body.tournamentId,
-                { label: "tournamentId" } ).number().val,
+                { label: "tournamentId" } ).optional().number().val,
         }) );
     if ( isError( validated ) ) {
         return next( validated.errorObject );
@@ -69,8 +69,7 @@ export async function deleteOne( req: Request, res: Response, next: NextFunction
         return next( ApiError.forbidden( "Ошибка сервера..." ) );
     }
 
-    if ( !participantPlayerIds.includes( req.user.id ) &&
-        !isAdmin( req.user ) ) {
+    if ( !participantPlayerIds.includes( req.user.id ) && !isAdmin( req.user ) ) {
         return next( ApiError.forbidden( "Нет доступа" ) );
     }
     for ( const user of participant.users ) {

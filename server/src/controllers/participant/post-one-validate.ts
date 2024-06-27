@@ -26,7 +26,7 @@ export async function postOneValidate( req: Request ) {
                 { label: "payMethod" } ).string().val
         }) );
     if ( isError( validated ) ) {
-        return validated.errorObject;
+        return next(validated.errorObject);
     }
     const { teamId, players, tournamentId, id, payMethod } = validated.data;
 
@@ -60,9 +60,7 @@ export async function postOneValidate( req: Request ) {
 
     const alreadyRegisteredParticipant = await ParticipantRepository.findOne( {
         where: {
-            id: id ? {
-                [Op.ne]: id
-            } : {},
+            ...(id ? { id: { [Op.ne]: id } } : {}),
             tournamentId: tournament.id,
         },
         include: [

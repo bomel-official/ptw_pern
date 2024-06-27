@@ -3,7 +3,8 @@ import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescrip
 import { Participant } from "../participant";
 
 @Table( {
-    tableName: "invoice"
+    tableName: "invoices",
+    freezeTableName: true
 } )
 export class Invoice
     extends Model<InferAttributes<Invoice>, InferCreationAttributes<Invoice>> {
@@ -44,7 +45,7 @@ export class Invoice
     declare expired?: CreationOptional<string>;
 
     @ForeignKey( () => Participant ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare participantId?: number;
 

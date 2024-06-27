@@ -13,19 +13,20 @@ export async function postPutOneValidate( req: Request ) {
             throw ApiError.unauthorized( "Не авторизован" );
         }
 
+        const data = {
+            players: new CV( req.body.players, { label: "players" } ).array(
+                ( val ) => new CV( val ).number().val ).val,
+            name: new CV( req.body.name, { label: "name" } ).string().val,
+            id: new CV( req.body.id, { label: "id" } ).optional().number().val,
+            capitanId: new CV( req.body.capitanId,
+                { label: "capitanId" } ).optional().number().val ?? req.user.id,
+            filename,
+            reqUser: req.user
+        };
         return {
             error: false,
-            errorObject: null,
-            data: {
-                players: new CV( req.body.players, { label: "players" } ).array(
-                    ( val ) => new CV( val ).number().val ).val,
-                name: new CV( req.body.name, { label: "name" } ).string().val,
-                id: new CV( req.body.name, { label: "id" } ).number().val,
-                capitanId: new CV( req.body.capitanId,
-                    { label: "capitanId" } ).number().val,
-                filename,
-                reqUser: req.user
-            }
+            data,
+            errorObject: null
         };
     } catch ( e ) {
         return {

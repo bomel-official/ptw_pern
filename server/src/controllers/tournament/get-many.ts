@@ -1,44 +1,61 @@
 import { TournamentRepository, UserRepository } from "@core";
 import { NextFunction, Request, Response } from "express";
 import { Op, Sequelize, WhereOptions } from "sequelize";
+import { IncludeOptions } from "sequelize/types/model";
 
 export async function getMany( req: Request, res: Response, next: NextFunction ) {
     const { status, numberPosts, game, type, userId } = req.query;
-
-    let whereDateEnd: WhereOptions = {};
-    let orderType: [ string, "DESC" | "ASC" ][] = [ [ "dateBegin",
-        "DESC" ], [ "id", "DESC" ] ];
-
+    let whereDateEndObject: WhereOptions = {};
+    let orderType: [ string, "DESC" | "ASC" ][] = [
+        [ "dateBegin", "DESC" ],
+        [ "id", "DESC" ],
+    ];
     if ( status === "active" ) {
-        whereDateEnd = {
-            dateEnd: { [Op.gte]: Sequelize.literal( "NOW()" ) },
+        whereDateEndObject = {
+            dateEnd: {
+                [Op.gte]: Sequelize.literal( "NOW()" ),
+            },
         };
-        orderType = [ [ "dateBegin", "ASC" ], [ "id", "DESC" ] ];
+        orderType = [
+            [ "dateBegin", "ASC" ],
+            [ "id", "DESC" ],
+        ];
     } else if ( status === "finished" ) {
-        whereDateEnd = {
-            dateEnd: { [Op.lte]: Sequelize.literal( "NOW()" ) },
+        whereDateEndObject = {
+            dateEnd: {
+                [Op.lte]: Sequelize.literal( "NOW()" ),
+            },
+        };
+    }
+
+    let includeUser: IncludeOptions = {
+        model: UserRepository,
+        as: "players",
+        attributes: [ "id" ],
+    };
+    if ( userId ) {
+        includeUser = {
+            ...includeUser, where: {
+                id: userId
+            }
         };
     }
 
     const rows = await TournamentRepository.findAll( {
         where: {
             [Op.and]: [
-                whereDateEnd,
-                { game },
-                type ? { type } : {}
+                whereDateEndObject,
+                {
+                    game: game
+                },
+                type ? {
+                    type: type
+                } : {}
             ]
         },
         order: orderType,
-        include: [ {
-            model: UserRepository,
-            as: "players",
-            attributes: [ "id" ],
-            where: userId ? {
-                id: userId
-            } : {}
-        } ],
-        limit: typeof numberPosts === "string" && numberPosts !== "-1" ?
-            parseInt( numberPosts ) : -1,
+        include: [ includeUser ],
+        ...(typeof numberPosts === "string" && numberPosts !== "-1" ? { limit: parseInt( numberPosts ) } : {})
     } );
     return res.json( {
         tournaments: rows

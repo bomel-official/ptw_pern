@@ -4,7 +4,8 @@ import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescrip
 import { BuildAttachmentType } from "../build-attachment-type";
 
 @Table( {
-    tableName: "build_attachment"
+    tableName: "build_attachments",
+    freezeTableName: true
 } )
 export class BuildAttachment
     extends Model<InferAttributes<BuildAttachment>, InferCreationAttributes<BuildAttachment>> {
@@ -35,7 +36,7 @@ export class BuildAttachment
     declare image?: string;
 
     @ForeignKey( () => BuildAttachmentType ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare buildAttachmentTypeId: number;
 

@@ -22,18 +22,21 @@ export async function getMany( req: Request, res: Response, next: NextFunction )
             id: teamIds
         };
     }
+
     const rows = await TeamRepository.findAll( {
         where,
         include: [
             {
                 model: UserRepository,
                 association: "players",
+                isMultiAssociation: true,
                 as: "players",
             },
             {
                 model: UserRepository,
                 as: "capitan",
-                foreignKey: "capitanId"
+                foreignKey: "capitanId",
+                isMultiAssociation: true,
             },
         ]
     } );

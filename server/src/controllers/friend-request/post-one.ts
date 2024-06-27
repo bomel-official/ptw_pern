@@ -16,7 +16,7 @@ export async function postOne( req: Request, res: Response,
             to: new CV( req.body.to, { label: "to" } ).number().val
         }) );
     if ( isError( validated ) ) {
-        return validated.errorObject;
+        return next(validated.errorObject);
     }
     const { to } = validated.data;
 

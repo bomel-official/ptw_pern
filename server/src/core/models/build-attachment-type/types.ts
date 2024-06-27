@@ -3,7 +3,8 @@ import { Column, HasMany, Model, Table } from "sequelize-typescript";
 import { BuildAttachment } from "../build-attachment";
 
 @Table( {
-    tableName: "build_attachment_type"
+    tableName: "build_attachment_types",
+    freezeTableName: true
 } )
 export class BuildAttachmentType
     extends Model<InferAttributes<BuildAttachmentType>, InferCreationAttributes<BuildAttachmentType>> {

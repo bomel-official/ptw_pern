@@ -16,7 +16,8 @@ import { Tournament } from "../tournament";
 import { User } from "../user";
 
 @Table( {
-    tableName: "friend_request"
+    tableName: "participants",
+    freezeTableName: true
 } )
 export class Participant extends Model<InferAttributes<Participant>, InferCreationAttributes<Participant>> {
 
@@ -76,7 +77,7 @@ export class Participant extends Model<InferAttributes<Participant>, InferCreati
     declare users: NonAttribute<User[]>;
 
     @ForeignKey( () => Team ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare teamId: number;
 
@@ -84,7 +85,7 @@ export class Participant extends Model<InferAttributes<Participant>, InferCreati
     declare team: NonAttribute<Team>;
 
     @ForeignKey( () => Tournament ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare tournamentId: number;
 

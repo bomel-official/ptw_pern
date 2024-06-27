@@ -1,8 +1,10 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes } from "sequelize";
-import { Column, Model, Table } from "sequelize-typescript";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { Column, HasMany, Model, Table } from "sequelize-typescript";
+import { Build } from "../build";
 
 @Table( {
-    tableName: "build_weapon_type"
+    tableName: "build_weapon_types",
+    freezeTableName: true
 } )
 export class BuildWeaponType extends Model<InferAttributes<BuildWeaponType>, InferCreationAttributes<BuildWeaponType>> {
 
@@ -20,4 +22,7 @@ export class BuildWeaponType extends Model<InferAttributes<BuildWeaponType>, Inf
         type: DataTypes.STRING, allowNull: true
     } )
     declare title_EU?: string;
+
+    @HasMany( () => Build, { foreignKey: "buildWeaponTypeId" } )
+    declare builds: NonAttribute<Build[]>;
 }

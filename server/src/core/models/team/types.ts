@@ -11,7 +11,8 @@ import { TeamRequest } from "../team-request";
 import { User } from "../user";
 
 @Table( {
-    tableName: "team"
+    tableName: "teams",
+    freezeTableName: true
 } )
 export class Team extends Model<InferAttributes<Team>, InferCreationAttributes<Team>> {
 
@@ -36,7 +37,7 @@ export class Team extends Model<InferAttributes<Team>, InferCreationAttributes<T
     declare avatar?: string;
 
     @ForeignKey( () => User ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare capitanId: number;
 

@@ -4,7 +4,8 @@ import { Tournament } from "../tournament";
 import { User } from "../user";
 
 @Table( {
-    tableName: "tournament_user"
+    tableName: "tournament_users",
+    freezeTableName: true
 } )
 export class TournamentUser extends Model<InferAttributes<TournamentUser>, InferCreationAttributes<TournamentUser>> {
 
@@ -14,12 +15,12 @@ export class TournamentUser extends Model<InferAttributes<TournamentUser>, Infer
     declare id: number;
 
     @ForeignKey( () => User ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare userId: number;
 
     @ForeignKey( () => Tournament ) @Column( {
-        type: DataTypes.INTEGER, allowNull: false
+        type: DataTypes.INTEGER, allowNull: true
     } )
     declare tournamentId: number;
 }

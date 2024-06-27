@@ -6,7 +6,8 @@ import {
 import { Column, Model, Table } from "sequelize-typescript";
 
 @Table( {
-    tableName: "question"
+    tableName: "questions",
+    freezeTableName: true
 } )
 export class Question extends Model<InferAttributes<Question>, InferCreationAttributes<Question>> {
 

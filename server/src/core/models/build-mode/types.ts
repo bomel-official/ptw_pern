@@ -3,7 +3,8 @@ import { DataTypes, InferAttributes, InferCreationAttributes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
 
 @Table( {
-    tableName: "build_mode"
+    tableName: "build_modes",
+    freezeTableName: true
 } )
 export class BuildMode extends Model<InferAttributes<BuildMode>, InferCreationAttributes<BuildMode>> {
 
