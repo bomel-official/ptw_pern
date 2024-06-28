@@ -1,0 +1,94 @@
+.fortune-wheel {
+  padding-top: 30px;
+  display: flex;
+  gap: 30px;
+
+  &__data {
+    flex-grow: 1;
+  }
+
+  &__wheel {
+    position: relative;
+    margin-bottom: 30px;
+  }
+
+  &__svg {
+    width: 100%;
+  }
+
+  &__button-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  &__button-arrow {
+    width: 44px;
+    height: 59px;
+    position: absolute;
+    left: 50%;
+    top: -30px;
+    transform: translateX(-50%);
+    z-index: -1;
+
+    path {
+      stroke: $white;
+      fill: $accentGradHover;
+    }
+  }
+
+  &__button {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    background: $accentGrad;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid $white;
+
+    &:hover {
+      background: $accentGradHover;
+    }
+  }
+
+  &__winner {
+    position: relative;
+    background-color: $gray;
+    padding: 16px;
+    text-align: center;
+    font-size: 24px;
+
+    b {
+      color: $accentGradHover;
+    }
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border-left: 8px solid transparent;
+      border-bottom: 8px solid $black;
+      border-right: 8px solid transparent;
+      content: '';
+      display: block;
+      transform: translate(8px, 2px) rotate(135deg);
+    }
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-left: 8px solid transparent;
+      border-top: 8px solid $black;
+      border-right: 8px solid transparent;
+      content: '';
+      display: block;
+      transform: translate(-8px, -2px) rotate(135deg);
+    }
+  }
+}

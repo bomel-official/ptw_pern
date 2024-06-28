@@ -26,7 +26,7 @@ export async function postOneValidate( req: Request ) {
                 { label: "payMethod" } ).string().val
         }) );
     if ( isError( validated ) ) {
-        return next(validated.errorObject);
+        return validated.errorObject;
     }
     const { teamId, players, tournamentId, id, payMethod } = validated.data;
 

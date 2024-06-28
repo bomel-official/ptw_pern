@@ -1,35 +1,35 @@
 interface ITranslations {
-    [str: string] : {
+    [str: string]: {
         RU: string,
         EU: string
-    }
+    };
 }
 
-export const getSlotWord = (number: number) => {
-    const stringNumber: string = number.toString()
-    const latsFigure = stringNumber[stringNumber.length - 1]
-    switch (latsFigure) {
-        case '1':
-            return 'слот'
-        case '2':
-            return 'слота'
-        case '3':
-            return 'слота'
-        case '4':
-            return 'слота'
-        case '5':
-            return 'слотов'
-        case '6':
-            return 'слотов'
-        case '7':
-            return 'слотов'
-        case '8':
-            return 'слотов'
-        case '9':
-            return 'слотов'
+export const getSlotWord = ( number: number ) => {
+    const stringNumber: string = number.toString();
+    const latsFigure = stringNumber[stringNumber.length - 1];
+    switch ( latsFigure ) {
+        case "1":
+            return "слот";
+        case "2":
+            return "слота";
+        case "3":
+            return "слота";
+        case "4":
+            return "слота";
+        case "5":
+            return "слотов";
+        case "6":
+            return "слотов";
+        case "7":
+            return "слотов";
+        case "8":
+            return "слотов";
+        case "9":
+            return "слотов";
     }
-    return 'слотов'
-}
+    return "слотов";
+};
 
 export const Translations: ITranslations = {
     "1": {
@@ -1240,7 +1240,7 @@ export const Translations: ITranslations = {
         "RU": "Покинуть команду",
         "EU": "Leave the team"
     },
-    "Сохранить" :{
+    "Сохранить": {
         "RU": "Сохранить",
         "EU": "Save"
     },
@@ -1579,5 +1579,13 @@ export const Translations: ITranslations = {
     "Очистить": {
         "RU": "Очистить",
         "EU": "Clear"
+    },
+    "Колесо фортуны": {
+        "RU": "Колесо фортуны",
+        "EU": "Fortune wheel"
+    },
+    "Крутить": {
+        "RU": "Крутить",
+        "EU": "Spin"
     }
-}
+};

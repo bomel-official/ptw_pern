@@ -3,11 +3,10 @@
 @font-face {
   font-family: "Mustica Pro";
   font-weight: 600;
-  src:
-      local("Mustica Pro"),
-      url("./static/fonts/MusticaproSemibold.ttf") format("truetype"),
-      url("./static/fonts/MusticaproSemibold.otf") format("opentype"),
-      url("./static/fonts/MusticaproSemibold.woff") format("woff");
+  src: local("Mustica Pro"),
+  url("./static/fonts/MusticaproSemibold.ttf") format("truetype"),
+  url("./static/fonts/MusticaproSemibold.otf") format("opentype"),
+  url("./static/fonts/MusticaproSemibold.woff") format("woff");
 }
 
 // Base styles
@@ -21,6 +20,7 @@
 @import 'static/css/Team';
 @import 'static/css/MetaBuilds';
 @import 'static/css/Shop';
+@import 'static/css/FortuneWheel';
 
 // Admin styles
 @import 'static/css/Admin';
@@ -46,6 +46,7 @@ img {
 * {
   box-sizing: border-box;
 }
+
 a {
   font: inherit;
   color: inherit;
@@ -55,7 +56,6 @@ a {
 svg {
   display: block;
 }
-
 
 
 button {
@@ -78,6 +78,7 @@ button {
   display: flex;
   align-items: center;
 }
+
 .flex-clear {
   width: 100%;
   height: 0;
@@ -102,7 +103,7 @@ button {
   &.no-border-bottom {
     border-bottom: none;
   }
-  
+
   &.fixed {
     position: fixed;
   }
@@ -139,6 +140,7 @@ button {
     & > svg {
       margin-right: 6px;
     }
+
     &.active {
       @include rounded-button('gray', $TL: true, $fontWeight: 400, $bgDefault: $hoverGray);
     }
@@ -154,6 +156,7 @@ button {
       margin-right: 6px;
     }
   }
+
   .auth {
     &__login-button {
       @include rounded-button('accent', $BR: true, $fontWeight: 700);
@@ -189,7 +192,7 @@ button {
 
       i {
         transition: .3s transform ease-in-out,
-                    .3s width ease-in-out;
+        .3s width ease-in-out;
         display: block;
         width: 14px;
         height: 1px;
@@ -213,6 +216,7 @@ button {
             transform: translateY(3px) rotate(-45deg);
             width: 8px;
           }
+
           i:nth-child(3) {
             transform: translateY(-3px) rotate(45deg);
             width: 8px;
@@ -248,16 +252,20 @@ button {
     height: 100%;
     padding: 70px 16px 40vh 16px;
   }
+
   &__items {
     border-top: 1px solid $header-border-color;
     padding: 20px 0 14px;
   }
+
   &__item {
     a {
       margin: 0 8px 6px;
+
       img {
         margin-right: 6px;
       }
+
       span {
         font-size: 14px;
         font-weight: 400;
@@ -267,14 +275,17 @@ button {
         color: $textHoverWhite;
       }
     }
+
     &:last-child a {
       @include rounded-button('gray', $BR: true);
       justify-content: flex-start;
     }
+
     &:first-child a {
       @include rounded-button('gray', $TL: true);
       justify-content: flex-start;
     }
+
     &:not(:first-child):not(:last-child) a {
       @include rounded-button('gray');
       justify-content: flex-start;
@@ -285,12 +296,14 @@ button {
     margin-top: auto;
     padding-bottom: 24px;
   }
+
   &__title {
     font-size: 13px;
     font-weight: 700;
     line-height: 20px;
     letter-spacing: 0.05em;
   }
+
   &__subtitle {
     font-size: 14px;
     font-weight: 400;
@@ -312,6 +325,7 @@ button {
       &:first-child {
         @include rounded-button('gray', $TL: true, $fontWeight: 700, $bgDefault: $hoverGray);
       }
+
       &:last-child {
         @include rounded-button('gray', $BR: true, $bgDefault: $hoverGray);
       }
@@ -386,6 +400,7 @@ button {
       &:first-child {
         @include rounded-button('gray', $TL: true, $fontWeight: 700, $padding: 0, $bgDefault: $hoverGray);
       }
+
       &:last-child {
         @include rounded-button('gray', $BR: true, $padding: 0, $bgDefault: $hoverGray);
       }
@@ -406,7 +421,7 @@ button {
 }
 
 
-@media screen and (max-device-width:500px) {
+@media screen and (max-device-width: 500px) {
   // Base mobile
   .ds {
     display: none;
@@ -430,16 +445,19 @@ button {
     &__nav {
       display: none;
     }
+
     &__goBackToMain {
       width: 24px;
       height: 40px;
       padding: 0;
     }
+
     .language {
       &__wrapper {
         margin-right: 16px;
       }
     }
+
     .auth__authenticated {
       background: none;
       padding-right: 0;
@@ -449,9 +467,11 @@ button {
       &::after, &::before {
         display: none;
       }
+
       .rating__team-nicks {
         display: none;
       }
+
       .rating__team-images {
         margin-right: 0;
       }
@@ -464,6 +484,7 @@ button {
       margin-bottom: 24px;
       padding: 0;
     }
+
     &__logo {
       margin-right: 0;
       margin-bottom: -18px;
@@ -488,6 +509,7 @@ button {
         width: calc(33.333% - 14px);
       }
     }
+
     &__up {
       margin-left: 8px;
       width: calc(100% - 16px);
@@ -507,6 +529,7 @@ button {
     &__character {
       display: none;
     }
+
     &__callToCation {
       width: calc(100% - 16px);
     }
@@ -527,11 +550,13 @@ button {
       font-size: 24px;
       line-height: 32px;
     }
+
     &__subtitle {
       font-size: 16px;
       line-height: 24px;
 
     }
+
     &__second-title {
       font-size: 20px;
       line-height: 28px;
@@ -545,11 +570,13 @@ button {
     &__content {
       padding: 0 24px;
     }
+
     &__title {
       padding: 24px 0 16px;
       font-size: 24px;
       line-height: 32px;
     }
+
     &__buttons {
       flex-direction: column-reverse;
 
@@ -558,15 +585,19 @@ button {
         margin: 0 14px 8px;
       }
     }
+
     &__gray-button {
       @include rounded-button('gray', $BR: true, $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
+
       &::before {
         border-top: none;
       }
     }
+
     &__submit {
       @include rounded-button('accent', $TL: true, $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
     }
+
     &__social {
       flex-direction: column;
       padding-bottom: 8px;
@@ -576,16 +607,18 @@ button {
         margin: 0 14px 8px;
       }
     }
+
     &__dsLink {
       @include rounded-button($fontWeight: 400, $TL: true, $padding: 14px 8px, $bgDefault: #0C0C15, $bgHover: #18182A, $bgActive: #0C0C15, $color: #6363E9);
     }
+
     &__row {
       flex-direction: column;
       margin-bottom: 4px;
 
       & > *,
       & > .input,
-      & > .input-br{
+      & > .input-br {
         width: calc(100% - 28px);
         margin: 0 14px 12px;
       }
@@ -618,16 +651,20 @@ button {
       &__content-bottom {
         padding-top: 0;
       }
+
       svg {
         stroke: $white;
       }
+
       &__title {
         margin-bottom: 0;
       }
+
       &__subtitle,
       &__top-info-item span {
         color: $white;
       }
+
       &__top {
         &-flex,
         &-info {
@@ -643,6 +680,7 @@ button {
         &-reg-time {
           text-align: left;
         }
+
         &-register {
           flex-grow: 1;
         }
@@ -667,6 +705,7 @@ button {
         width: 100%;
       }
     }
+
     &__block-grid {
       &.main-info-grid {
         grid-template-columns: 1fr 1fr;
@@ -686,6 +725,7 @@ button {
       font-size: 12px;
       padding: 14px 6px;
     }
+
     &__content {
       width: 100%;
       max-width: none;
@@ -695,36 +735,44 @@ button {
         .side__content-top-bg {
           height: 100%;
         }
+
         &.blackShadow::before {
           height: 100%;
         }
       }
     }
+
     &__container {
       padding: 24px 0 0;
     }
+
     &__content-top {
       padding: 0;
     }
+
     &__title {
       padding-top: 24px;
       font-size: 24px;
       line-height: 32px;
     }
+
     &__subtitle {
       font-size: 16px;
       line-height: 24px;
     }
+
     &__content-top {
       margin: 0 -16px;
       padding: 0 16px;
     }
+
     &__top {
       &-profile {
         &-flex {
           flex-direction: column;
           align-items: stretch;
         }
+
         &-logout {
           width: 100%;
           margin-top: 16px;
@@ -733,9 +781,11 @@ button {
             margin-left: 6px;
           }
         }
+
         &-nickname {
           word-break: break-word;
         }
+
         &-info {
           &-top {
             flex-wrap: wrap;
@@ -763,6 +813,7 @@ button {
       width: 100%;
       margin-bottom: 12px;
     }
+
     &__number {
       flex-grow: 1;
     }
@@ -783,6 +834,7 @@ button {
         display: flex;
         width: 100%;
       }
+
       &-info {
         margin-top: 16px;
         flex-direction: row;
@@ -790,10 +842,12 @@ button {
         margin-right: 0;
         width: 100%;
       }
+
       &-edit {
         flex-grow: 1;
         margin-right: 8px;
       }
+
       &-ignore {
         flex-grow: 1;
       }
@@ -805,12 +859,15 @@ button {
     &__subheading {
       margin-bottom: 24px;
     }
+
     &__create-button {
       margin-left: 8px;
     }
+
     &__block {
       margin-top: 12px;
     }
+
     &__grid-row {
       grid-template-columns: 1fr;
       grid-auto-flow: row;
@@ -821,9 +878,11 @@ button {
       flex-direction: column-reverse;
       padding-right: 0;
     }
+
     &__title {
       width: 100%;
     }
+
     &__left {
       padding-right: 64px;
       position: relative;
@@ -833,6 +892,7 @@ button {
       flex-wrap: wrap;
       gap: 12px;
     }
+
     &__image-wrapper {
       padding-right: 48px;
       position: relative;
@@ -852,14 +912,18 @@ button {
         //box-shadow: inset 0 0 10px 5px rgba(0,0,0, 1);
       }
     }
+
     &__author, &__header {
       margin-bottom: 0;
     }
+
     &__buttons {
       z-index: 4;
     }
+
     &__weapon-image {
     }
+
     &__data-item-size {
       width: auto;
     }
@@ -870,13 +934,20 @@ button {
     &__products {
       grid-template-columns: 1fr;
     }
+
     &__product {
       &-right {
         padding: 16px;
       }
+
       &-img {
         width: 120px;
       }
     }
+  }
+
+  // Fortune wheel
+  .fortune-wheel {
+    flex-direction: column;
   }
 }

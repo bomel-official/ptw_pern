@@ -2,6 +2,7 @@ import TrophyIcon from "../static/icons/trophy.svg";
 import ShopIcon from "../static/icons/shopping-bag.svg";
 import TrendUpIcon from "../static/icons/trending-up.svg";
 import MailIcon from "../static/icons/mail.svg";
+import TargetIcon from "../static/icons/target.svg";
 import PackagePlusIcon from "../static/icons/package-plus.svg";
 import PackageOpenIcon from "../static/icons/package-open.svg";
 import ArrowLeftRightIcon from "../static/icons/arrow-left-right.svg";
@@ -75,6 +76,11 @@ export const menuItems = [
         to: '/feedback',
         name: 'FAQ',
         icon: MailIcon
+    },
+    {
+        to: '/fortune-wheel',
+        name: 'Колесо фортуны',
+        icon: TargetIcon
     },
 ]
 

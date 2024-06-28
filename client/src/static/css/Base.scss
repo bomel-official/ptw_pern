@@ -6,10 +6,10 @@ $paypalBgColor: #0070E0;
 $paypalBgHoverColor: #368BE0;
 $paypalBgActiveColor: #0070E0;
 
-$textTransparentWhite: rgba(255,255,255,.25);
-$textWhite: rgba(255,255,255,.5);
-$textHoverWhite: rgba(255,255,255,.75);
-$textActiveWhite: rgba(255,255,255,1);
+$textTransparentWhite: rgba(255, 255, 255, .25);
+$textWhite: rgba(255, 255, 255, .5);
+$textHoverWhite: rgba(255, 255, 255, .75);
+$textActiveWhite: rgba(255, 255, 255, 1);
 
 $accent: #E62C1B;
 $hoverAccent: #E54D57;
@@ -71,7 +71,7 @@ $disabledGray: #292929;
   //transition: background .3s ease-in-out;
 
   &::before,
-  &::after{
+  &::after {
     content: '';
     display: block;
     position: absolute;
@@ -103,6 +103,7 @@ $disabledGray: #292929;
     &::after {
       border-left-color: $hoverColor;
     }
+
     &::before {
       border-right-color: $hoverColor;
     }
@@ -113,6 +114,7 @@ $disabledGray: #292929;
     &::after {
       border-left-color: $activeColor;
     }
+
     &::before {
       border-right-color: $activeColor;
     }
@@ -124,6 +126,7 @@ $disabledGray: #292929;
     &::after {
       border-left-color: $disabledAccent;
     }
+
     &::before {
       border-right-color: $disabledAccent;
     }
@@ -154,6 +157,7 @@ $disabledGray: #292929;
     }
   }
 }
+
 // Style components
 
 .c-textTransparentWhite {
@@ -177,6 +181,7 @@ $disabledGray: #292929;
     &:hover {
       color: $textActiveWhite;
     }
+
     &:active {
       color: $textHoverWhite;
     }
@@ -187,84 +192,111 @@ $disabledGray: #292929;
 .pt12 {
   padding-top: 12px;
 }
+
 .pt16 {
   padding-top: 16px;
 }
+
 .pt24 {
   padding-top: 24px;
 }
+
 .pt32 {
   padding-top: 32px;
 }
+
 .pt64 {
   padding-top: 64px;
 }
+
 .pb12 {
   padding-bottom: 12px;
 }
+
 .pb16 {
   padding-bottom: 16px;
 }
+
 .pb24 {
   padding-bottom: 24px;
 }
+
 .pb32 {
   padding-bottom: 32px;
 }
+
 .pb64 {
   padding-bottom: 64px;
 }
+
 .pb104 {
   padding-bottom: 104px;
 }
+
 .mb8 {
   margin-bottom: 8px;
 }
+
 .mb12 {
   margin-bottom: 12px;
 }
+
 .mb16 {
   margin-bottom: 16px;
 }
+
 .mb24 {
   margin-bottom: 24px;
 }
+
 .mb32 {
   margin-bottom: 32px;
 }
+
 .mb48 {
   margin-bottom: 48px;
 }
+
 .mb64 {
   margin-bottom: 64px;
 }
+
 .mt8 {
   margin-top: 8px;
 }
+
 .mt12 {
   margin-top: 12px;
 }
+
 .mt16 {
   margin-top: 16px;
 }
+
 .mt24 {
   margin-top: 24px;
 }
+
 .mt32 {
   margin-top: 32px;
 }
+
 .mt48 {
   margin-top: 48px;
 }
+
 .mt64 {
   margin-top: 64px;
 }
+
 .pl8 {
   padding-left: 8px;
 }
+
 .pr8 {
   padding-right: 8px;
 }
+
 .corner-margin {
   margin-left: 8px;
   margin-right: 8px;
@@ -277,6 +309,7 @@ $disabledGray: #292929;
 .mr-auto {
   margin-right: auto;
 }
+
 .ml-auto {
   margin-left: auto;
 }
@@ -302,6 +335,7 @@ textarea {
   font: inherit;
   margin: 0;
 }
+
 input[type=file] {
   opacity: 0;
   overflow: hidden;
@@ -322,6 +356,7 @@ input[type=file] {
       stroke: $textWhite;
     }
   }
+
   &__options {
     display: none;
     position: absolute;
@@ -351,7 +386,7 @@ input[type=file] {
     }
 
     &:not(:last-child) span {
-      border-bottom: 1px solid rgba(255,255,255, .05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
     }
   }
 
@@ -361,11 +396,13 @@ input[type=file] {
 
       svg {
         transform: rotate(180deg);
+
         path {
           stroke: $white;
         }
       }
     }
+
     .select__options {
       display: block;
     }
@@ -375,12 +412,15 @@ input[type=file] {
 .input-tl {
   @include rounded-button('gray', $TL: true, $fontWeight: 400, $padding: 0, $color: $textWhite);
 }
+
 .input-br {
   @include rounded-button('gray', $BR: true, $fontWeight: 400, $padding: 0, $color: $textWhite);
 }
+
 .input-both {
   @include rounded-button('gray', $BR: true, $TL: true, $fontWeight: 400, $padding: 0, $color: $textWhite);
 }
+
 .input {
   @include rounded-button('gray', $fontWeight: 400, $padding: 0, $color: $textWhite);
 }
@@ -445,12 +485,15 @@ input[type=file] {
 .button-tl-gray {
   @include rounded-button('gray', $TL: true, $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
 }
+
 .button-br-gray {
   @include rounded-button('gray', $BR: true, $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
 }
+
 .button-both-gray {
   @include rounded-button('gray', $BR: true, $TL: true, $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
 }
+
 .button-gray {
   @include rounded-button('gray', $fontWeight: 400, $padding: 14px 8px, $color: $textHoverWhite);
 }
@@ -458,12 +501,15 @@ input[type=file] {
 .button-tl-accent {
   @include rounded-button('accent', $TL: true, $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
 }
+
 .button-br-accent {
   @include rounded-button('accent', $BR: true, $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
 }
+
 .button-both-accent {
   @include rounded-button('accent', $BR: true, $TL: true, $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
 }
+
 .button-accent {
   @include rounded-button('accent', $fontWeight: 700, $padding: 14px 8px, $color: $textActiveWhite);
 }
@@ -476,6 +522,7 @@ input[type=file] {
   &::after {
     border-left-color: $paypalBgColor
   }
+
   &::before {
     border-right-color: $paypalBgColor
   }
@@ -486,16 +533,19 @@ input[type=file] {
     &::after {
       border-left-color: $paypalBgHoverColor
     }
+
     &::before {
       border-right-color: $paypalBgHoverColor
     }
   }
+
   &:active {
     background: $paypalBgActiveColor;
 
     &::after {
       border-left-color: $paypalBgActiveColor
     }
+
     &::before {
       border-right-color: $paypalBgActiveColor
     }
@@ -516,6 +566,7 @@ input[type=file] {
   &:hover {
     color: $hoverAccent;
   }
+
   &:active {
     color: $activeAccent;
   }
@@ -620,9 +671,11 @@ input[type=file] {
       height: 100%;
       padding: 24px 0;
     }
+
     &-items {
       padding: 0;
     }
+
     &-item {
       a {
         @include rounded-button('black', $BR: true, $TL: true);
@@ -636,9 +689,11 @@ input[type=file] {
           justify-content: flex-start;
           text-transform: none;
         }
+
         img {
           margin-right: 6px;
         }
+
         span {
           font-size: 14px;
           font-weight: 400;
@@ -653,12 +708,14 @@ input[type=file] {
     &-bottom {
       margin-top: auto;
     }
+
     &-title {
       font-size: 13px;
       font-weight: 700;
       line-height: 20px;
       letter-spacing: 0.05em;
     }
+
     &-subtitle {
       font-size: 14px;
       font-weight: 400;
@@ -680,6 +737,7 @@ input[type=file] {
         &:first-child {
           @include rounded-button('gray', $TL: true, $fontWeight: 700, $bgDefault: $hoverGray);
         }
+
         &:last-child {
           @include rounded-button('gray', $BR: true, $bgDefault: $hoverGray);
         }
@@ -693,6 +751,7 @@ input[type=file] {
     max-width: 976px;
     padding-right: 16px;
   }
+
   &__content {
     width: calc(50% + 348px);
     max-width: calc(100% - 264px);
@@ -704,7 +763,7 @@ input[type=file] {
 
       &-bg,
       &.gradientBG::before,
-      &.blackShadow::before{
+      &.blackShadow::before {
         position: absolute;
         z-index: 1;
         width: 100%;
@@ -719,19 +778,22 @@ input[type=file] {
         content: '';
         display: block;
         z-index: 2;
-        background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,1));
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
       }
+
       &.blackShadow::before {
         content: '';
         display: block;
         z-index: 2;
-        background: rgba(0,0,0,.9);
+        background: rgba(0, 0, 0, .9);
       }
     }
+
     &-bottom {
       padding-top: 32px;
     }
   }
+
   &__title {
     font-family: 'Mustica Pro', sans-serif;
     font-size: 32px;
@@ -740,6 +802,7 @@ input[type=file] {
     letter-spacing: 0;
     margin-bottom: 12px;
   }
+
   &__subtitle {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
@@ -749,6 +812,7 @@ input[type=file] {
     margin-bottom: 24px;
     color: $textWhite;
   }
+
   &__tab {
     &-headings {
       display: grid;
@@ -756,6 +820,7 @@ input[type=file] {
       grid-auto-flow: column;
       margin-bottom: -1px;
     }
+
     &-heading {
       display: block;
       padding: 14px;
@@ -788,6 +853,7 @@ input[type=file] {
       text-align: center;
     }
   }
+
   &__top {
     &-profile {
       padding: 24px;
@@ -805,10 +871,12 @@ input[type=file] {
         display: flex;
         align-items: center;
       }
+
       &-left.flex {
         align-items: center;
         margin-right: auto;
       }
+
       &-info {
         margin-left: 24px;
         display: flex;
@@ -819,10 +887,12 @@ input[type=file] {
           gap: 6px;
           margin-bottom: auto;
         }
+
         &-bottom {
           padding-top: 12px;
         }
       }
+
       &-nickname {
         font-family: 'Mustica Pro', sans-serif;
         font-size: 24px;
@@ -831,12 +901,14 @@ input[type=file] {
         letter-spacing: 0;
         text-align: left;
       }
+
       &-platform {
         width: 32px;
         height: 32px;
         object-fit: contain;
         object-position: center center;
       }
+
       &-tag {
         font-family: 'Inter', sans-serif;
         font-size: 14px;
@@ -848,8 +920,9 @@ input[type=file] {
         background: $gray;
         border-radius: 4px;
       }
+
       &-ds,
-      &-tw{
+      &-tw {
         font-family: 'Inter', sans-serif;
         font-size: 14px;
         font-weight: 400;
@@ -869,9 +942,11 @@ input[type=file] {
           object-fit: contain;
         }
       }
+
       &-tw {
         background-color: #9448FF;
       }
+
       &-logout {
         @include rounded-button('gray', $BR: true, $TL: true, $padding: 0);
         width: 32px;
@@ -883,6 +958,7 @@ input[type=file] {
         }
       }
     }
+
     &-flex {
       position: relative;
       z-index: 3;
@@ -891,9 +967,11 @@ input[type=file] {
       align-items: flex-end;
       padding-bottom: 24px;
     }
+
     &-left {
       flex-grow: 1;
     }
+
     &-info {
       display: flex;
       align-items: center;
@@ -919,9 +997,11 @@ input[type=file] {
         }
       }
     }
+
     &-right {
       width: 288px;
     }
+
     &-reg-inactive {
       margin-left: auto;
       color: $textWhite;
@@ -930,6 +1010,7 @@ input[type=file] {
       line-height: 20px;
       letter-spacing: 0;
     }
+
     &-reg-time {
       font-family: 'Inter', sans-serif;
       font-size: 12px;
@@ -938,20 +1019,24 @@ input[type=file] {
       letter-spacing: 0;
       text-align: right;
     }
+
     &-buttons {
       margin: 0 -6px;
       padding-top: 12px;
     }
+
     &-register {
       @include rounded-button('accent', $TL: true, $fontWeight: 700, $padding: 14px 8px, $color: $white);
       width: 212px;
       margin: 0 14px;
     }
+
     &-unregister {
       @include rounded-button('black', $TL: true, $fontWeight: 400, $padding: 14px 8px, $color: $white);
       width: 212px;
       margin: 0 14px;
     }
+
     &-share {
       @include rounded-button('black', $BR: true, $fontWeight: 400, $padding: 14px 6px, $color: $white);
       margin: 0 14px;
@@ -1009,7 +1094,7 @@ input[type=file] {
     right: 0;
     pointer-events: none;
     z-index: 1;
-    box-shadow: 0 10px 15px -5px rgba(0,0,0,.5);
+    box-shadow: 0 10px 15px -5px rgba(0, 0, 0, .5);
     background-color: $hoverGray;
     font-size: 13px;
     line-height: 20px;
@@ -1027,10 +1112,12 @@ input[type=file] {
       pointer-events: all;
     }
   }
+
   &.active {
     .arrow-icon {
       transform: rotate(180deg);
     }
+
     .dropdown__values {
       opacity: 1;
       pointer-events: all;
@@ -1049,11 +1136,13 @@ input[type=file] {
       padding: 14px 8px;
       white-space: nowrap;
     }
+
     &:not(:last-child) {
       a, button {
         border-bottom: 1px solid $gray;
       }
     }
+
     img, svg {
       margin-right: 6px;
     }
@@ -1081,9 +1170,11 @@ input[type=file] {
   &.c3 {
     grid-template-columns: 1fr 1fr 1fr;
   }
+
   &.c2 {
     grid-template-columns: 1fr 1fr;
   }
+
   &.c1 {
     grid-template-columns: 1fr;
   }
@@ -1096,7 +1187,7 @@ input[type=file] {
   left: 0;
   height: 140vh;
   padding-bottom: calc(40vh + 70px);
-  background: rgba(0,0,0,.75);
+  background: rgba(0, 0, 0, .75);
   backdrop-filter: blur(5px);
   z-index: 20;
   opacity: 0;
@@ -1137,6 +1228,7 @@ input[type=file] {
     margin-right: 6px;
     width: calc(100% - 12px);
   }
+
   &__grayButton {
     margin-left: 6px;
     margin-right: 6px;
@@ -1231,6 +1323,7 @@ input[type=file] {
       align-items: stretch;
       gap: 24px;
     }
+
     &-item {
       padding: 12px;
       border-radius: 4px;
@@ -1366,11 +1459,13 @@ input[type=file] {
       background-color: #C4C4C4;
       border-radius: 2px;
     }
+
     span:first-child {
-      transform: translate(3px,10px) rotate(45deg);
+      transform: translate(3px, 10px) rotate(45deg);
     }
+
     span:last-child {
-      transform: translate(8px,8px) rotate(-45deg);
+      transform: translate(8px, 8px) rotate(-45deg);
     }
   }
 
@@ -1380,17 +1475,21 @@ input[type=file] {
         border-bottom: none;
       }
     }
+
     .panel__icon {
       span {
         width: 16px;
       }
+
       span:first-child {
-        transform: translate(2px,10px) rotate(45deg);
+        transform: translate(2px, 10px) rotate(45deg);
       }
+
       span:last-child {
-        transform: translate(2px,8px) rotate(-45deg);
+        transform: translate(2px, 8px) rotate(-45deg);
       }
     }
+
     .panel__content {
       display: block;
     }
@@ -1400,7 +1499,7 @@ input[type=file] {
 .black-corner-TL {
   position: relative;
 
-  &::before{
+  &::before {
     position: absolute;
     top: 0;
     left: 0;
@@ -1412,6 +1511,7 @@ input[type=file] {
     transform: translate(-8px, -2px) rotate(135deg);
   }
 }
+
 .black-corner-BR {
   position: relative;
 
@@ -1427,12 +1527,14 @@ input[type=file] {
     transform: translate(8px, 2px) rotate(135deg);
   }
 }
+
 .black-corner-both {
   position: relative;
 
   @extend .black-corner-TL;
   @extend .black-corner-BR;
 }
+
 .pagination {
   display: flex;
   align-items: center;
@@ -1450,20 +1552,25 @@ input[type=file] {
       &:first-child {
         @include rounded-button('gray', $TL: true, $padding: 14px 6px);
       }
+
       &:not(:first-child):not(:last-child) {
         @include rounded-button('gray', $padding: 14px 6px);
       }
+
       &:last-child {
         @include rounded-button('gray', $BR: true, $padding: 14px 6px);
       }
     }
   }
+
   &__prev {
     margin-right: 17px;
   }
+
   &__next {
     margin-left: 17px;
   }
+
   &__number {
     margin: 0 11px;
   }
