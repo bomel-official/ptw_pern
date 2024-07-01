@@ -3,16 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev-client": "cd client && npm run start",
-    "dev-server": "cd server && npm run dev",
-    "dev": "npm run dev-client && npm run dev-server",
-    "pm2-start-client": "cd client && npm run serve",
-    "pm2-start-server": "cd client && npm run pm2-start",
-    "pm2-start": "npm run pm2-start-client && npm run pm2-start-server",
-    "pm2-restart-client": "cd client && npm run restart",
-    "pm2-restart-server": "cd client && npm run pm2-restart",
-    "pm2-restart": "npm run pm2-restart-client && npm run pm2-restart-server",
-    "pm2-restart-build": "cd client && npm run build && pm2 restart \"playtowin.pro express\""
+    "pull:deploy": "git pull origin main && npm install --prefix server && npm install --prefix client && npm run --prefix client build && pm2 restart \"playtowin.pro express\"\n"
   },
   "author": "Andrey Rusakov",
   "license": "ISC",
