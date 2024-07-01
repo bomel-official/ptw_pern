@@ -173,6 +173,7 @@ export type IQuestion = {
 
 export interface CompetitionDTO {
     id?: number;
+    authorId?: number,
     title: string;
     participantsAmount: number;
     participants: number[][];

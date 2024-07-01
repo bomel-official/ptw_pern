@@ -11,11 +11,11 @@ export function normalizeCompetition( competition: Competition | null ): Competi
 
     const participantsUsers = normalizedParticipants.map( participantRow => participantRow.map(
         participantItem => participantItem === -1 ? null :
-            competition.users.find( user => user.id === participantItem ) ) );
+            competition.users.find( user => user.id === participantItem ) ?? null ) );
 
     const outsidersUsers = normalizedOutsiders.map( outsiderRow => outsiderRow.map(
         outsiderItem => outsiderItem === -1 ? null :
-            competition.users.find( user => user.id === outsiderItem ) ) );
+            competition.users.find( user => user.id === outsiderItem ) ?? null ) );
 
     return {
         id: competition.id,
@@ -24,11 +24,9 @@ export function normalizeCompetition( competition: Competition | null ): Competi
         isOutsiders: competition.isOutsiders,
         participants: normalizedParticipants,
         outsiders: normalizedOutsiders,
-        users: competition.users,
         updatedAt: competition.updatedAt,
         createdAt: competition.createdAt,
         authorId: competition.authorId,
-        author: competition.author,
         participantsUsers,
         outsidersUsers,
     };

@@ -43,16 +43,16 @@ const CompetitionMainPage = () => {
                                     </NavLink>
                                 </div> }
                             <div className="side__tab-headings">
-                                { Object.values( COMPETITION_REQUEST_TYPES ).map( ( type, index ) => (
-                                    <button
+                                { Object.values( COMPETITION_REQUEST_TYPES ).map( ( type, index ) => {
+                                    return (!type.authRestricted || isAuthenticated) ? <button
                                         key={ index }
                                         className={ requestType === type.id ? "side__tab-heading active" :
                                             "side__tab-heading" }
                                         onClick={ () => setRequestType( type.id ) }
                                     >
                                         { __( type.label ) }
-                                    </button>
-                                ) ) }
+                                    </button> : null;
+                                } ) }
                             </div>
                         </div>
                     </div>

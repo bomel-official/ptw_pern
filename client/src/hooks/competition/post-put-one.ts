@@ -17,6 +17,7 @@ export function usePostPutOneCompetition( defaultValue?: CompetitionDTO | null )
     useEffect( () => {
         if ( defaultValue ) {
             setData( defaultValue );
+            setIsEdit( false );
         } else {
             setIsEdit( true );
         }

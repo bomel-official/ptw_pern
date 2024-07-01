@@ -7,19 +7,23 @@ export enum CompetitionRequestTypeId {
 export interface CompetitionRequestType {
     id: CompetitionRequestTypeId;
     label: string;
+    authRestricted: boolean;
 }
 
 export const COMPETITION_REQUEST_TYPES: Record<CompetitionRequestTypeId, CompetitionRequestType> = {
     [CompetitionRequestTypeId.ALL]: {
         id: CompetitionRequestTypeId.ALL,
-        label: "Все"
+        label: "Все",
+        authRestricted: false
     },
     [CompetitionRequestTypeId.OWN_INCLUDED]: {
         id: CompetitionRequestTypeId.OWN_INCLUDED,
-        label: "Вы учавствуете"
+        label: "Вы участвуете",
+        authRestricted: true
     },
     [CompetitionRequestTypeId.OWN]: {
         id: CompetitionRequestTypeId.OWN,
-        label: "Ваши турниры"
+        label: "Ваши турниры",
+        authRestricted: true
     },
 };

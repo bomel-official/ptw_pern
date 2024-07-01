@@ -7,4 +7,5 @@ export interface CompetitionDetailProps {
 export interface CompetitionTableProps {
     data: (IUser | null)[][];
     setValue: ( competition: IUser | null, rowIndex: number, index: number ) => void;
+    isEdit: boolean;
 }
