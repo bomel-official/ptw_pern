@@ -1,7 +1,7 @@
 import React, { MouseEvent, useEffect, useState } from "react";
 import { Footer } from "../components/base/Footer";
 import { Header } from "../components/base/Header";
-import { useHttp } from "../hooks/http.hook";
+import { useHttp } from "../hooks/http.hook/http-hook";
 import { __, _f } from "../multilang/Multilang";
 import { IQuestion } from "../StoreTypes";
 

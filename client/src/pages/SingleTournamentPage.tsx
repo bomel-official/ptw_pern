@@ -20,7 +20,7 @@ import SingleTournamentAbout from "../components/tournament/SingleTournamentAbou
 import {getTournamentAdditionalFields} from "../functions/getTournamentAdditionalFields";
 import {getRegisterHTML} from "../functions/getRegisterHTML";
 import {IParticipant} from "../StoreTypes";
-import {useHttp} from "../hooks/http.hook";
+import {useHttp} from "../hooks/http.hook/http-hook";
 import NavDropdown from "../components/base/NavDropdown";
 import {parseUrls} from "../functions/parseUrls";
 import getPayPalText from "../functions/getPayPalText";

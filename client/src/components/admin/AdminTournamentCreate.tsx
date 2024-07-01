@@ -3,7 +3,7 @@ import {_f, __} from "../../multilang/Multilang";
 import Select from "../base/Select";
 import {Games, IGameObject} from "../../data/Games";
 import {IMessageOptions, ITournament} from "../../StoreTypes";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {AuthContext} from "../../context/AuthContext";
 
 

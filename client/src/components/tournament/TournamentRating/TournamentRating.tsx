@@ -4,7 +4,7 @@ import DefaultUserPic from "../../../static/icons/USERPIC.png";
 import {NavLink} from "react-router-dom";
 import {icons} from "../../../data/PlatformIcons";
 import {IMessageOptions, IParticipant, ITournament} from "../../../StoreTypes";
-import {useHttp} from "../../../hooks/http.hook";
+import {useHttp} from "../../../hooks/http.hook/http-hook";
 import {getFile} from "../../../functions/getFile";
 import {AuthContext} from "../../../context/AuthContext";
 import {isUserAdmin} from "../../../functions/isUserAdmin";

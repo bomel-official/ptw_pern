@@ -28,9 +28,11 @@
   &.c3 {
     width: calc(33.333% - 24px);
   }
+
   &.c2 {
     width: calc(50% - 24px);
   }
+
   &.c1 {
     width: calc(100% - 24px);
   }
@@ -39,6 +41,7 @@
     .previewVertical__img {
       filter: grayscale(100%);
     }
+
     .previewVertical__status {
       color: $textTransparentWhite;
       background-color: $hoverGray;
@@ -57,6 +60,7 @@
     z-index: 5;
     transform: translate(-8px, -2px) rotate(135deg);
   }
+
   &::after {
     position: absolute;
     bottom: 0;
@@ -112,6 +116,7 @@
     text-align: left;
     margin-bottom: 4px;
   }
+
   &__subtitle {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -122,8 +127,9 @@
     color: $textHoverWhite;
     margin-bottom: 4px;
   }
+
   &__users,
-  &__date{
+  &__date {
     padding-top: 8px;
     display: flex;
     align-items: center;
@@ -139,17 +145,20 @@
       color: $textHoverWhite;
     }
   }
+
   &__buttons {
     display: flex;
     align-items: center;
     margin: 0 -8px;
   }
+
   &__fund {
     @include rounded-button('gray', $TL: true, $fontWeight: 400, $color: $textHoverWhite, $padding: 14px 8px, $bgDefault: $black, $bgHover: $black, $bgActive: $black);
     cursor: default;
     margin: 0 14px;
     width: calc(50% - 24px);
   }
+
   &__link {
     @include rounded-button('accent', $BR: true, $fontWeight: 700, $color: $white, $padding: 14px 8px);
     margin: 0 14px;
@@ -164,6 +173,7 @@
   &__content {
     flex-grow: 1;
   }
+
   &__fund {
     border-radius: 4px;
     overflow: hidden;
@@ -200,6 +210,7 @@
         transform: translate(-8px, -2px) rotate(135deg);
       }
     }
+
     &-heading {
       color: $textHoverWhite;
       font-family: 'Mustica Pro', sans-serif;
@@ -208,6 +219,7 @@
       line-height: 24px;
       letter-spacing: 0;
     }
+
     &-number {
       color: $white;
       font-family: 'Mustica Pro', sans-serif;
@@ -228,6 +240,7 @@
       border: 1px solid $gray;
       border-radius: 0 0 2px 2px;
     }
+
     &-item {
       &-place {
         font-family: 'Inter', sans-serif;
@@ -238,6 +251,7 @@
         text-align: left;
         color: $textHoverWhite;
       }
+
       &-prize {
         font-family: 'Inter', sans-serif;
         font-size: 14px;
@@ -249,6 +263,7 @@
       }
     }
   }
+
   &__block {
     padding-top: 32px;
 
@@ -271,6 +286,7 @@
       text-align: left;
       margin-bottom: 8px;
     }
+
     &-grid {
       grid-column-gap: 12px;
       grid-row-gap: 12px;
@@ -285,6 +301,7 @@
           text-align: left;
           color: $textHoverWhite;
         }
+
         &-row {
           padding-top: 4px;
           display: flex;
@@ -304,6 +321,7 @@
         }
       }
     }
+
     &-text {
       font-family: 'Inter', sans-serif;
       font-size: 14px;
@@ -331,6 +349,7 @@
       min-width: 288px;
       width: 288px;
     }
+
     &-block {
       padding: 16px;
       border-radius: 4px;
@@ -344,13 +363,16 @@
     svg {
       stroke: $textHoverWhite;
     }
+
     .tournament__block-grid-item-heading {
       color: $textWhite;
     }
+
     .tournament__block-grid-item-row span {
       color: $textHoverWhite;
     }
   }
+
   &__participants-link {
     @include rounded-button('gray', $BR: true, $TL: true, $fontWeight: 400, $color: $textHoverWhite, $padding: 10px 8px);
     margin: 0 8px;
@@ -376,6 +398,7 @@
       object-position: center center;
       object-fit: cover;
     }
+
     &-title {
       font-family: 'Mustica Pro', sans-serif;
       font-size: 24px;
@@ -383,6 +406,7 @@
       line-height: 32px;
       letter-spacing: 0;
     }
+
     &-place {
       svg {
         margin-right: 6px;
@@ -390,9 +414,10 @@
         height: 24px;
 
         path {
-         stroke-opacity: 1;
+          stroke-opacity: 1;
         }
       }
+
       span {
         font-family: 'Inter', sans-serif;
         font-size: 16px;
@@ -422,7 +447,7 @@
     }
 
     tr td,
-    tr th{
+    tr th {
       border-bottom: 1px solid $gray;
       white-space: nowrap;
       vertical-align: top;
@@ -438,6 +463,7 @@
       text-align: left;
       color: $textHoverWhite;
     }
+
     td {
       padding: 16px 6px;
 
@@ -445,6 +471,7 @@
         opacity: .3;
       }
     }
+
     .text {
       font-family: 'Inter', sans-serif;
       font-size: 14px;
@@ -456,6 +483,7 @@
       padding: 0;
       color: $textHoverWhite;
     }
+
     .bold {
       font-family: 'Inter', sans-serif;
       font-size: 14px;
@@ -474,6 +502,7 @@
       position: relative;
       z-index: 2;
     }
+
     &-nicks {
       svg, img {
         margin-right: 3px;
@@ -482,18 +511,22 @@
         object-fit: contain;
         object-position: center center;
       }
+
       .a-img {
         width: 16px;
         height: 16px;
       }
+
       a {
         display: flex;
         align-items: center;
       }
+
       .multitwitch {
         margin-left: 4px;
       }
     }
+
     &-images {
       margin-right: 12px;
       width: 40px;
@@ -508,6 +541,7 @@
         overflow: hidden;
       }
     }
+
     &-notifications {
       position: absolute;
       bottom: 100%;
@@ -523,6 +557,7 @@
       text-align: center;
     }
   }
+
   &__place {
     margin-left: 8px;
     background-color: $accent;
@@ -533,5 +568,50 @@
     gap: 4px;
     font-size: 14px;
     color: $white;
+  }
+}
+
+.tournament-table {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: clip;
+  height: 100%;
+  padding: 20px 0 100px;
+
+  &__separator-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__separator {
+    position: relative;
+    width: 20px;
+    display: block;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 20px;
+      bottom: 20px;
+      right: 50%;
+      left: 0;
+      border: 2px solid $textWhite;
+      border-left: none;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      right: 0;
+      height: 2px;
+      transform: translateY(-50%);
+      background-color: $textWhite;
+    }
   }
 }

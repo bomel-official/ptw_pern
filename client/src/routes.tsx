@@ -4,6 +4,8 @@ import AdminFAQPage from "./components/adminPages/AdminFAQPage";
 import AdminMetaBuildsPage from "./components/adminPages/AdminMetaBuildsPage";
 import AdminRoleEditorPage from "./components/adminPages/AdminRoleEditorPage";
 import AdminTournamentsPage from "./components/adminPages/AdminTournamentsPage";
+import CompetitionDetailPage from "./pages/competition/competition-detail-page";
+import CompetitionMainPage from "./pages/competition/competition-main-page";
 import Contact from "./pages/Contact";
 import { DiscordAuthPage } from "./pages/DiscordAuth";
 import FortuneWheel from "./pages/fortune-wheel/fortune-wheel";
@@ -44,6 +46,8 @@ export const useRoutes = () => {
             <Route path="/user-rules" element={ <UserRules/> }/>
             <Route path="/contact" element={ <Contact/> }/>
             <Route path="/fortune-wheel" element={ <FortuneWheel/> }/>
+            <Route path="/competition" element={ <CompetitionMainPage/> }/>
+            <Route path="/competition/:id" element={ <CompetitionDetailPage/> }/>
             <Route path="/admin/tournaments" element={ <AdminTournamentsPage/> }/>
             <Route path="/admin/builds" element={ <AdminMetaBuildsPage/> }/>
             <Route path="/admin/roles" element={ <AdminRoleEditorPage/> }/>

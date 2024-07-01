@@ -13,7 +13,7 @@ import {NavLink} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
 import MetaBuildList from "../components/metaBuilds/MetaBuildList";
 import {IBuildWeapon, IBuildWeaponType} from "../StoreTypes";
-import {useHttp} from "../hooks/http.hook";
+import {useHttp} from "../hooks/http.hook/http-hook";
 import StateSelect from "../components/base/StateSelect";
 
 

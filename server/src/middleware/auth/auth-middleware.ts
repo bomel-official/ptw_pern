@@ -16,7 +16,11 @@ export function authMiddleware( req: Request, res: Response,
         if ( !token ) {
             return res.status( 401 ).json( { message: "Не авторизован" } );
         }
-        req.user = jwt.verify( token, JWT_SECRET_KEY ) as JWTUserData;
+        try {
+            req.user = jwt.verify( token, JWT_SECRET_KEY ) as JWTUserData;
+        } catch ( e ) {
+            return res.status( 401 ).json( { message: "Не авторизован" } );
+        }
         return next();
     }
 

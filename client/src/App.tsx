@@ -7,7 +7,7 @@ import { GameContext } from "./context/GameContext";
 import { LanguageContext } from "./context/LanguageContext";
 import { useAuth } from "./hooks/auth.hook";
 import { useGame } from "./hooks/game.hook";
-import { useHttp } from "./hooks/http.hook";
+import { useHttp } from "./hooks/http.hook/http-hook";
 import { useLanguage } from "./hooks/language.hook";
 import { useRoutes } from "./routes";
 import { store } from "./store";

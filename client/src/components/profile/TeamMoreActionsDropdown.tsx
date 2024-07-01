@@ -3,7 +3,7 @@ import {__} from "../../multilang/Multilang";
 import {ITeam} from "../../StoreTypes";
 import {ITeamActions} from "./TeamTablet";
 import {AuthContext} from "../../context/AuthContext";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 
 const TeamMoreActionsDropdown = ({team, actions}: {team: ITeam, actions: ITeamActions}) => {
     const [isActive, setIsActive] = useState<boolean>(false)

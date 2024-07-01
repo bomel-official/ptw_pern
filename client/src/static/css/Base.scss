@@ -1055,6 +1055,16 @@ input[type=file] {
     text-transform: none;
     height: 48px;
 
+    &.compact {
+      height: 40px;
+      overflow: hidden;
+      border-radius: 4px;
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+      white-space: nowrap;
+    }
+
     input {
       text-align: left;
       padding: 14px 8px;

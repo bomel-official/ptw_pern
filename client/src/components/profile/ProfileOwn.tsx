@@ -15,7 +15,7 @@ import {__} from "../../multilang/Multilang";
 import {NavLink} from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext";
 import ProfileOwnTeamsTab from './ProfileOwnTeamsTab';
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 import {SaveTeam} from "../handlers/SaveTeam";
 import {getProfileUrl} from "../../functions/urls";

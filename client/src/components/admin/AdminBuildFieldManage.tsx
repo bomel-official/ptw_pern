@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {__, _f} from "../../multilang/Multilang";
 import {IMessageOptions} from "../../StoreTypes";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {AuthContext} from "../../context/AuthContext";
 import Select from "../base/Select";
 import AdminMetaBuildFieldItem from "./AdminMetaBuildFieldItem";

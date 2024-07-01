@@ -4,7 +4,7 @@ import UserAvatar from "../../static/icons/ANIME.jpg";
 import {__} from "../../multilang/Multilang";
 import ProfileTablet from "./ProfileTablet";
 import Pagination from "../base/Pagination";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 
 const ProfileFriends = ({user}: {user: IUser}) => {
     const [friendsList, setFriendsList] = useState<IUser[]>([])

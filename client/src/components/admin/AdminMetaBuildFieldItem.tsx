@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {__, _f} from "../../multilang/Multilang";
 import {BuildFields} from "./AdminBuildFieldManage";
 import Select from "../base/Select";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import AdminBuildFields from "./AdminBuildFields";
 
 const AdminMetaBuildFieldItem = ({

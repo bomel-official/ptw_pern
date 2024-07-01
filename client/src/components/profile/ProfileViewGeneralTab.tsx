@@ -8,7 +8,7 @@ import ProfileTablet from "./ProfileTablet";
 import {NavLink} from "react-router-dom";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {TournamentsList} from "../tournament/TournamentsList";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import ProfileSocial from "./ProfileSocial";
 
 const ProfileViewGeneralTab = ({user}: {user: IUser}) => {

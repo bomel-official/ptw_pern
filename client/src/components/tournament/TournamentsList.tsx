@@ -3,7 +3,7 @@ import {TournamentPreview} from "./TournamentPreview";
 import {useCallback, useContext, useEffect, useState} from "react";
 import {__} from "../../multilang/Multilang";
 import {GameContext, IGame} from "../../context/GameContext";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {ITournament} from "../../StoreTypes";
 
 export const TournamentsList = ({status, columns, type = 'tournament', userId}: {status?: IResultStatus, columns: number, type?: 'tournament'|'hub', userId?: number}) => {

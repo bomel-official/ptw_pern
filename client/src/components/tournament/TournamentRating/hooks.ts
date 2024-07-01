@@ -1,5 +1,5 @@
 import { Dispatch, useEffect, useState } from "react";
-import { useHttp } from "../../../hooks/http.hook";
+import { useHttp } from "../../../hooks/http.hook/http-hook";
 import {
     IMessageOptions,
     IParticipant,

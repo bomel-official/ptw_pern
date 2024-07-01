@@ -19,3 +19,5 @@ export type { Team } from "./team/types";
 export type { TournamentUser } from "./tournament-user/types";
 export type { Tournament } from "./tournament/types";
 export type { User } from "./user/types";
+export type { Competition, CompetitionNormalized } from "./competition/types";
+export type { CompetitionUser } from "./competition-user/types";

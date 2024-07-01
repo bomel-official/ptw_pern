@@ -2,7 +2,7 @@ import { useCallback, useEffect, useReducer, useState } from "react";
 
 import { ITeam, IUser } from "../StoreTypes";
 import { useDebounce } from "./debounce.hook";
-import { useHttp } from "./http.hook";
+import { useHttp } from "./http.hook/http-hook";
 
 export const initNewTeam: ITeam = {
     id: null,

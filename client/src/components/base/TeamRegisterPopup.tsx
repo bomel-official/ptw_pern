@@ -4,7 +4,7 @@ import PayPalData from "../../data/PayPalData";
 import { icons } from "../../data/PlatformIcons";
 import { getFile } from "../../functions/getFile";
 import { isUserAdmin } from "../../functions/isUserAdmin";
-import { useHttp } from "../../hooks/http.hook";
+import { useHttp } from "../../hooks/http.hook/http-hook";
 import { initNewTeam, useNewTeam } from "../../hooks/newTeam.hook";
 import { useTournamentRegistration } from "../../hooks/tournamentRegistration.hook";
 import { __ } from "../../multilang/Multilang";

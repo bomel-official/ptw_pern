@@ -3,7 +3,7 @@ import {Footer} from "../components/base/Footer";
 import {useContext, useEffect, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
-import {useHttp} from "../hooks/http.hook";
+import {useHttp} from "../hooks/http.hook/http-hook";
 import {__} from "../multilang/Multilang";
 import {LoginWith} from "../components/auth/LoginWith";
 import {IMessageOptions} from "../StoreTypes";

@@ -8,7 +8,7 @@ import {NavLink} from "react-router-dom";
 import {__, _f} from "../multilang/Multilang";
 import Select from "../components/base/Select";
 import {GameVersions, IGameOnlyVersion, IGameVersionObject} from "../data/Games";
-import {useHttp} from "../hooks/http.hook";
+import {useHttp} from "../hooks/http.hook/http-hook";
 import {IGameOnly} from "../context/GameContext";
 import StateSelect from "../components/base/StateSelect";
 import {AuthContext} from "../context/AuthContext";

@@ -12,8 +12,8 @@ export class ApiError extends Error {
         return new ApiError( 400, message || "Некорректный запрос" );
     }
 
-    static unauthorized( message: string ) {
-        return new ApiError( 401, message );
+    static unauthorized( message?: string ) {
+        return new ApiError( 401, message || "Не авторизован" );
     }
 
     static forbidden( message: string ) {

@@ -1,4 +1,4 @@
-import {API_URL} from "../hooks/http.hook";
+import {API_URL} from "../hooks/http.hook/http-hook";
 
 export const getFile = (filename: string|null|undefined|File) => {
     if (!filename) return '';

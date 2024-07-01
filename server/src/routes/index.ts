@@ -1,6 +1,7 @@
 import express from "express";
 import { authRouter } from "./auth";
 import { buildRouter } from "./build";
+import { competitionRouter } from "./competition";
 import { friendsRouter } from "./friends";
 import { questionRouter } from "./question";
 import { teamRouter } from "./team";
@@ -16,5 +17,6 @@ router.use( "/team", teamRouter );
 router.use( "/tournament", tournamentRouter );
 router.use( "/friend", friendsRouter );
 router.use( "/question", questionRouter );
+router.use( "/competition", competitionRouter );
 
 export { router };

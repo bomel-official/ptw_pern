@@ -1,16 +1,16 @@
-import {createContext, Dispatch, SetStateAction} from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 function noop() {}
 
-export type IGame = 'warzone' | null // CSGO Hidden
-export type IGameOnly = 'warzone'
+export type IGame = "warzone" | "dota2" | null // CSGO Hidden
+export type IGameOnly = "warzone" | "dota2"
 
 interface IGameContext {
     game: IGame,
     setGame: Dispatch<SetStateAction<IGame>>
 }
 
-export const GameContext = createContext<IGameContext>({
+export const GameContext = createContext<IGameContext>( {
     game: null,
     setGame: noop
-})
+} );

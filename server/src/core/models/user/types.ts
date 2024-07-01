@@ -7,8 +7,10 @@ import {
     InferCreationAttributes,
     NonAttribute
 } from "sequelize";
-import { Column, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, HasMany, Model, Table } from "sequelize-typescript";
 import { Build } from "../build";
+import { Competition } from "../competition";
+import { CompetitionUser } from "../competition-user";
 import { Team } from "../team";
 
 @Table( {
@@ -144,6 +146,12 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 
     @HasMany( () => Build )
     declare builds: NonAttribute<Build[]>;
+
+    @HasMany( () => Competition, "authorId" )
+    declare competitions: NonAttribute<Competition[]>;
+
+    @BelongsToMany( () => Competition, () => CompetitionUser )
+    declare competitionIncluded: NonAttribute<Competition[]>;
 
     @HasMany( () => Team, "capitanId" )
     declare own_teams: NonAttribute<Team[]>;

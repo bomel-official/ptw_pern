@@ -5,7 +5,7 @@ import ProfileView from "../components/profile/ProfileView";
 import { AuthContext } from "../context/AuthContext";
 import { ProfileTabsIds } from "../data/Links";
 
-import { useHttp } from "../hooks/http.hook";
+import { useHttp } from "../hooks/http.hook/http-hook";
 import { IUser } from "../StoreTypes";
 
 const ProfilePage = () => {

@@ -5,6 +5,8 @@ import { BuildMode } from "./build-mode/types";
 import { BuildWeaponType } from "./build-weapon-type/types";
 import { BuildWeapon } from "./build-weapon/types";
 import { Build } from "./build/types";
+import { CompetitionUser } from "./competition-user/types";
+import { Competition } from "./competition/types";
 import { FriendRequest } from "./friend-request/types";
 import { Invoice } from "./invoice/types";
 import { ParticipantRequest } from "./participant-request/types";
@@ -56,3 +58,7 @@ export const BuildModeRepository = Database.getRepository( BuildMode );
 export const BuildAttachmentRepository = Database.getRepository( BuildAttachment );
 
 export const BuildAttachmentTypeRepository = Database.getRepository( BuildAttachmentType );
+
+export const CompetitionRepository = Database.getRepository( Competition );
+
+export const CompetitionUserRepository = Database.getRepository( CompetitionUser );

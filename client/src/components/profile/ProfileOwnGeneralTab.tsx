@@ -13,7 +13,7 @@ import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
 import TeamEditPopup from "../base/TeamEditPopup";
 import DefaultUserPic from "../../static/icons/USERPIC.png";
 import {TournamentsList} from "../tournament/TournamentsList";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {AuthContext} from "../../context/AuthContext";
 import ProfileSocial from "./ProfileSocial";
 import {getProfileUrl} from "../../functions/urls";

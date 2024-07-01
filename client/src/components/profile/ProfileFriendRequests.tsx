@@ -3,7 +3,7 @@ import {IFriendRequest, IUser} from "../../StoreTypes";
 import {__} from "../../multilang/Multilang";
 import ProfileTablet from "./ProfileTablet";
 import Pagination from "../base/Pagination";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 
 const ProfileFriendRequests = ({user}: {user: IUser}) => {
     const [friendsList, setFriendsList] = useState<IFriendRequest[]>([])

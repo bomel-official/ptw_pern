@@ -1,10 +1,10 @@
-import {IGame, IGameOnly} from "./context/GameContext";
-import {DeviceIds, PlatformIds} from "./data/Platforms";
-import {IGameOnlyVersion} from "./data/Games";
+import { IGameOnly } from "./context/GameContext";
+import { IGameOnlyVersion } from "./data/Games";
+import { DeviceIds, PlatformIds } from "./data/Platforms";
 
 export interface IMessageOptions {
     status: string,
-    text: null|string
+    text: null | string
 }
 
 export type IBuildWeapon = {
@@ -95,7 +95,7 @@ export type ITournament = {
     title_EU: string,
     game: IGameOnly,
     slug: string,
-    type: 'tournament'|'hub'|null,
+    type: "tournament" | "hub" | null,
     isRegisterOn: boolean,
     twitchChannel: string,
     dateBegin: Date,
@@ -133,7 +133,7 @@ export type IParticipant = {
     users: Array<IUser>,
     points: number,
     dataArray: Array<Array<number>>,
-    places: Array<[number, number]>,
+    places: Array<[ number, number ]>,
     isRoundsHidden: Array<boolean>,
     players: Array<number>,
     payMethod: string,
@@ -147,7 +147,7 @@ export type IParticipantRequest = {
     id: number,
     points: number,
     dataArray: Array<Array<number>>,
-    places: Array<[number, number]>,
+    places: Array<[ number, number ]>,
     isRoundsHidden: Array<boolean>,
     status: string,
     participantId: number,
@@ -156,7 +156,7 @@ export type IParticipantRequest = {
 
 export type IParticipantRequestDTO = {
     dataArray: Array<Array<number>>,
-    places: Array<[number, number]>,
+    places: Array<[ number, number ]>,
     isRoundsHidden: Array<boolean>,
     participantId: number,
     approve: null | File,
@@ -169,4 +169,36 @@ export type IQuestion = {
     question_EU: string,
     answer_RU: string,
     answer_EU: string,
+}
+
+export interface CompetitionDTO {
+    id?: number;
+    title: string;
+    participantsAmount: number;
+    participants: number[][];
+    participantsUsers: (IUser | null)[][];
+    isOutsiders: boolean;
+    outsiders: number[][];
+    outsidersUsers: (IUser | null)[][];
+}
+
+export interface CompetitionDTORequest {
+    id?: number,
+    title: string;
+    participantsAmount: number;
+    participants: number[][];
+    isOutsiders: boolean;
+    outsiders: number[][];
+}
+
+export interface Competition {
+    id: number;
+    title: string;
+    participantsAmount: number;
+    participants: number[][];
+    participantsUsers: (IUser | null)[][];
+    isOutsiders: boolean;
+    outsiders: number[][];
+    outsidersUsers: (IUser | null)[][];
+    authorId: number;
 }

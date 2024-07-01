@@ -5,7 +5,7 @@ import {icons} from "../../data/PlatformIcons";
 import {__} from "../../multilang/Multilang";
 import {IUser} from "../../StoreTypes";
 import {AuthContext} from "../../context/AuthContext";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {getFile} from "../../functions/getFile";
 import Loader from "../base/Loader";
 

@@ -4,7 +4,7 @@ import {NavLink} from "react-router-dom";
 import Preview from "../../static/images/meta-build-preview.png";
 import {icons} from "../../data/PlatformIcons";
 import {IBuild, IBuildAttachment} from "../../StoreTypes";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {getFile} from "../../functions/getFile";
 import {getSocialLink} from "../../functions/getSocialLink";
 import {getDateString} from "../../functions/getDateString";

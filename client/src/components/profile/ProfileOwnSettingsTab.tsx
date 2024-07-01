@@ -3,7 +3,7 @@ import {__} from "../../multilang/Multilang";
 import ProfilePlatform from "./ProfilePlatform";
 import {socialItems} from "../../data/Links";
 import {IMessageOptions, IUser} from "../../StoreTypes";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 import {AuthContext} from "../../context/AuthContext";
 
 const ProfileOwnSettingsTab = ({user}: {user: IUser}) => {

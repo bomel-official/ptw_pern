@@ -2,7 +2,7 @@ import {Header} from "../components/base/Header";
 import {Footer} from "../components/base/Footer";
 import {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
-import {useHttp} from "../hooks/http.hook";
+import {useHttp} from "../hooks/http.hook/http-hook";
 import {__} from "../multilang/Multilang";
 import {LoginWith} from "../components/auth/LoginWith";
 

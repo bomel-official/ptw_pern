@@ -5,7 +5,7 @@ import { FortuneWheelItem, WheelProps } from "./types";
 const VIEW_BOX = 100;
 const STROKE_WIDTH = 40;
 const TEXT_OFFSET = 5;
-const SPIN_DELAY = 5;
+const SPIN_DELAY = 5; // Seconds
 
 const PI = Math.PI;
 const RADIUS = VIEW_BOX / 2 - STROKE_WIDTH / 2;
@@ -14,15 +14,17 @@ const CIRCLE_LENGTH = RADIUS * 2 * PI;
 const Wheel: FC<WheelProps> = ( { items } ) => {
     const [ angle, setAngle ] = useState( 0 );
     const [ winner, setWinner ] = useState<null | FortuneWheelItem>( null );
+    const [ spinTimeout, setSpinTimeout ] = useState( setTimeout( () => {}, SPIN_DELAY * 1000 ) );
 
     function spin() {
         const newSpinAngle = angle + 3600 + Math.random() * 3600;
         setAngle( newSpinAngle );
-        setTimeout( () => {
+        clearTimeout( spinTimeout );
+        setSpinTimeout( setTimeout( () => {
             setWinner(
                 items[items.length - 1 - Math.floor( ((newSpinAngle + 90) % 360) / (360 / items.length) )] ?? null
             );
-        }, SPIN_DELAY * 1000 );
+        }, SPIN_DELAY * 1000 ) );
     }
 
     return (

@@ -5,7 +5,7 @@ import TeamTablet from "./TeamTablet";
 import TeamEditPopup from "../base/TeamEditPopup";
 import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import {initNewTeam, useNewTeam} from "../../hooks/newTeam.hook";
-import {useHttp} from "../../hooks/http.hook";
+import {useHttp} from "../../hooks/http.hook/http-hook";
 
 const ProfileOwnTeamsTab = ({user, setTeamToEditAndActivatePopup, saveTeamToEdit, currentStep, setCurrentStep, isEditTeamFormActive, setIsEditTeamFormActive, newTeamUsed, messageOptions}: {
     user: IUser,
