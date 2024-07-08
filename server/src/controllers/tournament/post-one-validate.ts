@@ -64,7 +64,9 @@ export async function postOneValidate( req: Request ) {
             format_RU: new CV( req.body.format_RU,
                 { label: "format_RU" } ).string().val,
             format_EU: new CV( req.body.format_EU,
-                { label: "format_EU" } ).string().val
+                { label: "format_EU" } ).string().val,
+            participantType: new CV( req.body.participantType, { label: "participantType" } ).string()
+                .included( [ "list", "table" ] as const ).val
         };
 
         return {

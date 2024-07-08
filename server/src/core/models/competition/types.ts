@@ -1,14 +1,6 @@
-import {
-    CreationOptional,
-    DataTypes,
-    HasManyAddAssociationMixin,
-    HasManyRemoveAssociationMixin,
-    InferAttributes,
-    InferCreationAttributes,
-    NonAttribute
-} from "sequelize";
-import { BelongsTo, BelongsToMany, Column, ForeignKey, Model, Table } from "sequelize-typescript";
-import { CompetitionUser } from "../competition-user";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { BelongsTo, Column, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
+import { CompetitionTable } from "../competition-table";
 import { User } from "../user";
 
 @Table( {
@@ -32,21 +24,6 @@ export class Competition extends Model<InferAttributes<Competition>, InferCreati
     } )
     declare participantsAmount: number;
 
-    @Column( {
-        type: DataTypes.ARRAY( DataTypes.ARRAY( DataTypes.INTEGER ) ), defaultValue: []
-    } )
-    declare participants: number[][];
-
-    @Column( {
-        type: DataTypes.BOOLEAN, defaultValue: false
-    } )
-    declare isOutsiders: boolean;
-
-    @Column( {
-        type: DataTypes.ARRAY( DataTypes.ARRAY( DataTypes.INTEGER ) ), defaultValue: []
-    } )
-    declare outsiders: number[][];
-
     @ForeignKey( () => User ) @Column( {
         type: DataTypes.INTEGER, allowNull: true,
     } )
@@ -55,15 +32,6 @@ export class Competition extends Model<InferAttributes<Competition>, InferCreati
     @BelongsTo( () => User )
     declare author: NonAttribute<User>;
 
-    @BelongsToMany( () => User, () => CompetitionUser )
-    declare users: NonAttribute<User[]>;
-
-    declare addUser: HasManyAddAssociationMixin<User, number>;
-
-    declare removeUser: HasManyRemoveAssociationMixin<User, number>;
-}
-
-export interface CompetitionNormalized extends InferAttributes<Competition> {
-    outsidersUsers: (User | null)[][],
-    participantsUsers: (User | null)[][];
+    @HasOne( () => CompetitionTable )
+    declare competitionTable: NonAttribute<CompetitionTable>;
 }

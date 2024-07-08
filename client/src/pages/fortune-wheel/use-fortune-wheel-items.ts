@@ -23,7 +23,6 @@ export function useFortuneWheelItems() {
             sumOfNumbers += number;
             color += letters[number];
         }
-        console.log(color, sumOfNumbers);
         return {
             color: `#${ color }`,
             contrast: `#${ sumOfNumbers >= 32 ? "000000" : "FFFFFF" }`

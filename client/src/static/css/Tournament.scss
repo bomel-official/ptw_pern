@@ -613,5 +613,18 @@
       transform: translateY(-50%);
       background-color: $textWhite;
     }
+
+    &.hidden {
+      opacity: 0;
+    }
+
+    &.top-only::before {
+      top: 20px;
+      bottom: calc(50% - 1px);
+      right: 50%;
+      left: 0;
+      border-left: none;
+      border-bottom: none;
+    }
   }
 }

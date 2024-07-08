@@ -16,7 +16,7 @@ const FortuneWheel = () => {
                     <h1 className="shop__header mb12">{ __( "Колесо фортуны" ) }</h1>
                     <div className="fortune-wheel">
                         <div className="fortune-wheel__wrapper">
-                            <Wheel items={ items }/>
+                            <Wheel items={ items.filter( ( item ) => !!item.label ) }/>
                         </div>
                         <div className="fortune-wheel__data">
                             { items.map( ( item, index ) => (

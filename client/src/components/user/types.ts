@@ -6,3 +6,7 @@ export interface UserSearchDropdownProps {
     variant?: "compact" | "normal";
     options?: (IUser | null)[];
 }
+
+export interface UserProfileCardProps {
+    user: IUser;
+}

@@ -1,30 +1,43 @@
-import { TeamRepository, TeamRequestRepository, UserRepository } from "@core";
+import { CV, generateValidator, isError, TeamRepository, TeamRequestRepository, UserRepository } from "@core";
 import { NextFunction, Request, Response } from "express";
-import { WhereOptions } from "sequelize";
+import { Op } from "sequelize";
 
 export async function getMany( req: Request, res: Response, next: NextFunction ) {
-    const { type, userId } = req.query;
-    let where: WhereOptions = {};
-
-    if ( userId && type === "own" ) {
-        where = {
-            capitanId: userId
-        };
+    const validated = generateValidator(
+        () => ({
+            type: new CV( req.query.type,
+                { label: "type" } ).optional().string().val,
+            userId: new CV( req.query.userId,
+                { label: "userId" } ).optional().number().val,
+            s: new CV( req.query.s,
+                { label: "s" } ).optional().string().val,
+        }) );
+    if ( isError( validated ) ) {
+        return next( validated.errorObject );
     }
+    const {
+        type, userId, s
+    } = validated.data;
 
-    if ( userId && typeof userId === "string" && type === "part" ) {
+    const teamIds: number[] = [];
+
+    if ( userId && type === "part" ) {
         const teamReqs = await TeamRequestRepository.findAll( { where: { userId } } );
-        const teamIds: number[] = [];
         for ( const item of teamReqs ) {
             teamIds.push( item.teamId );
         }
-        where = {
-            id: teamIds
-        };
     }
 
     const rows = await TeamRepository.findAll( {
-        where,
+        where: {
+            ...(userId && type === "own" ? { capitanId: userId } : {}),
+            ...(userId && type === "part" ? { id: teamIds } : {}),
+            ...(typeof s === "string" ? {
+                name: {
+                    [Op.iLike]: `%${ s }%`
+                }
+            } : {})
+        },
         include: [
             {
                 model: UserRepository,
@@ -38,7 +51,10 @@ export async function getMany( req: Request, res: Response, next: NextFunction )
                 foreignKey: "capitanId",
                 isMultiAssociation: true,
             },
-        ]
+        ],
+        ...(typeof s === "string" ? {
+            limit: 10
+        } : {})
     } );
     res.json( { rows } );
 }

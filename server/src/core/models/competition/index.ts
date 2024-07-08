@@ -1,1 +1,1 @@
-export { Competition, CompetitionNormalized } from "./types";
+export { Competition } from "./types";

@@ -2,12 +2,14 @@ import { Game, TournamentType } from "@constants";
 import {
     CreationOptional,
     DataTypes,
-    HasManyAddAssociationMixin, HasManyRemoveAssociationMixin,
+    HasManyAddAssociationMixin,
+    HasManyRemoveAssociationMixin,
     InferAttributes,
     InferCreationAttributes,
     NonAttribute
 } from "sequelize";
-import { BelongsToMany, Column, Model, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, HasOne, Model, Table } from "sequelize-typescript";
+import { CompetitionTable, CompetitionTableNormalized } from "../competition-table";
 import { TournamentUser } from "../tournament-user";
 
 import { User } from "../user";
@@ -143,10 +145,22 @@ export class Tournament extends Model<InferAttributes<Tournament>, InferCreation
     } )
     declare format_EU: string;
 
+    @Column( {
+        type: DataTypes.STRING, defaultValue: "list"
+    } )
+    declare participantType: CreationOptional<"list" | "table">;
+
+    @HasOne( () => CompetitionTable )
+    declare competitionTable?: NonAttribute<CompetitionTable>;
+
     @BelongsToMany( () => User, () => TournamentUser )
     declare players: NonAttribute<User[]>;
 
     declare addPlayer: HasManyAddAssociationMixin<User, number>;
 
     declare removePlayer: HasManyRemoveAssociationMixin<User, number>;
+}
+
+export interface TournamentNormalized extends Omit<InferAttributes<Tournament>, "competitionTable"> {
+    competitionTable: CompetitionTableNormalized;
 }

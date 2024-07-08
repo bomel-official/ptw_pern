@@ -1,48 +1,60 @@
-import { CompetitionDTO } from "../../StoreTypes";
+import {
+    CompetitionDTO,
+    CompetitionParticipant,
+    CompetitionTable,
+    Team,
+    IUser,
+    CompetitionTableDTO
+} from "../../StoreTypes";
 
-export const COMPETITION_EMPTY_NUMBER_VALUE = -1;
+export const COMPETITION_ITEM_EMPTY_INDEX = -1;
+
+export const COMPETITION_ITEM_DEFAULT: CompetitionParticipant<IUser | Team> = {
+    index: COMPETITION_ITEM_EMPTY_INDEX,
+    items: [],
+    points: 0,
+};
+
+export const COMPETITION_ITEM_NUMBER_DEFAULT: CompetitionParticipant<number> = {
+    index: COMPETITION_ITEM_EMPTY_INDEX,
+    items: [],
+    points: 0,
+};
 
 export const COMPETITION_DEFAULT: CompetitionDTO = {
     title: "",
-    participants: [],
-    participantsAmount: 0,
-    participantsUsers: [],
-    isOutsiders: false,
-    outsiders: [],
-    outsidersUsers: [],
+    competitionTable: {
+        itemsInTeam: 1,
+        allowShuffle: true,
+        type: "user",
+        parentType: "competition",
+        participantsUsers: [],
+        isOutsiders: false,
+        outsidersUsers: [],
+        users: [],
+        teams: []
+    }
 };
 
-export const COMPETITION_PARTICIPANT_AMOUNT_OPTIONS: Array<{ value: any, text: string }> = [
+export const TOURNAMENT_COMPETITION_TABLE_DEFAULT: CompetitionTableDTO = {
+    itemsInTeam: 1,
+    allowShuffle: true,
+    type: "team",
+    parentType: "tournament",
+    participantsUsers: [],
+    isOutsiders: false,
+    outsidersUsers: [],
+    users: [],
+    teams: []
+}
+
+export const COMPETITION_TYPE_OPTIONS: Array<{ value: CompetitionTable["type"], text: string }> = [
     {
-        text: '2',
-        value: 2
+        text: "Пользователи",
+        value: "user"
     },
     {
-        text: '4',
-        value: 4
+        text: "Команды",
+        value: "team"
     },
-    {
-        text: '8',
-        value: 8
-    },
-    {
-        text: '16',
-        value: 16
-    },
-    {
-        text: '32',
-        value: 32
-    },
-    {
-        text: '64',
-        value: 64
-    },
-    {
-        text: '128',
-        value: 128
-    },
-    {
-        text: '256',
-        value: 256
-    },
-]
+];

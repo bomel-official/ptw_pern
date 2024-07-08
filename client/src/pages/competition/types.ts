@@ -1,11 +1,10 @@
-import { Competition, IUser } from "../../StoreTypes";
+import { Competition, CompetitionParticipant, IUser, Team } from "../../StoreTypes";
 
 export interface CompetitionDetailProps {
     competition: Competition | null;
 }
 
 export interface CompetitionTableProps {
-    data: (IUser | null)[][];
-    setValue: ( competition: IUser | null, rowIndex: number, index: number ) => void;
-    isEdit: boolean;
+    data: CompetitionParticipant<IUser | Team>[][];
+    setValue: (( competition: CompetitionParticipant<IUser | Team>, rowIndex: number, index: number ) => void) | null;
 }

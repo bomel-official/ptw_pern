@@ -16,8 +16,8 @@ export class ApiError extends Error {
         return new ApiError( 401, message || "Не авторизован" );
     }
 
-    static forbidden( message: string ) {
-        return new ApiError( 403, message );
+    static forbidden( message?: string ) {
+        return new ApiError( 403, message || "Нет доступа" );
     }
 
     static notFound( message: string ) {

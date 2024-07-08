@@ -28,7 +28,8 @@ export async function putOne( req: Request, res: Response, next: NextFunction ) 
         descRules_EU,
         descAdditional_RU,
         descAdditional_EU,
-        slug
+        slug,
+        participantType
     } = req.body;
 
     const filename = await uploadImage( previewImg );
@@ -83,7 +84,8 @@ export async function putOne( req: Request, res: Response, next: NextFunction ) 
         descRules_RU,
         descRules_EU,
         descAdditional_RU,
-        descAdditional_EU
+        descAdditional_EU,
+        participantType
     } );
     if ( filename ) {
         tournament.set( {

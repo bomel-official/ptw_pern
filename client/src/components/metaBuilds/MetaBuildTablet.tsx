@@ -33,7 +33,6 @@ const MetaBuildTablet = ({build, deleteHandler, toggleIsMeta}: {build: IBuild, d
             const {likes} = await request('/api/build/like', 'POST', {buildId: build.id, userId: user?.id || ''}, {
                 Authorization: `Bearer ${token}`
             }, true)
-            console.log(likes, likes.length)
             setLikes(likes.length)
             setIsLiked(user ? likes.includes(user.id) : false)
         } catch (e) {}

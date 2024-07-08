@@ -15,6 +15,7 @@
     "blob": "^0.1.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
+    "playtowin": "file:..",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",

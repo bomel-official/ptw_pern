@@ -5,6 +5,8 @@ import { BuildMode } from "./build-mode/types";
 import { BuildWeaponType } from "./build-weapon-type/types";
 import { BuildWeapon } from "./build-weapon/types";
 import { Build } from "./build/types";
+import { CompetitionTable } from "./competition-table";
+import { CompetitionTeam } from "./competition-team";
 import { CompetitionUser } from "./competition-user/types";
 import { Competition } from "./competition/types";
 import { FriendRequest } from "./friend-request/types";
@@ -62,3 +64,7 @@ export const BuildAttachmentTypeRepository = Database.getRepository( BuildAttach
 export const CompetitionRepository = Database.getRepository( Competition );
 
 export const CompetitionUserRepository = Database.getRepository( CompetitionUser );
+
+export const CompetitionTeamRepository = Database.getRepository( CompetitionTeam );
+
+export const CompetitionTableRepository = Database.getRepository( CompetitionTable );

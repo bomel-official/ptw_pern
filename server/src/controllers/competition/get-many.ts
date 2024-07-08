@@ -1,6 +1,6 @@
 import {
     CompetitionRepository,
-    CompetitionUserRepository,
+    CompetitionTableRepository,
     CV,
     generateValidator,
     isError,
@@ -54,23 +54,24 @@ export async function getMany( req: Request, res: Response, next: NextFunction )
             return next( ApiError.unauthorized() );
         }
 
-        const user = await UserRepository.findOne( {
-            where: {
-                id: req.user.id
-            },
+        const competition = await CompetitionRepository.findAll( {
             include: [
                 {
-                    model: CompetitionRepository,
+                    model: CompetitionTableRepository,
                     as: "competitionIncluded",
+                    include: [ {
+                        model: UserRepository,
+                        as: "users",
+                        where: {
+                            id: req.user.id
+                        },
+                        attributes: []
+                    } ]
                 }
             ]
         } );
 
-        if ( !user ) {
-            return next( ApiError.unauthorized() );
-        }
-
-        return res.json( { data: user.competitionIncluded } );
+        return res.json( { data: competition } );
     }
 
     return next( ApiError.badRequest( "Некорректный запрос" ) );

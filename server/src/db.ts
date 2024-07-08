@@ -7,6 +7,8 @@ import { BuildMode } from "./core/models/build-mode/types";
 import { BuildWeaponType } from "./core/models/build-weapon-type/types";
 import { BuildWeapon } from "./core/models/build-weapon/types";
 import { Build } from "./core/models/build/types";
+import { CompetitionTable } from "./core/models/competition-table/types";
+import { CompetitionTeam } from "./core/models/competition-team/types";
 import { CompetitionUser } from "./core/models/competition-user/types";
 import { Competition } from "./core/models/competition/types";
 import { FriendRequest } from "./core/models/friend-request/types";
@@ -30,7 +32,8 @@ export const Database = new Sequelize(
     {
         models: [ User, TournamentUser, Tournament, TeamRequest, Team, Question, ProductCat, Product, ParticipantUser,
             ParticipantRequest, Participant, Invoice, FriendRequest, BuildWeaponType, BuildWeapon, BuildMode,
-            BuildAttachmentType, BuildAttachment, Build, Competition, CompetitionUser ],
+            BuildAttachmentType, BuildAttachment, Build, Competition, CompetitionUser, CompetitionTeam,
+            CompetitionTable ],
         repositoryMode: true,
         dialect: "postgres",
         host: getEnv( process.env.DB_HOST ),

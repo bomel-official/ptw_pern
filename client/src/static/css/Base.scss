@@ -1356,6 +1356,49 @@ input[type=file] {
   display: flex;
   align-items: center;
 
+  &__wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  &__index {
+    display: flex;
+    align-items: center;
+    margin-left: -8px;
+    width: 40px;
+    border-right: 1px solid rgba(255, 255, 255, .1);
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    color: $textWhite;
+  }
+
+  &__points {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    width: 48px;
+    border-left: 1px solid rgba(255, 255, 255, .1);
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    background-color: $hoverGray;
+    margin-right: -8px;
+
+    &.winner {
+      background-color: $accent;
+    }
+
+    .profileCard__input {
+      padding: 0 0 0 10px;
+      width: 40px;
+      text-align: center;
+    }
+  }
+
   &__top {
     display: flex;
 

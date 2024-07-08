@@ -94,3 +94,4 @@ export { putOneRole as putOneUserRole } from "./user/put-one-role";
 export { getOne as getOneCompetition } from "./competition/get-one";
 export { getMany as getManyCompetition } from "./competition/get-many";
 export { postPutOne as postPutOneCompetition } from "./competition/post-put-one";
+export { postPutOne as postPutOneCompetitionTable } from "./competition/post-put-one-table";

@@ -11,6 +11,7 @@ import { BelongsToMany, Column, HasMany, Model, Table } from "sequelize-typescri
 import { Build } from "../build";
 import { Competition } from "../competition";
 import { CompetitionUser } from "../competition-user";
+import { CompetitionTable } from "../competition-table";
 import { Team } from "../team";
 
 @Table( {
@@ -42,7 +43,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     @Column( {
         type: DataTypes.STRING, defaultValue: UserRole.USER
     } )
-    declare role: CreationOptional<UserRole>;
+    declare role: UserRole;
 
     @Column( {
         type: DataTypes.STRING, defaultValue: "FREE"
@@ -150,8 +151,8 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     @HasMany( () => Competition, "authorId" )
     declare competitions: NonAttribute<Competition[]>;
 
-    @BelongsToMany( () => Competition, () => CompetitionUser )
-    declare competitionIncluded: NonAttribute<Competition[]>;
+    @BelongsToMany( () => CompetitionTable, () => CompetitionUser )
+    declare competitionIncluded: NonAttribute<CompetitionTable[]>;
 
     @HasMany( () => Team, "capitanId" )
     declare own_teams: NonAttribute<Team[]>;

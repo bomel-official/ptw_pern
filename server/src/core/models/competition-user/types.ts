@@ -1,10 +1,10 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes } from "sequelize";
 import { Column, ForeignKey, Model, Table } from "sequelize-typescript";
-import { Competition } from "../competition";
+import { CompetitionTable } from "../competition-table";
 import { User } from "../user";
 
 @Table( {
-    tableName: "competition-users",
+    tableName: "competition_users",
     freezeTableName: true
 } )
 export class CompetitionUser extends Model<InferAttributes<CompetitionUser>, InferCreationAttributes<CompetitionUser>> {
@@ -19,7 +19,7 @@ export class CompetitionUser extends Model<InferAttributes<CompetitionUser>, Inf
     } )
     declare userId: number;
 
-    @ForeignKey( () => Competition ) @Column( {
+    @ForeignKey( () => CompetitionTable ) @Column( {
         type: DataTypes.INTEGER, allowNull: true
     } )
     declare competitionId: number;
