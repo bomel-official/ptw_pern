@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "pull:deploy": "git pull origin main && npm install --prefix server && npm install --prefix client && npm run --prefix client build && npm run start --prefix server"
+    "pull:deploy": "git pull origin main && npm install --prefix server && npm install --prefix client && npm run --prefix client build && pm2 restart \"playtowin.pro express\""
   },
   "author": "Andrey Rusakov",
   "license": "ISC",
