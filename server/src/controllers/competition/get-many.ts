@@ -55,20 +55,18 @@ export async function getMany( req: Request, res: Response, next: NextFunction )
         }
 
         const competition = await CompetitionRepository.findAll( {
-            include: [
-                {
-                    model: CompetitionTableRepository,
-                    as: "competitionIncluded",
-                    include: [ {
-                        model: UserRepository,
-                        as: "users",
-                        where: {
-                            id: req.user.id
-                        },
-                        attributes: []
-                    } ]
-                }
-            ]
+            where: {
+                "$competitionTable.users.id$": req.user.id,
+            },
+            include: [ {
+                model: CompetitionTableRepository,
+                as: "competitionTable",
+                include: [ {
+                    model: UserRepository,
+                    as: "users",
+                    attributes: [ "id" ]
+                } ]
+            } ]
         } );
 
         return res.json( { data: competition } );
