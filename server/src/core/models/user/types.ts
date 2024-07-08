@@ -43,7 +43,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     @Column( {
         type: DataTypes.STRING, defaultValue: UserRole.USER
     } )
-    declare role: UserRole;
+    declare role: CreationOptional<UserRole>;
 
     @Column( {
         type: DataTypes.STRING, defaultValue: "FREE"

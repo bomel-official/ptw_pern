@@ -5,7 +5,7 @@ export function normalizeCompetitionTable( competitionTable: CompetitionTable | 
         return null;
     }
 
-    const participantsUsers: CompetitionNormalized["competitionTable"]["participantsUsers"] = competitionTable.participants.map(
+    const participantsUsers: CompetitionTableNormalized["participantsUsers"] = competitionTable.participants.map(
         participantRow => participantRow.map( participantItem => {
             const participantItemItems: (User | Team)[] = [];
             for ( const itemId of participantItem.items ) {
@@ -27,7 +27,7 @@ export function normalizeCompetitionTable( competitionTable: CompetitionTable | 
             });
         } ) );
 
-    const outsidersUsers: CompetitionNormalized["competitionTable"]["outsidersUsers"] = competitionTable.outsiders.map(
+    const outsidersUsers: CompetitionTableNormalized["outsidersUsers"] = competitionTable.outsiders.map(
         outsiderRow => outsiderRow.map( outsiderItem => {
             const outsiderItemItems: (User | Team)[] = [];
             for ( const itemId of outsiderItem.items ) {
@@ -51,6 +51,7 @@ export function normalizeCompetitionTable( competitionTable: CompetitionTable | 
 
     return {
         id: competitionTable.id,
+        authorId: competitionTable.authorId,
         type: competitionTable.type,
         parentType: competitionTable.parentType,
         allowShuffle: competitionTable.allowShuffle,

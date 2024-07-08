@@ -118,5 +118,5 @@ export interface CompetitionTableNormalized
 }
 
 export interface CompetitionNormalized extends Omit<InferAttributes<Competition>, 'competitionTable'> {
-    competitionTable: CompetitionTableNormalized;
+    competitionTable: CompetitionTableNormalized | null;
 }
