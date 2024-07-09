@@ -1,6 +1,6 @@
 $header-border-color: #292929;
 $white: #fff;
-$black: #000;
+$black: #0D0E11;
 
 $paypalBgColor: #0070E0;
 $paypalBgHoverColor: #368BE0;
@@ -22,9 +22,9 @@ $accentGradActive: #C13215;
 $accentGradLeft: #FF4102;
 $accentGradRight: #E62C1B;
 
-$gray: #141414;
+$gray: #1C1D21;
 $hoverGray: #292929;
-$activeGray: #141414;
+$activeGray: #1C1D21;
 $disabledGray: #292929;
 
 @mixin rounded-button($typeColor: 'none', $TL: false, $TR: false, $BR: false, $BL: false, $fontWeight: 400, $padding: 10px 8px, $color: $white, $bgDefault: $gray, $bgHover: $hoverGray, $bgActive: $activeGray) {

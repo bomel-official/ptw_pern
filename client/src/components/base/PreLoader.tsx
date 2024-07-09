@@ -55,7 +55,7 @@ export const PreLoader = () => {
     }
     
     .preLoader__progress-bar {
-      background-color: #141414;
+      background-color: #1C1D21;
       height: 8px;
       width: 100%;
       position: relative;
