@@ -28,7 +28,7 @@ const CompetitionMainPage = () => {
                         <div className="side__container">
                             <SideMobileMenu/>
                             <h1 className="side__title">{ __( "Турниры сообщества" ) }</h1>
-                            { isAuthenticated &&
+                            { isAuthenticated ?
                                 <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
                                     <h2 className="side__subtitle build__subheading">{ __(
                                         `Вы можете найти турниры, созданные другими игроками или создать свой` ) }</h2>
@@ -40,6 +40,14 @@ const CompetitionMainPage = () => {
                                                   strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                         <span>{ __( "Создать турнир" ) }</span>
+                                    </NavLink>
+                                </div> :
+                                <div className="tournament__sidebar-block flex mb12 flex-mb-column build__block">
+                                    <h2 className="side__subtitle build__subheading">{ __(
+                                        `Для создания необходимо авторизоваться` ) }</h2>
+                                    <NavLink to="/auth"
+                                             className="button-both-accent corner-margin build__create-button">
+                                        <span>{ __( "Войти" ) }</span>
                                     </NavLink>
                                 </div> }
                             <div className="side__tab-headings">
