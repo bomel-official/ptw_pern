@@ -1654,7 +1654,11 @@ export const Translations: ITranslations = {
     },
     "Перемешать": {
         "RU": "Перемешать",
-        "EU": "Mix it up"
+        "EU": "Shuffle teams order"
+    },
+    "Перемешать состав команд": {
+        "RU": "Перемешать состав команд",
+        "EU": "Shuffle the teams"
     },
     "Выберите тип участников": {
         "RU": "Выберите тип участников",
@@ -1687,4 +1691,4 @@ const a = {
         "RU": "Все",
         "EU": "All"
     },
-}
+};
