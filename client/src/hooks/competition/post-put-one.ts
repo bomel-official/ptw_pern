@@ -31,7 +31,7 @@ export function usePostPutOneCompetition( defaultValue?: CompetitionDTO | null )
 
     const {
         toggleIsOutsiders, setOutsider, shuffle, setParticipant, setParticipantType, setItemsInTeam, addItem,
-        removeItem, toggleAllowShuffle, saveTable
+        removeItem, toggleAllowShuffle, saveTable, shuffleTeamMembers
     } = usePostPutOneCompetitionTable( ( dispatch ) => {
         setData( prevState => ({ ...prevState, competitionTable: dispatch( prevState.competitionTable ) }) );
     } );
@@ -58,7 +58,7 @@ export function usePostPutOneCompetition( defaultValue?: CompetitionDTO | null )
     }
 
     return {
-        data, setTitle, loading, error, toggleIsOutsiders,
+        data, setTitle, loading, error, toggleIsOutsiders, shuffleTeamMembers,
         messageOptions, save, isEdit, setIsEdit, addItem, removeItem, toggleAllowShuffle, setParticipantType, items,
         setItemsInTeam, shuffle, setParticipant, setOutsider
     };

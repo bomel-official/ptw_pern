@@ -1,7 +1,5 @@
 import { isTeam } from "../../guards";
 import {
-    Competition,
-    CompetitionDTORequest,
     CompetitionParticipant,
     CompetitionTable,
     CompetitionTableDTO,
@@ -9,7 +7,7 @@ import {
     IUser,
     Team
 } from "../../StoreTypes";
-import { COMPETITION_ITEM_NUMBER_DEFAULT } from "../competition";
+import { COMPETITION_ITEM_DEFAULT, COMPETITION_ITEM_NUMBER_DEFAULT } from "../competition";
 import { generateTeams } from "../competition/libs";
 import { useTypedHttp } from "../http.hook";
 import { ResponseData } from "../types";
@@ -22,14 +20,34 @@ export function usePostPutOneCompetitionTable(
     }
 
     function toggleIsOutsiders() {
-        setTable( ( prevState ) => ({ ...prevState, isOutsiders: !prevState.isOutsiders }) );
+        setTable( ( prevState ) => {
+            const isOutsiders = !prevState.isOutsiders;
+            let participantsUsers = [ ...prevState.participantsUsers ];
+
+            if ( isOutsiders ) {
+                participantsUsers[participantsUsers.length - 1] =
+                    [ participantsUsers[participantsUsers.length - 1][0], COMPETITION_ITEM_DEFAULT ];
+                participantsUsers = [ ...participantsUsers, [ COMPETITION_ITEM_DEFAULT ] ];
+            }
+            if ( !isOutsiders ) {
+                participantsUsers = participantsUsers.slice( 0, participantsUsers.length - 1 );
+                participantsUsers[participantsUsers.length - 1] =
+                    participantsUsers[participantsUsers.length - 1].slice( 0,
+                        participantsUsers[participantsUsers.length - 1].length - 1 );
+            }
+
+            return { ...prevState, isOutsiders, participantsUsers };
+        } );
     }
 
     function toggleAllowShuffle() {
         setTable( ( prevState ) => ({ ...prevState, allowShuffle: !prevState.allowShuffle }) );
     }
 
-    function setParticipantsAmount( table: CompetitionTableDTO ): CompetitionTableDTO {
+    function setParticipantsAmount(
+        table: CompetitionTableDTO,
+        shuffleTeamMembers: boolean = false
+    ): CompetitionTableDTO {
         const newItems = table.type === "user"
             ? table.users
             : table.teams;
@@ -37,6 +55,7 @@ export function usePostPutOneCompetitionTable(
         if ( newItems.length % table.itemsInTeam !== 0 ) {
             return table;
         }
+        const isOutsiders = table.isOutsiders;
 
         const cellAmount = Math.round( 2 ** (Math.ceil( Math.log( newItems.length ) / Math.log( 2 ) )) /
             table.itemsInTeam );
@@ -47,7 +66,12 @@ export function usePostPutOneCompetitionTable(
         for ( let power = 0; 2 ** power <= cellAmount; power++ ) {
             const arrayLength = Math.round( cellAmount / (2 ** power) );
 
-            newParticipantsUsers[power] = Array( arrayLength ).fill( COMPETITION_ITEM_NUMBER_DEFAULT );
+            if ( isOutsiders && 2 ** power === cellAmount ) {
+                newParticipantsUsers[power] = Array( arrayLength + 1 ).fill( COMPETITION_ITEM_NUMBER_DEFAULT );
+                newParticipantsUsers[power + 1] = Array( 1 ).fill( COMPETITION_ITEM_NUMBER_DEFAULT );
+            } else {
+                newParticipantsUsers[power] = Array( arrayLength ).fill( COMPETITION_ITEM_NUMBER_DEFAULT );
+            }
 
             if ( power === 0 ) {
                 newOutsidersUsers[power] =
@@ -65,7 +89,7 @@ export function usePostPutOneCompetitionTable(
                 .fill( COMPETITION_ITEM_NUMBER_DEFAULT ) );
         }
 
-        const { participantsUsersRow } = generateTeams( newItems, table.itemsInTeam, cellAmount );
+        const { participantsUsersRow } = generateTeams( newItems, table.itemsInTeam, cellAmount, shuffleTeamMembers );
         newParticipantsUsers[0] = participantsUsersRow;
 
         return {
@@ -77,6 +101,10 @@ export function usePostPutOneCompetitionTable(
 
     function shuffle() {
         setTable( ( prevState ) => setParticipantsAmount( prevState ) );
+    }
+
+    function shuffleTeamMembers() {
+        setTable( ( prevState ) => setParticipantsAmount( prevState, true ) );
     }
 
     function setItemsInTeam( itemsInTeam: number ) {
@@ -118,11 +146,12 @@ export function usePostPutOneCompetitionTable(
                 ? table.participantsUsers[rowIndex][index + 1]
                 : table.participantsUsers[rowIndex][index - 1];
             const isWinner = (opponent?.points ?? -1) < newItem.points;
-            if ( isWinner && table.participantsUsers.length > (rowIndex + 1) ) {
+            if ( isWinner && table.participantsUsers.length > rowIndex + 1 ) {
                 table.participantsUsers[rowIndex + 1][Math.floor( index / 2 )] =
                     { ...newItem, points: 0 };
+                const maxParticipantRowIndex = table.isOutsiders ? rowIndex + 3 : rowIndex + 2;
 
-                if ( rowIndex < table.participantsUsers.length - 2 && opponent.index !== -1 ) {
+                if ( maxParticipantRowIndex < table.participantsUsers.length && opponent.index !== -1 ) {
                     const outsiderIndex = rowIndex > 0 ?
                         Math.floor( (table.outsidersUsers[rowIndex - 1].length + index) / 2 ) : Math.floor( index / 2 );
                     table.outsidersUsers[rowIndex][outsiderIndex] = { ...opponent, points: 0 };
@@ -136,7 +165,9 @@ export function usePostPutOneCompetitionTable(
                 ].filter(
                     option => option !== undefined && option.index !== -1
                 );
-                if ( rowIndex < table.participantsUsers.length - 1 && prevItems.length === 2 && prevItems[0].points ===
+                const maxPrevParticipantRowIndex = table.isOutsiders ? rowIndex + 1 : rowIndex;
+                if ( maxPrevParticipantRowIndex < table.participantsUsers.length - 1 && prevItems.length === 2 &&
+                    prevItems[0].points ===
                     prevItems[1].points ) {
                     const loser = prevItems[0].index === newItem.index ? prevItems[1] : prevItems[0];
                     const outsiderIndex = prevRowIndex > 0 ?
@@ -158,11 +189,19 @@ export function usePostPutOneCompetitionTable(
                 ? table.outsidersUsers[rowIndex][index + 1]
                 : table.outsidersUsers[rowIndex][index - 1];
             const isWinner = (opponent?.points ?? -1) < newItem.points;
+
             if ( isWinner && table.outsidersUsers.length > (rowIndex + 1) ) {
                 table.outsidersUsers[rowIndex + 1][Math.floor( index / 2 )] = { ...newItem, points: 0 };
+
+                if ( rowIndex + 2 === table.outsidersUsers.length ) {
+                    table.participantsUsers[table.participantsUsers.length - 2][1] = { ...newItem, points: 0 };
+                }
             }
 
             table.outsidersUsers[rowIndex][index] = newItem;
+            if ( rowIndex + 1 === table.outsidersUsers.length ) {
+                table.participantsUsers[table.participantsUsers.length - 2][1] = { ...newItem, points: 0 };
+            }
 
             return table;
         } );
@@ -197,6 +236,6 @@ export function usePostPutOneCompetitionTable(
 
     return {
         toggleIsOutsiders, addItem, removeItem, toggleAllowShuffle, setParticipantType,
-        setItemsInTeam, shuffle, setParticipant, setOutsider, saveTable
+        setItemsInTeam, shuffle, setParticipant, setOutsider, saveTable, shuffleTeamMembers
     };
 }

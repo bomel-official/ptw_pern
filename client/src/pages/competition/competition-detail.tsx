@@ -12,7 +12,7 @@ import { CompetitionDetailProps } from "./types";
 
 const CompetitionDetail: FC<CompetitionDetailProps> = ( { competition } ) => {
     const {
-        data, setTitle, toggleIsOutsiders, messageOptions, save, setParticipant, setOutsider,
+        data, setTitle, toggleIsOutsiders, messageOptions, save, setParticipant, setOutsider, shuffleTeamMembers,
         isEdit, setIsEdit, addItem, removeItem, toggleAllowShuffle, setParticipantType, items, setItemsInTeam, shuffle
     } = usePostPutOneCompetition( competition );
 
@@ -86,21 +86,29 @@ const CompetitionDetail: FC<CompetitionDetailProps> = ( { competition } ) => {
                                 } }
                             />
                         </div>
-
                         { data.competitionTable.type === "user" && <>
                             <p className="build__label pt12">{ __( "Участников в команде" ) }</p>
-                            <label htmlFor="itemsInTeam" className="input-both mb12">
-                                <input
-                                    type="number"
-                                    name="itemsInTeam"
-                                    id="itemsInTeam"
-                                    placeholder={ __( "Участников в команде" ) }
-                                    value={ data.competitionTable.itemsInTeam }
-                                    onChange={ ( e: React.FormEvent<HTMLInputElement> ) => {
-                                        setItemsInTeam( parseInt( e.currentTarget.value ) );
-                                    } }
-                                />
-                            </label>
+                            <div className="build__grid-row mb12">
+
+                                <label htmlFor="itemsInTeam" className="input-both">
+                                    <input
+                                        type="number"
+                                        name="itemsInTeam"
+                                        id="itemsInTeam"
+                                        placeholder={ __( "Участников в команде" ) }
+                                        value={ data.competitionTable.itemsInTeam }
+                                        onChange={ ( e: React.FormEvent<HTMLInputElement> ) => {
+                                            setItemsInTeam( parseInt( e.currentTarget.value ) );
+                                        } }
+                                    />
+                                </label>
+                                { data.competitionTable.allowShuffle && data.competitionTable.itemsInTeam > 1 ? <button
+                                    className="button-both-accent corner-margin"
+                                    onClick={ shuffleTeamMembers }
+                                >
+                                    { __( "Перемешать состав команд" ) }
+                                </button> : <div></div> }
+                            </div>
                         </> }
                     </> }
                     <CompetitionItems
@@ -128,9 +136,7 @@ const CompetitionDetail: FC<CompetitionDetailProps> = ( { competition } ) => {
                         onClick={ toggleIsOutsiders }
                     >
                         <span className="admin__checkbox-rect"></span>
-                        <span className="admin__checkbox-label">{ __(
-                            data.competitionTable.isOutsiders ? "Скрыть утешительные матчи" :
-                                "Показать утешительные матчи" ) }</span>
+                        <span className="admin__checkbox-label">{ __( "Утешительные матчи" ) }</span>
                     </label>
                     { data.competitionTable.isOutsiders && <CompetitionTable
                         data={ data.competitionTable.outsidersUsers }

@@ -17,9 +17,10 @@ export function shuffleArray<TItem extends any>( competitionRow: TItem[] ): TIte
 export function generateTeams(
     items: (Team | IUser)[],
     itemsInTeam: number,
-    amountLength: number
+    amountLength: number,
+    shuffleTeamMembers: boolean
 ): { participantsUsersRow: Array<CompetitionParticipant<Team | IUser>> } {
-    const newItems = shuffleArray( items );
+    const newItems = shuffleTeamMembers ? shuffleArray( items ) : items;
 
     const participantsUsersRow: Array<CompetitionParticipant<Team | IUser>> = Array( amountLength )
         .fill( COMPETITION_ITEM_DEFAULT );

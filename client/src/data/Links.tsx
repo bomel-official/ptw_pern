@@ -62,7 +62,7 @@ export const menuItems = [
     },
     {
         to: "/competition",
-        name: "Турниры сообщества",
+        name: "Waggers/Kill Race",
         icon: ComponentIcon,
         games: [ "warzone", "dota2" ]
     },
