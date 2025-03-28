@@ -19,7 +19,7 @@ export async function putMany( req: Request, res: Response,
                         ( placesCell ) => new CV(
                             placesCell ).number().val ).val
                 ).val,
-                points: new CV( participant.points ).number().val,
+                points: new CV( participant.points || 0 ).number().val,
                 isRoundsHidden: new CV( participant.isRoundsHidden ).array(
                     isRoundHidden => new CV( isRoundHidden ).bool().val ).val,
                 players: new CV( participant.players ).number().val
