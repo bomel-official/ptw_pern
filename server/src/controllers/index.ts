@@ -21,20 +21,11 @@ export { putToggleBuildMeta } from "./build/put-toggle-build-meta";
 
 // Payment — migrated to modules/payment (Phase 4)
 
-// Friend request
-export { getManyFriend } from "./friend-request/get-many-friend";
-export { getMany as getManyFriendRequest } from "./friend-request/get-many";
-export { postOne as postOneFriendRequest } from "./friend-request/post-one";
-export {
-    deleteOne as deleteOneFriendRequest
-} from "./friend-request/delete-one";
+// Friend request — migrated to modules/friend (Phase 6)
 
 // Question — migrated to modules/question (Phase 2)
 
-// Team
-export { getMany as getManyTeam } from "./team/get-many";
-export { postPutOne as postPutOneTeam } from "./team/post-put-one";
-export { deleteOne as deleteOneTeam } from "./team/delete-one";
+// Team — migrated to modules/team (Phase 6)
 
 // Participant — migrated to modules/participant (Phase 4)
 
