@@ -1,6 +1,6 @@
 import { UserRole } from "@constants";
 import { JWTUserData, UserRepository } from "@core";
-import { getEnv, jwtUserData } from "@libs";
+import { getJwtSecret, jwtUserData } from "@libs";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -14,8 +14,12 @@ export function createCheckRoleMiddleware( roles: UserRole[] ) {
             if ( !token ) {
                 return res.status( 401 ).json( { message: "Не авторизован" } );
             }
-            const decoded = jwt.verify( token,
-                getEnv( getEnv( process.env.JWT_SECRET_KEY ) ) ) as JWTUserData;
+            let decoded: JWTUserData;
+            try {
+                decoded = jwt.verify( token, getJwtSecret() ) as JWTUserData;
+            } catch ( e ) {
+                return res.status( 401 ).json( { message: "Не авторизован" } );
+            }
             const user = await UserRepository.findByPk( decoded.id );
 
             if ( !user || roles.indexOf( user.role ) === -1 ) {

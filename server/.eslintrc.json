@@ -1,28 +1,37 @@
 {
-  // Настройки проекта
+  "root": true,
   "env": {
-    // Проект для сервера
     "node": true,
-    // Включаем возможности ES6
-    "es6": true,
-    // Добавляем возможности ES2017
-    "es2017": true
+    "es2021": true
   },
-  // Наборы правил
   "extends": [
-    // Базовый набор правил eslint
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
-  // Движок парсинга
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    // Движку нужен проект TS для правил с типами
-    "project": "tsconfig.json",
-    "tsconfigRootDir": "."
+    "ecmaVersion": 2021,
+    "sourceType": "module"
   },
-  // Плагин с наборами правил для TypeScript
   "plugins": [
     "@typescript-eslint"
   ],
-  "rules": {}
+  "ignorePatterns": [
+    "dist",
+    "node_modules",
+    "*.js"
+  ],
+  "rules": {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-var-requires": "warn",
+    "@typescript-eslint/no-namespace": "warn",
+    "@typescript-eslint/ban-types": "warn",
+    "no-empty": ["warn", { "allowEmptyCatch": true }]
+  }
 }

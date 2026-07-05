@@ -1,11 +1,11 @@
 import { JWTUserData } from "@core";
-import { getEnv } from "@libs";
+import { getJwtSecret } from "@libs";
 import jwt from "jsonwebtoken";
 
 export function genJwt( { id, email, role, nickname }: JWTUserData ) {
     return jwt.sign(
         { id, email, role, nickname },
-        getEnv( process.env.JWT_SECRET_KEY ),
+        getJwtSecret(),
         { expiresIn: "7d" }
     );
 }

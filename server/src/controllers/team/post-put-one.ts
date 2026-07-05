@@ -36,7 +36,7 @@ export async function postPutOne( req: Request, res: Response, next: NextFunctio
     if ( name.length < 3 ) {
         return next( ApiError.badRequest( "Название команды должно быть 3 и больше символов" ) );
     }
-    for ( let playerId of players ) {
+    for ( const playerId of players ) {
         if (
             !isUserInGroup( creator.role, UserRoleGroup.ADMIN ) &&
             !creator.friends.includes( playerId ) &&
@@ -60,13 +60,13 @@ export async function postPutOne( req: Request, res: Response, next: NextFunctio
             return next( ApiError.badRequest(
                 "Вы не можете редактировать эту команду" ) );
         }
-        for ( let player of team.players ) {
+        for ( const player of team.players ) {
             if ( !players.includes( player.id ) ) {
                 await team.removePlayer( player.id );
             }
         }
         const playersResponse: User[] = [];
-        for ( let playerId of players ) {
+        for ( const playerId of players ) {
             const player = await UserRepository.findByPk( playerId );
             if ( !player ) {
                 return next( ApiError.badRequest( "Пользователь не найден" ) );
@@ -111,7 +111,7 @@ export async function postPutOne( req: Request, res: Response, next: NextFunctio
         } );
         const playersResponse: User[] = [];
         await creator.addOwn_team( team );
-        for ( let playerId of players ) {
+        for ( const playerId of players ) {
             const player = await UserRepository.findByPk( playerId );
             if ( !player ) {
                 return next( ApiError.badRequest( "Пользователь не найден" ) );

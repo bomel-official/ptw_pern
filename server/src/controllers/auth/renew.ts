@@ -1,6 +1,6 @@
 import { JWTUserData, UserRepository } from "@core";
 import { ApiError } from "@error";
-import { getEnv } from "@libs";
+import { getJwtSecret } from "@libs";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { genJwt } from "../libs";
@@ -16,8 +16,12 @@ export async function renew( req: Request, res: Response, next: NextFunction ) {
         return next( ApiError.unauthorized( "Не авторизован" ) );
     }
 
-    const userId = (jwt.verify( reqToken,
-        getEnv( process.env.JWT_SECRET_KEY ) ) as JWTUserData).id;
+    let userId: number;
+    try {
+        userId = (jwt.verify( reqToken, getJwtSecret() ) as JWTUserData).id;
+    } catch ( e ) {
+        return next( ApiError.unauthorized( "Не авторизован" ) );
+    }
     const user = await UserRepository.findByPk( userId );
     if ( !user ) {
         return next( ApiError.unauthorized( "Не авторизован" ) );

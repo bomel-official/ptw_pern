@@ -42,7 +42,7 @@
       "@middleware": [
         "middleware"
       ],
-      "@types": [
+      "@app-types": [
         "core/types"
       ]
     }

@@ -1,6 +1,6 @@
 import { UserRepository } from "@core";
 import { getEnv, jwtUserData } from "@libs";
-import { DiscordUserResponse, Oauth2TokenResponse } from "@types";
+import { DiscordUserResponse, Oauth2TokenResponse } from "@app-types";
 import axios from "axios";
 import type { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
@@ -57,7 +57,10 @@ export async function redirectDiscordProceed( req: Request, res: Response, next:
             const token = genJwt( jwtUserData( UserAlreadyExist ) );
 
             res.cookie( "token", token, {
-                maxAge: 1000 * 60 * 15, httpOnly: true
+                maxAge: 1000 * 60 * 15,
+                httpOnly: true,
+                sameSite: "lax",
+                secure: process.env.NODE_ENV === "production"
             } );
             return res.redirect( getEnv( process.env.CLIENT_URL ) + `/profile/${ UserAlreadyExist.nickname }` );
         } else {
@@ -80,7 +83,10 @@ export async function redirectDiscordProceed( req: Request, res: Response, next:
             const token = genJwt( jwtUserData( newUser ) );
 
             res.cookie( "token", token, {
-                maxAge: 1000 * 60 * 15, httpOnly: true
+                maxAge: 1000 * 60 * 15,
+                httpOnly: true,
+                sameSite: "lax",
+                secure: process.env.NODE_ENV === "production"
             } );
             return res.redirect( getEnv( process.env.CLIENT_URL ) + `/profile/${ newUser.nickname }` );
         }

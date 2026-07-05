@@ -20,7 +20,7 @@ export async function postOne( req: Request, res: Response, next: NextFunction )
         return next(
             ApiError.badRequest( "Поле никнейм имеет недопустимые символы" ) );
     }
-    if ( !email.match( /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i ) ) {
+    if ( !email.match( /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/i ) ) {
         return next( ApiError.badRequest( "Некоректный email" ) );
     }
 

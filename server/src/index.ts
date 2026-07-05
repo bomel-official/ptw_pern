@@ -1,6 +1,4 @@
 require( "dotenv" ).config();
-import "module-alias/register";
-import "tsconfig-paths/register";
 import { JWTUserData } from "@core";
 import { Database } from "@db";
 import { getEnv } from "@libs";
