@@ -33,8 +33,6 @@ export const useRoutes = () => {
             <Route path="/" element={ <MainPage/> }/>
             <Route path="/feedback" element={ <PanelsPage/> }/>
             <Route path="/auth" element={ <DiscordAuthPage/> }/>
-            {/*<Route path="/auth" element={<AuthPage/>} />*/ }
-            {/*<Route path="/register" element={<RegisterPage/>} />*/ }
             <Route path="/lost-password" element={ <LostPasswordPage/> }/>
             <Route path="/tournaments" element={ <TournamentsPage type="tournament"/> }/>
             <Route path="/hubs" element={ <TournamentsPage type="hub"/> }/>
