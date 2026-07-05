@@ -22,6 +22,10 @@ import { SingleTournamentPage } from "./pages/SingleTournamentPage";
 import TeammateSearchPage from "./pages/TeammateSearchPage";
 import { TournamentsPage } from "./pages/TournamentsPage";
 import UserRules from "./pages/UserRules";
+import { RequireRole } from "@/app/routes/RequireRole";
+import { NotFoundPage } from "@/pages/not-found";
+
+const ADMIN_ROLES = [ "ADMIN", "SUPERADMIN" ];
 
 export const useRoutes = () => {
     return (
@@ -48,10 +52,15 @@ export const useRoutes = () => {
             <Route path="/fortune-wheel" element={ <FortuneWheelPage/> }/>
             <Route path="/competition" element={ <CompetitionMainPage/> }/>
             <Route path="/competition/:id" element={ <CompetitionDetailPage/> }/>
-            <Route path="/admin/tournaments" element={ <AdminTournamentsPage/> }/>
-            <Route path="/admin/builds" element={ <AdminMetaBuildsPage/> }/>
-            <Route path="/admin/roles" element={ <AdminRoleEditorPage/> }/>
-            <Route path="/admin/faq" element={ <AdminFAQPage/> }/>
+            <Route path="/admin/tournaments" element={
+                <RequireRole roles={ ADMIN_ROLES }><AdminTournamentsPage/></RequireRole> }/>
+            <Route path="/admin/builds" element={
+                <RequireRole roles={ ADMIN_ROLES }><AdminMetaBuildsPage/></RequireRole> }/>
+            <Route path="/admin/roles" element={
+                <RequireRole roles={ ADMIN_ROLES }><AdminRoleEditorPage/></RequireRole> }/>
+            <Route path="/admin/faq" element={
+                <RequireRole roles={ ADMIN_ROLES }><AdminFAQPage/></RequireRole> }/>
+            <Route path="*" element={ <NotFoundPage/> }/>
         </Routes>
     );
 };
