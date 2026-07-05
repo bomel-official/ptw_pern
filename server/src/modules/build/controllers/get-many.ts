@@ -6,7 +6,7 @@ import {
 } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
-import { parseModelWhere } from "../libs";
+import { parseModelWhere } from "../../../controllers/libs";
 
 export async function getMany( req: Request, res: Response, next: NextFunction ) {
     const { object } = req.params;

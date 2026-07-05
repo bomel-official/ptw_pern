@@ -10,47 +10,32 @@ import {
 } from "@core";
 import { ApiError } from "@error";
 import { NextFunction, Request, Response } from "express";
-import { uploadImage } from "../libs";
+import { uploadImage } from "../../../controllers/libs";
 
-export async function putOne( req: Request, res: Response, next: NextFunction ) {
-    const validatedObject = generateValidator(
-        () => ({
-            object: new CV( req.params.object,
-                { label: "object" } ).string().val
-        }) );
-    if ( isError( validatedObject ) ) {
-        return next( validatedObject.errorObject );
-    }
-    const { object } = validatedObject.data;
+export async function postOne( req: Request, res: Response, next: NextFunction ) {
+    const { object } = req.params;
 
     if ( object === "weapon-type" ) {
         const validated = generateValidator(
             () => ({
-                id: new CV( req.body.id, { label: "id" } ).number().val,
                 title_RU: new CV( req.body.title_RU,
                     { label: "title_RU" } ).string().val,
                 title_EU: new CV( req.body.title_EU,
                     { label: "title_EU" } ).string().val,
             }) );
         if ( isError( validated ) ) {
-            return next( validated.errorObject );
+            return next(validated.errorObject);
         }
-        const { id, title_RU, title_EU } = validated.data;
+        const { title_RU, title_EU } = validated.data;
 
-        const item = await BuildWeaponTypeRepository.findByPk( id );
-        if ( !item ) return next(
-            ApiError.badRequest( "Редактируемый объект не найден" ) );
-
-        item.set( {
+        const newItem = await BuildWeaponTypeRepository.create( {
             title_EU, title_RU
         } );
-        await item.save();
 
-        return res.json( { message: "Обновлено!", item } );
+        return res.json( { message: "Добавлено!", item: newItem } );
     } else if ( object === "weapon" ) {
         const validated = generateValidator(
             () => ({
-                id: new CV( req.body.id, { label: "id" } ).number().val,
                 title_RU: new CV( req.body.title_RU,
                     { label: "title_RU" } ).string().val,
                 title_EU: new CV( req.body.title_EU,
@@ -65,10 +50,10 @@ export async function putOne( req: Request, res: Response, next: NextFunction ) 
                     (attachment => new CV( attachment ).number().val) ).val
             }) );
         if ( isError( validated ) ) {
-            return next( validated.errorObject );
+            return next(validated.errorObject);
         }
         const {
-            id, title_RU, title_EU, buildWeaponTypeId, gameVersion,
+            title_RU, title_EU, buildWeaponTypeId, gameVersion,
             allowedAttachments
         } = validated.data;
 
@@ -77,25 +62,19 @@ export async function putOne( req: Request, res: Response, next: NextFunction ) 
             width: 352, height: 180
         } );
 
-        const item = await BuildWeaponRepository.findByPk( id );
-        if ( !item ) return next(
-            ApiError.badRequest( "Редактируемый объект не найден" ) );
-
-        item.set( {
+        const newItem = await BuildWeaponRepository.create( {
             title_EU,
             title_RU,
             buildWeaponTypeId,
-            image: filename || item.image,
+            image: filename,
             gameVersion,
             allowedAttachments
         } );
-        await item.save();
 
-        return res.json( { message: "Обновлено!", item } );
+        return res.json( { message: "Добавлено!", item: newItem } );
     } else if ( object === "attachment" ) {
         const validated = generateValidator(
             () => ({
-                id: new CV( req.body.id, { label: "id" } ).number().val,
                 title_RU: new CV( req.body.title_RU,
                     { label: "title_RU" } ).string().val,
                 title_EU: new CV( req.body.title_EU,
@@ -107,10 +86,10 @@ export async function putOne( req: Request, res: Response, next: NextFunction ) 
                     .included( Object.values( Game ) as Game[] ).val
             }) );
         if ( isError( validated ) ) {
-            return next( validated.errorObject );
+            return next(validated.errorObject);
         }
         const {
-            id, title_RU, title_EU, buildAttachmentTypeId, gameVersion,
+            title_RU, title_EU, buildAttachmentTypeId, gameVersion,
         } = validated.data;
 
         const { image } = req.files || { image: null };
@@ -118,44 +97,33 @@ export async function putOne( req: Request, res: Response, next: NextFunction ) 
             width: 352, height: 180
         } );
 
-        const item = await BuildAttachmentRepository.findByPk( id );
-        if ( !item ) return next(
-            ApiError.badRequest( "Редактируемый объект не найден" ) );
-
-        item.set( {
+        const newItem = await BuildAttachmentRepository.create( {
             title_EU,
             title_RU,
             gameVersion,
             buildAttachmentTypeId,
-            image: filename || item.image
+            image: filename
         } );
-        await item.save();
 
-        return res.json( { message: "Обновлено!", item } );
+        return res.json( { message: "Добавлено!", item: newItem } );
     } else if ( object === "attachment-type" ) {
         const validated = generateValidator(
             () => ({
-                id: new CV( req.body.id, { label: "id" } ).number().val,
                 title_RU: new CV( req.body.title_RU,
                     { label: "title_RU" } ).string().val,
                 title_EU: new CV( req.body.title_EU,
                     { label: "title_EU" } ).string().val,
             }) );
         if ( isError( validated ) ) {
-            return next( validated.errorObject );
+            return next(validated.errorObject);
         }
-        const { id, title_RU, title_EU } = validated.data;
+        const { title_RU, title_EU } = validated.data;
 
-        const item = await BuildAttachmentTypeRepository.findByPk( id );
-        if ( !item ) return next(
-            ApiError.badRequest( "Редактируемый объект не найден" ) );
-
-        item.set( {
+        const newItem = await BuildAttachmentTypeRepository.create( {
             title_EU, title_RU
         } );
-        await item.save();
 
-        return res.json( { message: "Обновлено!", item } );
+        return res.json( { message: "Добавлено!", item: newItem } );
     }
 
     return next( ApiError.badRequest( "Неверно заполены данные" ) );
