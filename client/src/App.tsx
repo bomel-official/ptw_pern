@@ -10,8 +10,23 @@ import { useGame } from "./hooks/game.hook";
 import { useHttp } from "./hooks/http.hook/http-hook";
 import { useLanguage } from "./hooks/language.hook";
 import { useRoutes } from "./routes";
-import { store } from "./store";
+import { store } from "@/app/store";
+import { useAppDispatch } from "@/app/store/hooks";
+import { setToken } from "@/entities/session";
 import { IUser } from "./StoreTypes";
+
+/**
+ * Bridges the legacy AuthContext token into the Redux session slice so the RTK
+ * Query base query can read the auth token synchronously. Removed once auth
+ * fully moves into the session entity (Phase 7).
+ */
+const SessionSync: React.FC<{ token: string | null }> = ( { token } ) => {
+    const dispatch = useAppDispatch();
+    useEffect( () => {
+        dispatch( setToken( token ) );
+    }, [ dispatch, token ] );
+    return null;
+};
 
 function App() {
     const { token, login, logout, userId } = useAuth();
@@ -62,6 +77,7 @@ function App() {
                     game, setGame
                 } }>
                     <Provider store={ store }>
+                        <SessionSync token={ token }/>
                         <div className="App">
                             <PreLoader/>
                             <Router>
