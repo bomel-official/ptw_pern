@@ -1,9 +1,9 @@
+import { competitionRouter } from "@modules/competition";
+import { questionRouter } from "@modules/question";
 import express from "express";
 import { authRouter } from "./auth";
 import { buildRouter } from "./build";
-import { competitionRouter } from "./competition";
 import { friendsRouter } from "./friends";
-import { questionRouter } from "./question";
 import { teamRouter } from "./team";
 import { tournamentRouter } from "./tournament";
 import { userRouter } from "./user";

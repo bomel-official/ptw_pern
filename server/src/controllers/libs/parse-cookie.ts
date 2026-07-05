@@ -4,9 +4,14 @@ export function parseCookie( cookies: string | undefined ) {
     const data: ParsedCookies = {};
     try {
         if ( cookies ) {
-            for ( let cookie of cookies.split( ";" ) ) {
-                const [ name, value ] = cookie.split( "=" );
-                data[name.trim()] = value.trim();
+            for ( const cookie of cookies.split( ";" ) ) {
+                const separatorIndex = cookie.indexOf( "=" );
+                if ( separatorIndex === -1 ) {
+                    continue;
+                }
+                const name = cookie.slice( 0, separatorIndex ).trim();
+                const value = cookie.slice( separatorIndex + 1 ).trim();
+                data[name] = value;
             }
         }
     } catch ( e ) {

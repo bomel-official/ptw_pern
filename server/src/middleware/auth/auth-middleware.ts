@@ -1,9 +1,7 @@
 import { JWTUserData } from "@core";
-import { getEnv } from "@libs";
+import { getJwtSecret } from "@libs";
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
-const JWT_SECRET_KEY = getEnv( getEnv( process.env.JWT_SECRET_KEY ) ) ?? "JWT_SECRET_KEY";
 
 export function authMiddleware( req: Request, res: Response,
                                 next: NextFunction ) {
@@ -17,7 +15,7 @@ export function authMiddleware( req: Request, res: Response,
             return res.status( 401 ).json( { message: "Не авторизован" } );
         }
         try {
-            req.user = jwt.verify( token, JWT_SECRET_KEY ) as JWTUserData;
+            req.user = jwt.verify( token, getJwtSecret() ) as JWTUserData;
         } catch ( e ) {
             return res.status( 401 ).json( { message: "Не авторизован" } );
         }

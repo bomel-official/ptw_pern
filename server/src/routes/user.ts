@@ -41,6 +41,5 @@ userRouter.post( "/register",
 userRouter.post( "/admin/set-role",
     createCheckRoleMiddleware( UserRoleGroup.SUPERADMIN ), putOneUserRole );
 userRouter.post( "/edit", authMiddleware, putOneUser );
-userRouter.post( "/lostpassoword" ); // todo
 
 export { userRouter };

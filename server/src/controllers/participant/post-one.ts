@@ -19,7 +19,7 @@ export async function postOne( req: Request, res: Response, next: NextFunction )
     if ( !id || isAdmin( reqUser ) ) { // Create participant
         const roomNumber = await getParticipantRoomNumber( tournament.id );
 
-        let newReq = await ParticipantRepository.create( {
+        const newReq = await ParticipantRepository.create( {
             tournamentId: tournament.id,
             points: 0,
             teamId: team.id,

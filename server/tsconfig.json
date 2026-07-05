@@ -42,7 +42,19 @@
       "@middleware": [
         "middleware"
       ],
-      "@types": [
+      "@shared": [
+        "shared"
+      ],
+      "@shared/*": [
+        "shared/*"
+      ],
+      "@modules": [
+        "modules"
+      ],
+      "@modules/*": [
+        "modules/*"
+      ],
+      "@app-types": [
         "core/types"
       ]
     }

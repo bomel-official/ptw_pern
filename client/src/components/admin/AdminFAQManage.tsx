@@ -1,6 +1,9 @@
-import React, { MouseEvent, useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import { useHttp } from "../../hooks/http.hook/http-hook";
+import React, { MouseEvent, useState } from "react";
+import {
+    useDeleteQuestionMutation,
+    useGetQuestionsQuery,
+    useUpsertQuestionMutation,
+} from "@/entities/question";
 import { __, _f } from "../../multilang/Multilang";
 import { IMessageOptions } from "../../StoreTypes";
 
@@ -16,26 +19,11 @@ const AdminFaqManage = () => {
     const [ messageOptions, setMessageOptions ] = useState<IMessageOptions>( {
         status: "", text: ""
     } );
-    const [ items, setItems ] = useState<Array<Record<string, any>>>( [] );
     const [ newItem, setNewItem ] = useState<Record<string, any>>( newQuestionTemplate );
 
-    const { loading, request, error, clearError } = useHttp();
-    const auth = useContext( AuthContext );
-
-    const fetchQuestions = async () => {
-        const { rows } = await request( `/api/question/get`, "GET" );
-        setItems( rows );
-    };
-
-    useEffect( () => {
-        fetchQuestions().catch( () => {} );
-    }, [] );
-
-    useEffect( () => {
-        setMessageOptions( {
-            status: "neg", text: error
-        } );
-    }, [ error ] );
+    const { data: items = [] } = useGetQuestionsQuery();
+    const [ upsertQuestion ] = useUpsertQuestionMutation();
+    const [ deleteQuestion ] = useDeleteQuestionMutation();
 
     const changeNewItem = ( key: string, value: string ) => {
         setNewItem( { ...newItem, [key]: value } );
@@ -43,32 +31,21 @@ const AdminFaqManage = () => {
 
     const deleteHandler = async ( itemToDelete: Record<string, any> ) => {
         try {
-            const { message }: { message: string, item: Record<string, any> } = await request( `/api/question/delete`,
-                "POST", { id: itemToDelete.id }, {
-                    Authorization: `Bearer ${ auth.token }`
-                }, true );
-            if ( message ) {
-                setItems( items.filter( (item => (item.id !== itemToDelete.id)) ) );
-            }
-        } catch ( e ) {}
+            await deleteQuestion( itemToDelete.id ).unwrap();
+        } catch ( e: any ) {
+            setMessageOptions( { status: "neg", text: e?.data?.message || "Ошибка" } );
+        }
     };
 
     const createOrSaveHandler = async ( event: any, itemToSave: Record<string, any> ) => {
         event.preventDefault();
-        clearError();
         try {
-            const { message, item }: { message: string, item: Record<string, any> } = await request(
-                `/api/question/save-create`, "POST", { ...itemToSave, id: itemToSave.id ? itemToSave.id : "" }, {
-                    Authorization: `Bearer ${ auth.token }`
-                }, true );
-            setMessageOptions( {
-                status: "pos", text: message
-            } );
-            if ( item ) {
-                setItems( [ ...items, item ] );
-                setNewItem( {} );
-            }
-        } catch ( e ) {}
+            const { message } = await upsertQuestion( itemToSave as any ).unwrap();
+            setMessageOptions( { status: "pos", text: message || "" } );
+            setNewItem( { ...newQuestionTemplate } );
+        } catch ( e: any ) {
+            setMessageOptions( { status: "neg", text: e?.data?.message || "Ошибка" } );
+        }
     };
 
     const fields = [

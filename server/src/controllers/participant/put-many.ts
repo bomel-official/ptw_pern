@@ -35,7 +35,7 @@ export async function putMany( req: Request, res: Response,
         return res.json( { isOk: true, message: "Данные обновлены!" } );
     }
 
-    for ( let participant of participants ) {
+    for ( const participant of participants ) {
         let points = 0;
         for ( let i = 0; i < AMOUNT_ROUNDS; i++ ) {
             points += participant.places[i][1];

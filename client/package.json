@@ -3,18 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "craco start",
+    "build": "craco build",
     "serve": "pm2 serve build --name \"playtowin.pro react\" --spa --watch",
     "restart": "pm2 restart \"playtowin.pro react\" --spa --watch",
-    "test": "react-scripts test",
+    "test": "craco test",
+    "typecheck": "tsc --noEmit",
     "eject": "react-scripts eject"
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.5.0",
     "axios": "1.7.9",
-    "blob": "0.1.0",
-    "js-cookie": "3.0.5",
     "jwt-decode": "3.1.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -44,7 +43,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
-    "@types/js-cookie": "3.0.6",
+    "@craco/craco": "^7.1.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "20.17.16",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.1"
