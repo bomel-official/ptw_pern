@@ -1,23 +1,12 @@
-import React, { MouseEvent, useEffect, useState } from "react";
+import React, { MouseEvent } from "react";
 import { Footer } from "../components/base/Footer";
 import { Header } from "../components/base/Header";
-import { useHttp } from "../hooks/http.hook/http-hook";
+import { useGetQuestionsQuery } from "@/entities/question";
 import { __, _f } from "../multilang/Multilang";
-import { IQuestion } from "../StoreTypes";
 
 const PanelsPage = () => {
-    const [ items, setItems ] = useState<Array<IQuestion>>( [] );
+    const { data: items = [] } = useGetQuestionsQuery();
 
-    const { request } = useHttp();
-
-    const fetchQuestions = async () => {
-        const { rows } = await request( `/api/question/get`, "GET" );
-        setItems( rows );
-    };
-
-    useEffect( () => {
-        fetchQuestions().catch( () => {} );
-    }, [] );
     return (
         <div className="PanelsPage full-height header-padding">
             <Header/>

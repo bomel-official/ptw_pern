@@ -1,27 +1,22 @@
 import { UserRoleGroup } from "@constants";
-import {
-    deleteOneQuestion,
-    getManyQuestion,
-    postPutOneQuestion
-} from "@controllers";
 import { createCheckRoleMiddleware } from "@middleware";
 import { Router } from "express";
+import { questionController } from "./question.controller";
 
 const questionRouter = Router();
 
-// [GET]
+questionRouter.get( "/get", questionController.getMany );
 
-questionRouter.get( "/get", getManyQuestion );
-
-// [POST]
-
-questionRouter.post( "/save-create",
+questionRouter.post(
+    "/save-create",
     createCheckRoleMiddleware( UserRoleGroup.ADMIN ),
-    postPutOneQuestion );
+    questionController.saveCreate,
+);
 
-// [DELETE]
-questionRouter.post( "/delete",
+questionRouter.delete(
+    "/delete",
     createCheckRoleMiddleware( UserRoleGroup.ADMIN ),
-    deleteOneQuestion );
+    questionController.remove,
+);
 
 export { questionRouter };

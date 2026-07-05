@@ -33,10 +33,7 @@ export {
     deleteOne as deleteOneFriendRequest
 } from "./friend-request/delete-one";
 
-// Question
-export { getMany as getManyQuestion } from "./question/get-many";
-export { postPutOne as postPutOneQuestion } from "./question/post-put-one";
-export { deleteOne as deleteOneQuestion } from "./question/delete-one";
+// Question — migrated to modules/question (Phase 2)
 
 // Team
 export { getMany as getManyTeam } from "./team/get-many";
