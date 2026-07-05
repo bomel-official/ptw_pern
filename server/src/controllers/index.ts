@@ -19,11 +19,7 @@ export { putOneLike as putOneBuildLike } from "./build/put-one-like";
 export { putOne as putOneBuildItem } from "./build/put-one";
 export { putToggleBuildMeta } from "./build/put-toggle-build-meta";
 
-// Payment
-export { enotGetStatus } from "./payment/enot-get-status";
-export { enotCreateInvoice } from "./payment/enot-create-invoice";
-export { yookassaGetStatus } from "./payment/yookassa-get-status";
-export { yookassaCreateInvoice } from "./payment/yookassa-create-invoice";
+// Payment — migrated to modules/payment (Phase 4)
 
 // Friend request
 export { getManyFriend } from "./friend-request/get-many-friend";
@@ -40,41 +36,11 @@ export { getMany as getManyTeam } from "./team/get-many";
 export { postPutOne as postPutOneTeam } from "./team/post-put-one";
 export { deleteOne as deleteOneTeam } from "./team/delete-one";
 
-// Participant
-export { deleteOne as deleteOneParticipant } from "./participant/delete-one";
-export { getMany as getManyParticipant } from "./participant/get-many";
-export { getOneOwnParticipant } from "./participant/get-one-own-participant";
-export {
-    getOnePayStatus as getOneParticipantPayStatus
-} from "./participant/get-one-pay-status";
-export {
-    getOnePayUrl as getOneParticipantPayUrl
-} from "./participant/get-one-pay-url";
-export { postOne as postOneParticipant } from "./participant/post-one";
-export { putMany as putManyParticipant } from "./participant/put-many";
-export {
-    putOneIncreasePriority as putOneParticipantIncreasePriority
-} from "./participant/put-one-increase-priority";
-export {
-    putOneRoomNumber as putOneParticipantRoomNumber
-} from "./participant/put-one-room-number";
-export {
-    putOnePayStatus as putOneParticipantPayStatus
-} from "./participant/put-one-pay-status";
+// Participant — migrated to modules/participant (Phase 4)
 
-// Participant request
-export {
-    postOne as postOneParticipantRequest
-} from "./participant-request/post-one";
-export {
-    putOneStatus as putOneParticipantRequestStatus
-} from "./participant-request/put-one-status";
+// Participant request — migrated to modules/participant-request (Phase 4)
 
-// Tournament
-export { getMany as getManyTournament } from "./tournament/get-many";
-export { getOne as getOneTournament } from "./tournament/get-one";
-export { postOne as postOneTournament } from "./tournament/post-one";
-export { putOne as putOneTournament } from "./tournament/put-one";
+// Tournament — migrated to modules/tournament (Phase 4)
 
 // User
 export { getMany as getManyUser } from "./user/get-many";
