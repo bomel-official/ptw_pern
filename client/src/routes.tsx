@@ -8,7 +8,7 @@ import CompetitionDetailPage from "./pages/competition/competition-detail-page";
 import CompetitionMainPage from "./pages/competition/competition-main-page";
 import Contact from "./pages/Contact";
 import { DiscordAuthPage } from "./pages/DiscordAuth";
-import FortuneWheel from "./pages/fortune-wheel/fortune-wheel";
+import { FortuneWheelPage } from "@/pages/fortune-wheel";
 import { LostPasswordPage } from "./pages/LostPasswordPage";
 import { MainPage } from "./pages/MainPage";
 import MetaBuildCreatePage from "./pages/MetaBuildCreatePage";
@@ -45,7 +45,7 @@ export const useRoutes = () => {
             <Route path="/privacy" element={ <PrivacyPage/> }/>
             <Route path="/user-rules" element={ <UserRules/> }/>
             <Route path="/contact" element={ <Contact/> }/>
-            <Route path="/fortune-wheel" element={ <FortuneWheel/> }/>
+            <Route path="/fortune-wheel" element={ <FortuneWheelPage/> }/>
             <Route path="/competition" element={ <CompetitionMainPage/> }/>
             <Route path="/competition/:id" element={ <CompetitionDetailPage/> }/>
             <Route path="/admin/tournaments" element={ <AdminTournamentsPage/> }/>

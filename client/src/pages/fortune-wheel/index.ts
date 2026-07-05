@@ -1,1 +1,1 @@
-export * from "./fortune-wheel";
+export { default as FortuneWheelPage } from "./ui/FortuneWheelPage";

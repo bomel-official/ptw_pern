@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
-import { __ } from "../../multilang/Multilang";
-import { FortuneWheelItem, WheelProps } from "./types";
+import { __ } from "@/multilang/Multilang";
+import { FortuneWheelItem, WheelProps } from "../model/types";
 
 const VIEW_BOX = 100;
 const STROKE_WIDTH = 40;
@@ -11,7 +11,7 @@ const PI = Math.PI;
 const RADIUS = VIEW_BOX / 2 - STROKE_WIDTH / 2;
 const CIRCLE_LENGTH = RADIUS * 2 * PI;
 
-const Wheel: FC<WheelProps> = ( { items } ) => {
+export const Wheel: FC<WheelProps> = ( { items } ) => {
     const [ angle, setAngle ] = useState( 0 );
     const [ winner, setWinner ] = useState<null | FortuneWheelItem>( null );
     const [ spinTimeout, setSpinTimeout ] = useState( setTimeout( () => {}, SPIN_DELAY * 1000 ) );
@@ -37,9 +37,8 @@ const Wheel: FC<WheelProps> = ( { items } ) => {
                          transition: `transform cubic-bezier(.1, .64, 0, .99) ${ SPIN_DELAY }s`
                      } }>
                     { items.map( ( item, index ) => (
-                        <>
+                        <React.Fragment key={ index }>
                             <circle
-                                key={ index }
                                 className="unit"
                                 r={ RADIUS }
                                 cx="50%"
@@ -69,7 +68,7 @@ const Wheel: FC<WheelProps> = ( { items } ) => {
                                     (VIEW_BOX / 2 - TEXT_OFFSET)
                                 }) rotate(${ 180 / items.length * (2 * index + 1) + 180 })` }
                             >{ item.label }</text>
-                        </>
+                        </React.Fragment>
                     ) ) }
                 </svg>
                 <div className="fortune-wheel__button-wrapper">
@@ -85,5 +84,3 @@ const Wheel: FC<WheelProps> = ( { items } ) => {
         </div>
     );
 };
-
-export default Wheel;

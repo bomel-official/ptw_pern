@@ -1,11 +1,10 @@
 import React from "react";
-import { Footer } from "../../components/base/Footer";
-import { Header } from "../../components/base/Header";
-import { __ } from "../../multilang/Multilang";
-import { useFortuneWheelItems } from "./use-fortune-wheel-items";
-import Wheel from "./wheel";
+import { Footer } from "@/components/base/Footer";
+import { Header } from "@/components/base/Header";
+import { useFortuneWheelItems, Wheel } from "@/entities/fortune-wheel";
+import { __ } from "@/multilang/Multilang";
 
-const FortuneWheel = () => {
+const FortuneWheelPage = () => {
     const { items, addItem, removeItem, changeItem } = useFortuneWheelItems();
 
     return (
@@ -47,4 +46,4 @@ const FortuneWheel = () => {
     );
 };
 
-export default FortuneWheel;
+export default FortuneWheelPage;
