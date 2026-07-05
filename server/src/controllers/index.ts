@@ -1,10 +1,4 @@
-// Auth
-export { redirectDiscordProceed } from "./auth/redirect-discord-proceed";
-export { redirectDiscord } from "./auth/redirect-discord";
-export { getUserByCookie } from "./auth/get-user-by-cookie";
-export { renew } from "./auth/renew";
-export { login } from "./auth/login";
-export { check } from "./auth/check";
+// Auth — migrated to modules/auth (Phase 7)
 
 // Build
 export { deleteOne as deleteOneBuildItem } from "./build/delete-one";
@@ -33,15 +27,6 @@ export { putToggleBuildMeta } from "./build/put-toggle-build-meta";
 
 // Tournament — migrated to modules/tournament (Phase 4)
 
-// User
-export { getMany as getManyUser } from "./user/get-many";
-export { getManyAdmins as getManyUserAdmins } from "./user/get-many-admins";
-export { getOne as getOneUser } from "./user/get-one";
-export {
-    getOneByNickname as getOneUserByNickname
-} from "./user/get-one-by-nickname";
-export { postOne as postOneUser } from "./user/post-one";
-export { putOne as putOneUser } from "./user/put-one";
-export { putOneRole as putOneUserRole } from "./user/put-one-role";
+// User — migrated to modules/user (Phase 7)
 
 // Competition — migrated to modules/competition (Phase 5)

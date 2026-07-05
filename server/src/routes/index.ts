@@ -1,12 +1,12 @@
+import { authRouter } from "@modules/auth";
 import { competitionRouter } from "@modules/competition";
 import { friendsRouter } from "@modules/friend";
 import { questionRouter } from "@modules/question";
 import { teamRouter } from "@modules/team";
 import { tournamentRouter } from "@modules/tournament";
+import { userRouter } from "@modules/user";
 import express from "express";
-import { authRouter } from "./auth";
 import { buildRouter } from "./build";
-import { userRouter } from "./user";
 
 const router = express.Router();
 
