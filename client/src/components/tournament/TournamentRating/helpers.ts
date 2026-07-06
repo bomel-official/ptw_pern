@@ -1,49 +1,50 @@
-import {IParticipant, IUser} from "../../../StoreTypes";
-import {Dispatch} from "react";
-import {AMOUNT_ROUNDS, DEFAULT_ROUNDS_HIDDEN} from "./TournamentRating";
+import { Dispatch } from "react";
+import { IParticipant, IUser } from "../../../StoreTypes";
+import { setMatrixCell, setPlacesCell, toggleRoundHidden } from "./rating-helpers";
 
-export const isUserInParticipant = (participant: IParticipant, user: IUser | null) => {
+export const isUserInParticipant = ( participant: IParticipant, user: IUser | null ) => {
     return (
         user !== null &&
-        participant.users.find((_user) => _user.id === user.id) !== undefined
-    )
-}
+        participant.users.find( ( _user ) => _user.id === user.id ) !== undefined
+    );
+};
 
-export const useTournamentLiveEdit = (participants: Array<IParticipant>, setParticipants: Dispatch<Array<IParticipant>>) => {
-    const changeParticipant = (index: number, newParticipant: IParticipant) => {
-        setParticipants(participants.map((ptsp, i) => {
-            if (index === i) {
-                return newParticipant
-            }
-            return ptsp
-        }))
-    }
+export const useTournamentLiveEdit = (
+    participants: Array<IParticipant>,
+    setParticipants: Dispatch<Array<IParticipant>>,
+) => {
+    const changeParticipant = ( index: number, newParticipant: IParticipant ) => {
+        setParticipants( participants.map( ( ptsp, i ) => (i === index ? newParticipant : ptsp) ) );
+    };
 
-    const setParticipantPlayerKills = (index: number, i: number, j: number, value: number) => {
-        const newParticipant = {...participants[index]}
-        newParticipant.dataArray[j][i] = value
-        changeParticipant(index, newParticipant)
-    }
+    const setParticipantPlayerKills = ( index: number, i: number, j: number, value: number ) => {
+        const participant = participants[index];
+        changeParticipant( index, {
+            ...participant,
+            dataArray: setMatrixCell( participant.dataArray, j, i, value ),
+        } );
+    };
 
-    const setParticipantPlaces = (index: number, i: number, item: 0 | 1, value: number) => {
-        const newParticipant = {...participants[index]}
-        newParticipant.places[i][item] = value
-        changeParticipant(index, newParticipant)
-    }
+    const setParticipantPlaces = ( index: number, i: number, item: 0 | 1, value: number ) => {
+        const participant = participants[index];
+        changeParticipant( index, {
+            ...participant,
+            places: setPlacesCell( participant.places, i, item, value ),
+        } );
+    };
 
-    const setRoundsHidden = (index: number, i: number) => {
-        const newParticipant = {...participants[index]}
-        if (newParticipant.isRoundsHidden.length !== AMOUNT_ROUNDS) {
-            newParticipant.isRoundsHidden = DEFAULT_ROUNDS_HIDDEN
-        }
-        newParticipant.isRoundsHidden[i] = !newParticipant.isRoundsHidden[i]
-        changeParticipant(index, newParticipant)
-    }
+    const setRoundsHidden = ( index: number, i: number ) => {
+        const participant = participants[index];
+        changeParticipant( index, {
+            ...participant,
+            isRoundsHidden: toggleRoundHidden( participant.isRoundsHidden, i ),
+        } );
+    };
 
     return {
         changeParticipant,
         setParticipantPlayerKills,
         setParticipantPlaces,
-        setRoundsHidden
-    }
-}
+        setRoundsHidden,
+    };
+};
