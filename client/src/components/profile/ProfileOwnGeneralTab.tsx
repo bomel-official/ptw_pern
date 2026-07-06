@@ -2,7 +2,6 @@ import React, {Dispatch, useCallback, useContext, useEffect, useState} from 'rea
 import ProfileStats from "./ProfileStats";
 import {__} from "../../multilang/Multilang";
 import TeamTablet from "./TeamTablet";
-import TournamentTablet from "../tournament/TournamentTablet";
 import ProfilePlatform from "./ProfilePlatform";
 import {IMessageOptions, ITeam, IUser} from "../../StoreTypes";
 import {ProfileTabsIds, socialItems} from "../../data/Links";

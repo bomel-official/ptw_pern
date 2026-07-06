@@ -3,8 +3,9 @@ import {NavLink} from "react-router-dom";
 import {IResultStatus, ResultStatuses} from "../../data/ResultStatuses";
 import {getFile} from "../../functions/getFile";
 import {getDateString} from "../../functions/getDateString";
+import {ITournament} from "../../StoreTypes";
 
-export const TournamentPreview = ({item, status, columns, isHideParticipants}: {item: any, status: IResultStatus | undefined, columns: number, isHideParticipants?: boolean}) => {
+export const TournamentPreview = ({item, status, columns, isHideParticipants}: {item: ITournament, status: IResultStatus | undefined, columns: number, isHideParticipants?: boolean}) => {
     const dateBegin = new Date(item.dateBegin)
     const dateEnd = new Date(item.dateEnd)
     const now = new Date(Date.now())

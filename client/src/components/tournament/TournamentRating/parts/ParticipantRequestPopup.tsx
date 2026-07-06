@@ -9,7 +9,8 @@ import { IMessageOptions, IParticipant } from "../../../../StoreTypes";
 import Loader from "../../../base/Loader";
 import { Popup } from "../../../base/Popup";
 import { useParticipantRequest } from "../hooks";
-import { AMOUNT_ROUNDS } from "../TournamentRating";
+import { AMOUNT_ROUNDS } from "../rating-constants";
+import { computeRatingTotals, isRoundHidden, safeNumber } from "../rating-helpers";
 
 export const ParticipantRequestPopup: FC<{
     isActive: boolean, onHide: () => void, participants: Array<IParticipant>, changeCertainParticipant: ( index: number,
@@ -17,7 +18,6 @@ export const ParticipantRequestPopup: FC<{
 }> = ( { isActive, onHide, participants, changeCertainParticipant } ) => {
     const { user, token } = useContext( AuthContext );
     const {
-        setParticipantRequestPlaces,
         setParticipantRequestPlayerKills,
         participantRequest,
         participant,
@@ -30,44 +30,37 @@ export const ParticipantRequestPopup: FC<{
         status: "", text: ""
     } );
 
-    if ( !participant ) return (<></>);
-    if ( !participantRequest ) return (<></>);
+    if ( !participant || !participantRequest ) {
+        return null;
+    }
 
     const players = participant.users.length;
-    const roundsInfo = [];
-    const killAmounts = Array( players ).fill( 0 );
-    let amountPoints = 0;
+    const { killAmounts, amountPoints, roundPoints } = computeRatingTotals(
+        participantRequest.dataArray, participantRequest.places, participantRequest.isRoundsHidden, players );
 
-    for ( let i = 0; i < AMOUNT_ROUNDS; i++ ) {
-        const currentRoundInfo: Array<JSX.Element> = [];
-        let currentRoundPoints = participantRequest.places[i][1] || 0;
-        for ( let j = 0; j < players; j++ ) {
-            currentRoundInfo.push( <div className="text" key={ `player-${ j }-${ i }` }>
-                <input
-                    className="input-text"
-                    type="number"
-                    value={ participantRequest?.dataArray[j][i] }
-                    onChange={ ( e ) => setParticipantRequestPlayerKills( i, j, parseFloat( e.target.value ) ) }
-                />
-            </div> );
-            if ( !(participantRequest?.isRoundsHidden.length && participantRequest.isRoundsHidden[i]) ) {
-                killAmounts[j] += participantRequest?.dataArray[j][i] || 0;
-            }
-            currentRoundPoints += participantRequest?.dataArray[j][i] || 0;
-        }
-        if ( !(participantRequest?.isRoundsHidden.length && participantRequest?.isRoundsHidden[i]) ) {
-            amountPoints += currentRoundPoints;
-        }
-        roundsInfo.push( <td key={ `round-${ i }` } className={ (participantRequest?.isRoundsHidden.length &&
-            participantRequest?.isRoundsHidden[i]) ? "transparent" : "" }>
-            <div className="text">{ currentRoundPoints } { __( "очков" ) }</div>
-            <div className="flex">
-                <div>
-                    { currentRoundInfo }
+    const roundsInfo = Array.from( { length: AMOUNT_ROUNDS }, ( _round, i ) => {
+        const hidden = isRoundHidden( participantRequest.isRoundsHidden, i );
+        return (
+            <td key={ `round-${ i }` } className={ hidden ? "transparent" : "" }>
+                <div className="text">{ roundPoints[i] } { __( "очков" ) }</div>
+                <div className="flex">
+                    <div>
+                        { Array.from( { length: players }, ( _p, j ) => (
+                            <div className="text" key={ `player-${ j }-${ i }` }>
+                                <input
+                                    className="input-text"
+                                    type="number"
+                                    value={ participantRequest.dataArray[j]?.[i] ?? 0 }
+                                    onChange={ ( e ) =>
+                                        setParticipantRequestPlayerKills( i, j, safeNumber( e.target.value ) ) }
+                                />
+                            </div>
+                        ) ) }
+                    </div>
                 </div>
-            </div>
-        </td> );
-    }
+            </td>
+        );
+    } );
 
     return (
         <Popup isActive={ isActive } onHide={ onHide } title={ "Опубликовать результаты" } width="1280px">

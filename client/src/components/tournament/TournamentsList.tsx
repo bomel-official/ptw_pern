@@ -18,7 +18,7 @@ export const TournamentsList = ({status, columns, type = 'tournament', userId}: 
         const {tournaments} = await request(`/api/tournament/get-all?status=${status || ''}&numberPosts=${numberPost}&game=${game}&type=${type}${userId ? `&userId=${userId}` : ''}`, 'GET')
         setIsShowMore(col - tournaments.length === 0)
         setData(tournaments)
-    }, [])
+    }, [request, userId, col])
 
     useEffect(() => {
         if (game) {
